@@ -44,7 +44,8 @@ packages/
 .github/
   copilot-instructions.md
   workflows/           CI workflows
-config/                Versioned tax and financial rules with sources/dates
+packages/finance-engine/src/finance_engine/
+  tax_rules_2026.yaml  Versioned tax rules with sources and effective dates
 docker-compose.yml
 .env.example
 ```

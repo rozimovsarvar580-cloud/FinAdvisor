@@ -1,0 +1,18 @@
+schema_version: 1
+jurisdiction: UZ
+effective_from: "2026-01-01"
+published_at: "2026-10-03"
+source:
+  name: "Uzbekistan Tax Code, LexUZ"
+  url: "https://lex.uz/docs/4674893?ONDATE=01.01.2026"
+regimes:
+  turnover_tax:
+    rate: "0.04"
+    base: "annual_revenue"
+    source_article: "Tax Code, Article 467"
+    eligibility_note: "Illustrative general rate; confirm taxpayer eligibility and activity-specific rules."
+  profit_tax:
+    rate: "0.15"
+    base: "positive_taxable_profit"
+    source_article: "Tax Code, Article 337"
+    eligibility_note: "Illustrative general rate; confirm taxpayer eligibility and activity-specific rules."

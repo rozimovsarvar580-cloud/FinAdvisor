@@ -17,3 +17,10 @@ before enabling those providers for persistent API-account access.
 
 `POST /pricing/commission` accepts an annual revenue string and returns a
 progressive commission breakdown calculated by `packages/finance-engine`.
+
+Financial calculations are exposed at `POST /calc/{type}` for `annuity`,
+`differential`, `capex`, `payroll`, `tax-comparison`, `break-even`, `payback`,
+`dscr`, and `reverse-revenue`. Submit monetary and percentage values as decimal
+strings; responses include the formula and input values used. The 2026 tax
+rules are versioned with their source and effective date in the finance-engine
+package.
