@@ -14,3 +14,6 @@ Authentication routes: `POST /auth/register`, `POST /auth/login`, and
 `GET /auth/me` (Bearer JWT). Social identity sign-in uses NextAuth in the web
 application; provision linked social users through a trusted identity exchange
 before enabling those providers for persistent API-account access.
+
+`POST /pricing/commission` accepts an annual revenue string and returns a
+progressive commission breakdown calculated by `packages/finance-engine`.

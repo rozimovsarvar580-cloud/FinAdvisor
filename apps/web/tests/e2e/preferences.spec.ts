@@ -114,3 +114,52 @@ test("about page explains the product and switches audience tabs", async ({
     page.getByRole("heading", { name: "Структурируйте финансы проекта клиента" })
   ).toBeVisible();
 });
+
+test("pricing periods update, commission uses the API, and guest selects Pro", async ({
+  page
+}) => {
+  await page.route("**/api/pricing/commission", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        annual_revenue: "1100000000",
+        total_commission: "23000000.00",
+        bands: [
+          {
+            tier: "first_100m",
+            revenue_portion: "100000000",
+            rate_percent: "4.00",
+            commission: "4000000.00"
+          },
+          {
+            tier: "next_900m",
+            revenue_portion: "900000000",
+            rate_percent: "2.00",
+            commission: "18000000.00"
+          },
+          {
+            tier: "above_1b",
+            revenue_portion: "100000000",
+            rate_percent: "1.00",
+            commission: "1000000.00"
+          }
+        ]
+      })
+    });
+  });
+  await page.goto("/uz/pricing");
+
+  await expect(page.getByText("$10", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Oylik" }).click();
+  await expect(page.getByText("$40", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Yillik" }).click();
+  await expect(page.getByText("$480", { exact: true })).toBeVisible();
+
+  await page.getByLabel("Yillik tushum").fill("1100000000");
+  await page.getByRole("button", { name: "Komissiyani hisoblash" }).click();
+  await expect(page.getByText(/23000000\.00/)).toBeVisible();
+
+  await page.getByRole("button", { name: "Tanlash" }).nth(1).click();
+  await expect(page).toHaveURL(/\/uz\/signup\?plan=pro$/);
+});

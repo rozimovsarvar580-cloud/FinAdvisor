@@ -323,7 +323,132 @@
       "button": "Bepul boshlash"
     }
   },
-  "pricing": {},
+  "pricing": {
+    "hero": {
+      "eyebrow": "Oddiy va tushunarli tariflar",
+      "title": "Biznesingizga mos rejalashtirish vositalari",
+      "description": "Bepul boshlang, ehtiyojingiz oshganida mos tarifni tanlang."
+    },
+    "periods": {
+      "weekly": "Haftalik",
+      "monthly": "Oylik",
+      "yearly": "Yillik"
+    },
+    "periodSuffix": {
+      "weekly": "/ hafta",
+      "monthly": "/ oy",
+      "yearly": "/ yil"
+    },
+    "popular": "Ommabop",
+    "selectPlan": "Tanlash",
+    "checkingSession": "Tekshirilmoqda...",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Boshlash uchun asosiy vositalar",
+        "features": {
+          "onePlan": "Bitta biznes-reja",
+          "basicCalculations": "Asosiy hisob-kitoblar",
+          "webPreview": "Reja ko‘rinishini ko‘rish"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Jiddiy rejalashtirish uchun",
+        "features": {
+          "unlimitedPlans": "Ko‘proq biznes-rejalar",
+          "aiPlanWriting": "AI yordamida reja matni",
+          "documentExport": "Hujjatlarga eksport"
+        }
+      },
+      "business": {
+        "name": "Business",
+        "description": "Jamoa bilan ishlash uchun",
+        "features": {
+          "teamAccess": "Jamoa uchun foydalanish",
+          "advancedReports": "Kengaytirilgan hisobotlar",
+          "prioritySupport": "Ustuvor yordam"
+        }
+      }
+    },
+    "comparison": {
+      "eyebrow": "Taqqoslash",
+      "title": "Tariflarni yonma-yon ko‘ring",
+      "description": "O‘zingiz uchun muhim imkoniyatlarni solishtiring.",
+      "criteria": "Imkoniyat",
+      "features": {
+        "plans": {
+          "name": "Biznes-rejalar",
+          "plans": {
+            "free": "Bitta",
+            "pro": "Kengaytirilgan",
+            "business": "Kengaytirilgan"
+          }
+        },
+        "calculations": {
+          "name": "Moliyaviy hisob-kitoblar",
+          "plans": {
+            "free": "Asosiy",
+            "pro": "To‘liq",
+            "business": "To‘liq"
+          }
+        },
+        "aiWriting": {
+          "name": "AI matn yordami",
+          "plans": {
+            "free": "—",
+            "pro": "Bor",
+            "business": "Bor"
+          }
+        },
+        "exports": {
+          "name": "Hujjatga eksport",
+          "plans": {
+            "free": "—",
+            "pro": "Bor",
+            "business": "Bor"
+          }
+        },
+        "collaboration": {
+          "name": "Jamoaviy ish",
+          "plans": {
+            "free": "—",
+            "pro": "—",
+            "business": "Bor"
+          }
+        }
+      }
+    },
+    "commission": {
+      "sectionEyebrow": "Komissiya hisoblagichi",
+      "sectionTitle": "Progressiv komissiyani oldindan baholang",
+      "eyebrow": "Shaffof hisob",
+      "title": "Yillik tushum bo‘yicha hisob-kitob",
+      "description": "Yillik tushumni kiriting. Har bir stavka faqat o‘z pog‘onasidagi tushum qismiga qo‘llanadi.",
+      "tiers": {
+        "first": "Dastlabki 100 mln so‘m — 4%",
+        "second": "Keyingi 900 mln so‘m — 2%",
+        "third": "1 mlrd so‘mdan yuqori qism — 1%"
+      },
+      "progressiveNote": "Hisob progressiv: yuqori stavka butun tushumga emas, faqat tegishli pog‘ona qismiga qo‘llanadi.",
+      "inputLabel": "Yillik tushum",
+      "placeholder": "Masalan, 250000000",
+      "currency": "so‘m",
+      "calculate": "Komissiyani hisoblash",
+      "loading": "Hisoblanmoqda...",
+      "resultLabel": "Taxminiy komissiya",
+      "bandNames": {
+        "first_100m": "Dastlabki 100 mln",
+        "next_900m": "Keyingi 900 mln",
+        "above_1b": "1 mlrd dan yuqori"
+      }
+    },
+    "cta": {
+      "title": "Moliyaviy rejangizni bugun boshlang",
+      "description": "Biznes ma’lumotlaringizni kiriting va rejalashtirishni boshlang.",
+      "button": "Hisob yaratish"
+    }
+  },
   "auth": {
     "loginTitle": "Hisobingizga kiring",
     "loginSubtitle": "Moliyaviy rejangizni davom ettiring",
@@ -391,6 +516,8 @@
     "invalidCredentials": "Elektron pochta yoki parol noto‘g‘ri",
     "emailInUse": "Bu elektron pochta bilan hisob allaqachon mavjud",
     "signupFailed": "Hisob yaratib bo‘lmadi. Qayta urinib ko‘ring",
-    "connectionFailed": "Serverga ulanib bo‘lmadi. Keyinroq urinib ko‘ring"
+    "connectionFailed": "Serverga ulanib bo‘lmadi. Keyinroq urinib ko‘ring",
+    "calculatorUnavailable": "Hisoblagich xizmatiga ulanib bo‘lmadi. Keyinroq urinib ko‘ring",
+    "calculatorFailed": "Komissiyani hisoblab bo‘lmadi. Kiritilgan qiymatni tekshiring"
   }
 }

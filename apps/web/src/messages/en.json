@@ -323,7 +323,132 @@
       "button": "Get started for free"
     }
   },
-  "pricing": {},
+  "pricing": {
+    "hero": {
+      "eyebrow": "Straightforward plans",
+      "title": "Planning tools that fit your business",
+      "description": "Start for free and choose a plan that fits as your needs grow."
+    },
+    "periods": {
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "periodSuffix": {
+      "weekly": "/ week",
+      "monthly": "/ month",
+      "yearly": "/ year"
+    },
+    "popular": "Popular",
+    "selectPlan": "Choose plan",
+    "checkingSession": "Checking...",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Essential tools to get started",
+        "features": {
+          "onePlan": "One business plan",
+          "basicCalculations": "Basic calculations",
+          "webPreview": "Plan preview"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "For in-depth planning",
+        "features": {
+          "unlimitedPlans": "More business plans",
+          "aiPlanWriting": "AI-assisted plan writing",
+          "documentExport": "Document exports"
+        }
+      },
+      "business": {
+        "name": "Business",
+        "description": "For collaborative teams",
+        "features": {
+          "teamAccess": "Team access",
+          "advancedReports": "Advanced reports",
+          "prioritySupport": "Priority support"
+        }
+      }
+    },
+    "comparison": {
+      "eyebrow": "Compare",
+      "title": "Compare plans side by side",
+      "description": "Find the capabilities that matter most to your business.",
+      "criteria": "Feature",
+      "features": {
+        "plans": {
+          "name": "Business plans",
+          "plans": {
+            "free": "One",
+            "pro": "Expanded",
+            "business": "Expanded"
+          }
+        },
+        "calculations": {
+          "name": "Financial calculations",
+          "plans": {
+            "free": "Basic",
+            "pro": "Full",
+            "business": "Full"
+          }
+        },
+        "aiWriting": {
+          "name": "AI writing assistance",
+          "plans": {
+            "free": "—",
+            "pro": "Included",
+            "business": "Included"
+          }
+        },
+        "exports": {
+          "name": "Document export",
+          "plans": {
+            "free": "—",
+            "pro": "Included",
+            "business": "Included"
+          }
+        },
+        "collaboration": {
+          "name": "Team collaboration",
+          "plans": {
+            "free": "—",
+            "pro": "—",
+            "business": "Included"
+          }
+        }
+      }
+    },
+    "commission": {
+      "sectionEyebrow": "Commission calculator",
+      "sectionTitle": "Estimate the progressive commission",
+      "eyebrow": "Transparent calculation",
+      "title": "Estimate from annual revenue",
+      "description": "Enter annual revenue. Each rate applies only to the portion in its corresponding bracket.",
+      "tiers": {
+        "first": "First UZS 100 million — 4%",
+        "second": "Next UZS 900 million — 2%",
+        "third": "Above UZS 1 billion — 1%"
+      },
+      "progressiveNote": "This is progressive: each higher rate applies only to its bracket, not to all revenue.",
+      "inputLabel": "Annual revenue",
+      "placeholder": "For example, 250000000",
+      "currency": "UZS",
+      "calculate": "Calculate commission",
+      "loading": "Calculating...",
+      "resultLabel": "Estimated commission",
+      "bandNames": {
+        "first_100m": "First 100 million",
+        "next_900m": "Next 900 million",
+        "above_1b": "Above 1 billion"
+      }
+    },
+    "cta": {
+      "title": "Start your financial plan today",
+      "description": "Enter your business details and start planning.",
+      "button": "Create an account"
+    }
+  },
   "auth": {
     "loginTitle": "Log in to your account",
     "loginSubtitle": "Continue building your financial plan",
@@ -391,6 +516,8 @@
     "invalidCredentials": "Email or password is incorrect",
     "emailInUse": "An account with this email already exists",
     "signupFailed": "Could not create your account. Try again",
-    "connectionFailed": "Could not connect to the server. Try again later"
+    "connectionFailed": "Could not connect to the server. Try again later",
+    "calculatorUnavailable": "Could not connect to the calculator service. Try again later",
+    "calculatorFailed": "Could not calculate the commission. Check the value you entered"
   }
 }
