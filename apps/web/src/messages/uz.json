@@ -44,6 +44,125 @@
           "note": "Bu bo‘limlar namunasi bo‘lib, haqiqiy moliyaviy prognozlarni o‘z ichiga olmaydi."
         }
     },
+    "about": {
+        "hero": {
+          "eyebrow": "FinAdvisor haqida",
+          "title": "Nega FinAdvisor?",
+          "description": "Kichik biznes egalari uchun moliyaviy rejalashtirishni tushunarli, asosli va qulay qilish uchun.",
+          "cta": "Reja tuzishni boshlash"
+        },
+        "story": {
+          "eyebrow": "Restoran misolida",
+          "title": "G‘oyadan asoslangan qarorgacha",
+          "paragraph1": "Tasavvur qiling: siz o‘z restoraningizni ochmoqchisiz. Taomlar va joy tayyor, ammo xarajatlar, jamoa soni va kutilayotgan tushum bo‘yicha savollar ko‘p.",
+          "paragraph2": "Turli jadvallardagi taxminlar bir-biriga mos kelmasa, bankka reja tayyorlash yoki mablag‘ ehtiyojini tushuntirish qiyinlashadi.",
+          "paragraph3": "FinAdvisor ma’lumotlarni tartibga solishga, moliyaviy ko‘rsatkichlarni maxsus dvigatelda hisoblashga va natijalarni tushunarli biznes-rejaga aylantirishga yordam beradi.",
+          "exampleLabel": "Restoran loyihasi",
+          "exampleTitle": "Bitta reja, muhim savollar",
+          "example": {
+            "costs": {
+              "title": "Boshlang‘ich xarajatlar",
+              "description": "Uskuna, ta’mirlash va ishga tushirish ehtiyojlarini jamlang."
+            },
+            "team": {
+              "title": "Jamoa va faoliyat",
+              "description": "Shtat, ish haqi va kundalik ish jarayonini rejalashtiring."
+            },
+            "demand": {
+              "title": "Talab va tushum",
+              "description": "Menyu, o‘rtacha chek va mijozlar oqimi haqidagi taxminlarni kiriting."
+            }
+          }
+        },
+        "approach": {
+          "eyebrow": "Yondashuvimiz",
+          "title": "Ma’lumotdan boshqariladigan qarorgacha",
+          "description": "Har bir bosqich siz kiritgan ma’lumot va tekshiriladigan hisob-kitoblarga tayanadi.",
+          "steps": [
+            {
+              "title": "Ma’lumot kiriting",
+              "description": "Biznesingiz, xarajatlaringiz va rejalaringizni shakllantiring."
+            },
+            {
+              "title": "AI tushuntiradi",
+              "description": "Moliyaviy dvigatel hisoblagan raqamlar izohlanadi; AI ularni hisoblamaydi."
+            },
+            {
+              "title": "Taqdim eting",
+              "description": "Tartibli rejangizni bank yoki ehtimoliy hamkor bilan muhokama qiling."
+            },
+            {
+              "title": "Kuzatib boring",
+              "description": "Rejangizni ko‘rib chiqing va yangi ma’lumotlar bilan yangilang."
+            }
+          ]
+        },
+        "audience": {
+          "eyebrow": "Kimlar uchun",
+          "title": "Har bir rolga mos foyda",
+          "tabsLabel": "FinAdvisor foydalanuvchi rollari",
+          "roles": {
+            "owner": {
+              "label": "Tadbirkor",
+              "title": "Biznes egasi uchun aniqroq reja",
+              "description": "Restoran g‘oyasini tuzilmali moliyaviy reja bilan tayyorlang, xarajat va jamoa ehtiyojlarini ko‘rib chiqing, keyingi qadamlarni anglang."
+            },
+            "accountant": {
+              "label": "Buxgalter",
+              "title": "Mijoz loyihasining moliyasini tartiblang",
+              "description": "Kiritilgan taxminlar va ularning hisob-kitobdagi natijalarini bir joyda ko‘rib, tadbirkorga biznes-rejani tayyorlashda ko‘maklashing."
+            },
+            "investor": {
+              "label": "Investor",
+              "title": "Loyiha taxminlarini tushunarli ko‘ring",
+              "description": "Loyiha egasi tuzgan reja va asosiy taxminlarni ko‘rib chiqing. Bu vosita tekshiruv yoki mustaqil tahlilning o‘rnini bosmaydi."
+            }
+          }
+        },
+        "comparison": {
+          "eyebrow": "Maqsadli yondashuv",
+          "title": "FinAdvisor va umumiy AI",
+          "description": "FinAdvisor biznes-reja oqimiga mo‘ljallangan: moliyaviy natijalar maxsus dvigatelda hisoblanib, keyin izohlanadi.",
+          "headers": {
+            "criteria": "Mezon",
+            "finadvisor": "FinAdvisor",
+            "generalAi": "Umumiy AI vositasi"
+          },
+          "rows": {
+            "calculations": {
+              "label": "Moliyaviy hisob",
+              "finadvisor": "Alohida moliyaviy dvigatel bajaradi",
+              "generalAi": "Natija modelga va so‘rovga bog‘liq"
+            },
+            "localRules": {
+              "label": "Mahalliy qoidalar",
+              "finadvisor": "Versiyalangan manba va sanali sozlamalar",
+              "generalAi": "Mahalliy qoidalar har doim yangilangan bo‘lmasligi mumkin"
+            },
+            "explanations": {
+              "label": "Izohlar",
+              "finadvisor": "Hisoblangan raqamlar asosida tuziladi",
+              "generalAi": "Berilgan kontekst va promptga tayanadi"
+            },
+            "documents": {
+              "label": "Reja tuzilishi",
+              "finadvisor": "Kichik biznes rejasi oqimiga mos",
+              "generalAi": "Umumiy maqsadli matn yaratish"
+            }
+          }
+        },
+        "trust": {
+          "eyebrow": "Ishonch va mas’uliyat",
+          "title": "Raqamlarni ko‘ring, taxminlarni tekshiring",
+          "description": "FinAdvisor kiritilgan ma’lumot va sozlangan qoidalar asosida natija tayyorlaydi. Siz taxminlarni ko‘rib chiqishingiz, kerak bo‘lsa mutaxassis bilan maslahatlashishingiz lozim.",
+          "warning": "AI xatosiz emas va hech qanday reja kredit, foyda yoki investitsiya qaytimini kafolatlamaydi."
+        },
+        "cta": {
+          "title": "Keyingi qadamingizni aniqroq rejalashtiring",
+          "description": "Biznesingiz haqida ma’lumot kiriting va reja tuzishni boshlang.",
+          "button": "Bepul boshlash"
+        }
+    },
     "problem": {
       "eyebrow": "Muammo",
       "title": "Yaxshi g‘oya aniq reja bilan boshlanadi",

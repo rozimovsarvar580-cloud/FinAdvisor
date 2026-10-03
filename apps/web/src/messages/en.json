@@ -44,6 +44,125 @@
         "note": "This is a sample outline and does not contain actual financial forecasts."
       }
     },
+    "about": {
+      "hero": {
+        "eyebrow": "About FinAdvisor",
+        "title": "Why FinAdvisor?",
+        "description": "We make financial planning clear, grounded, and accessible for small-business owners.",
+        "cta": "Start your plan"
+      },
+      "story": {
+        "eyebrow": "A restaurant example",
+        "title": "From an idea to a grounded decision",
+        "paragraph1": "Imagine you want to open a restaurant. You have a menu and location in mind, but questions remain about costs, team size, and expected revenue.",
+        "paragraph2": "When assumptions across different spreadsheets do not align, preparing a plan for a bank or explaining your funding needs becomes harder.",
+        "paragraph3": "FinAdvisor helps organize your inputs, calculate indicators in a dedicated engine, and turn the results into an understandable business plan.",
+        "exampleLabel": "Restaurant project",
+        "exampleTitle": "One plan, the essential questions",
+        "example": {
+          "costs": {
+            "title": "Startup costs",
+            "description": "Bring together equipment, renovation, and launch requirements."
+          },
+          "team": {
+            "title": "Team and operations",
+            "description": "Plan staffing, payroll, and day-to-day operations."
+          },
+          "demand": {
+            "title": "Demand and revenue",
+            "description": "Enter assumptions about your menu, average check, and customer traffic."
+          }
+        }
+      },
+      "approach": {
+        "eyebrow": "Our approach",
+        "title": "From information to an informed decision",
+        "description": "Each step is grounded in your inputs and verifiable calculations.",
+        "steps": [
+          {
+            "title": "Enter your information",
+            "description": "Describe your business, costs, and plans."
+          },
+          {
+            "title": "AI explains",
+            "description": "AI explains figures calculated by the finance engine; it does not calculate them."
+          },
+          {
+            "title": "Present your plan",
+            "description": "Discuss your structured plan with a bank or potential partner."
+          },
+          {
+            "title": "Review and update",
+            "description": "Revisit your plan and update it as new information becomes available."
+          }
+        ]
+      },
+      "audience": {
+        "eyebrow": "Who it's for",
+        "title": "Useful for different roles",
+        "tabsLabel": "FinAdvisor user roles",
+        "roles": {
+          "owner": {
+            "label": "Business owner",
+            "title": "A clearer plan for business owners",
+            "description": "Shape a restaurant idea into a structured financial plan, review costs and staffing needs, and understand possible next steps."
+          },
+          "accountant": {
+            "label": "Accountant",
+            "title": "Organize a client's project finances",
+            "description": "Review submitted assumptions and calculation outcomes in one place while helping an entrepreneur prepare a business plan."
+          },
+          "investor": {
+            "label": "Investor",
+            "title": "Review project assumptions in a clear format",
+            "description": "Explore a project owner's plan and key assumptions. This tool does not replace due diligence or independent analysis."
+          }
+        }
+      },
+      "comparison": {
+        "eyebrow": "A focused approach",
+        "title": "FinAdvisor and general-purpose AI",
+        "description": "FinAdvisor is designed for business planning: a dedicated engine calculates financial outputs before they are explained.",
+        "headers": {
+          "criteria": "Criteria",
+          "finadvisor": "FinAdvisor",
+          "generalAi": "General AI tool"
+        },
+        "rows": {
+          "calculations": {
+            "label": "Financial calculations",
+            "finadvisor": "Handled by a dedicated finance engine",
+            "generalAi": "Output depends on the model and prompt"
+          },
+          "localRules": {
+            "label": "Local rules",
+            "finadvisor": "Versioned settings with sources and dates",
+            "generalAi": "Local rules may not always be current"
+          },
+          "explanations": {
+            "label": "Explanations",
+            "finadvisor": "Based on calculated values",
+            "generalAi": "Depends on the context in the prompt"
+          },
+          "documents": {
+            "label": "Plan structure",
+            "finadvisor": "Designed for small-business planning",
+            "generalAi": "General-purpose text generation"
+          }
+        }
+      },
+      "trust": {
+        "eyebrow": "Trust and responsibility",
+        "title": "Review the figures and validate assumptions",
+        "description": "FinAdvisor prepares results from your inputs and configured rules. Review assumptions and consult a qualified professional when needed.",
+        "warning": "AI can make mistakes, and no plan guarantees a loan, profit, or investment return."
+      },
+      "cta": {
+        "title": "Plan your next step with greater clarity",
+        "description": "Enter your business details and start building a plan.",
+        "button": "Get started for free"
+      }
+    },
     "problem": {
       "eyebrow": "The challenge",
       "title": "A strong idea starts with a clear plan",

@@ -93,3 +93,24 @@ test("landing page shows the key sections and an accessible FAQ accordion", asyn
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(page.getByRole("link", { name: "Reja tuzishni boshlash" }).first()).toBeVisible();
 });
+
+test("about page explains the product and switches audience tabs", async ({
+  page
+}) => {
+  await page.goto("/ru/about");
+
+  await expect(
+    page.getByRole("heading", { name: "Почему FinAdvisor?" })
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "FinAdvisor и универсальный AI" })
+  ).toBeVisible();
+  await expect(
+    page.getByText("AI может ошибаться, а бизнес-план не гарантирует кредит, прибыль или возврат инвестиций.")
+  ).toBeVisible();
+
+  await page.getByRole("tab", { name: "Бухгалтер" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Структурируйте финансы проекта клиента" })
+  ).toBeVisible();
+});
