@@ -9,7 +9,7 @@ test("locale switch keeps the current route and stores the choice", async ({
   await expect(page).toHaveURL(/\/en$/);
   await expect(
     page.getByRole("heading", {
-      name: "Clear financial decisions for your business"
+      name: "Run your business with confidence and clear numbers"
     })
   ).toBeVisible();
   await expect(page.getByRole("combobox", { name: "Language" })).toHaveValue(
@@ -54,4 +54,42 @@ test("auth pages translate and protected paths preserve the callback URL", async
   ).toBeVisible();
   await expect(page.getByLabel("Тип аккаунта")).toBeVisible();
   await expect(page.getByText("Принимаю условия использования и политику конфиденциальности")).toBeVisible();
+});
+
+test("landing page shows the key sections and an accessible FAQ accordion", async ({
+  page
+}) => {
+  await page.goto("/uz");
+
+  await expect(
+    page.getByRole("heading", {
+      name: "Biznesingizni raqamlar bilan ishonchli boshqaring"
+    })
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Yaxshi g‘oya aniq reja bilan boshlanadi" })
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Biznes rejangiz uchun kerakli vositalar" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ko‘p beriladigan savollar" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Namuna PDF'ni ko‘rish" }).click();
+  await expect(
+    page.getByRole("dialog", { name: "Biznes-reja namunasi" })
+  ).toBeVisible();
+  await expect(
+    page.getByText("Moliyaviy reja va hisoblar", { exact: true })
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+
+  const question = page.getByRole("button", {
+    name: "FinAdvisor kimlar uchun mo‘ljallangan?"
+  });
+  await question.click();
+  await expect(question).toHaveAttribute("aria-expanded", "true");
+  await expect(
+    page.getByText(/O‘zbekistonda kichik biznes boshlayotgan/)
+  ).toBeVisible();
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.getByRole("link", { name: "Reja tuzishni boshlash" }).first()).toBeVisible();
 });

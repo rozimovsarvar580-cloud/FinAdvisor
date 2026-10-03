@@ -13,6 +13,197 @@
   "home": {
     "tagline": "Biznesingiz uchun aniq moliyaviy qarorlar"
   },
+  "landing": {
+    "hero": {
+      "badge": "O‘zbekiston kichik biznesi uchun",
+      "title": "Biznesingizni raqamlar bilan ishonchli boshqaring",
+      "description": "Restoraningiz uchun moliyaviy reja tuzing, xarajat va tushumni tushuning hamda bankka tayyor biznes-reja oling.",
+      "primaryCta": "Reja tuzishni boshlash",
+      "secondaryCta": "Namuna PDF'ni ko‘rish",
+      "footnote": "Raqamlar aniq hisoblanadi. AI ularni sodda tilda tushuntiradi.",
+      "calculator": {
+        "eyebrow": "Restoran rejangiz",
+        "title": "Hisob-kitobga birinchi qadam",
+        "seats": "O‘rindiqlar",
+        "seatsValue": "Siz belgilaysiz",
+        "dailyOrders": "Kunlik buyurtmalar",
+        "dailyOrdersValue": "Siz belgilaysiz",
+        "estimate": "Shaxsiy hisob-kitob",
+        "preview": "Namuna",
+        "note": "O‘z biznesingiz ma’lumotlari bilan boshlang"
+        },
+        "samplePlan": {
+          "title": "Biznes-reja namunasi",
+          "description": "Rejangizda bo‘lishi mumkin bo‘lgan asosiy bo‘limlarni ko‘ring.",
+          "sections": {
+            "overview": "Loyiha haqida qisqacha ma’lumot",
+            "market": "Bozor va mijozlar",
+            "operations": "Jamoa va faoliyat rejasi",
+            "finance": "Moliyaviy reja va hisoblar"
+          },
+          "note": "Bu bo‘limlar namunasi bo‘lib, haqiqiy moliyaviy prognozlarni o‘z ichiga olmaydi."
+        }
+    },
+    "problem": {
+      "eyebrow": "Muammo",
+      "title": "Yaxshi g‘oya aniq reja bilan boshlanadi",
+      "description": "Kichik biznesni boshlashda muhim moliyaviy savollarga ishonchli javob topish qiyin bo‘lishi mumkin.",
+      "cards": [
+        {
+          "title": "Xarajatlar tarqoq",
+          "description": "Uskuna, ijara va ish haqi xarajatlari bir joyga jamlanmaydi."
+        },
+        {
+          "title": "Tushumni taxmin qilish qiyin",
+          "description": "Maqsad va kundalik ko‘rsatkichlar o‘rtasidagi bog‘liqlik noaniq qoladi."
+        },
+        {
+          "title": "Bank reja so‘raydi",
+          "description": "Moliyalashtirish uchun tartibli va asoslangan biznes-reja kerak."
+        },
+        {
+          "title": "Qarorlar noaniq",
+          "description": "Raqamlarni solishtirmasdan qilingan qarorlar xavfni oshiradi."
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "Jarayon",
+      "title": "Rejadan qarorgacha to‘rt qadam",
+      "description": "Murakkab jadvallar o‘rniga yo‘naltirilgan sodda jarayon.",
+      "items": [
+        {
+          "title": "Biznesingizni tanishtiring",
+          "description": "Restoran formati, joyi, menyusi va jamoasi haqida ma’lumot bering."
+        },
+        {
+          "title": "Moliyaviy modelni hisoblang",
+          "description": "Moliyaviy dvigatel daromad, xarajat va asosiy ko‘rsatkichlarni hisoblaydi."
+        },
+        {
+          "title": "Rejani ko‘rib chiqing",
+          "description": "Hisoblangan natijalar tushunarli izohlar va bo‘limlar bilan taqdim etiladi."
+        },
+        {
+          "title": "Keyingi qadamingizni belgilang",
+          "description": "Rejani bank yoki hamkor bilan muhokama qilishga tayyorlang."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "Imkoniyatlar",
+      "title": "Biznes rejangiz uchun kerakli vositalar",
+      "description": "Barcha asosiy moliyaviy ma’lumotlar yagona ish jarayonida.",
+      "items": [
+        {
+          "title": "Biznes-reja",
+          "description": "Restoraningizga mos tuzilgan reja bo‘limlari."
+        },
+        {
+          "title": "Moliyaviy hisob-kitoblar",
+          "description": "Muhim ko‘rsatkichlarning izohli hisoblari."
+        },
+        {
+          "title": "Xarajatlar rejasi",
+          "description": "Boshlang‘ich sarmoya va joriy xarajatlar."
+        },
+        {
+          "title": "Jamoa va ish haqi",
+          "description": "Shtat tarkibi hamda ish haqi fondini rejalash."
+        },
+        {
+          "title": "Zararsizlik nuqtasi",
+          "description": "Xarajatlar qoplanishi uchun zarur ko‘rsatkichlar."
+        },
+        {
+          "title": "Ssenariylarni solishtirish",
+          "description": "Rejadagi o‘zgarishlar ta’sirini ko‘rib chiqing."
+        },
+        {
+          "title": "Tushunarli izohlar",
+          "description": "AI tayyor hisob natijalarini sodda tilda tushuntiradi."
+        },
+        {
+          "title": "Eksportga tayyor",
+          "description": "Rejangizni qulay hujjat ko‘rinishida olishga tayyorlang."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "Tariflar",
+      "title": "Boshlash uchun mos tarifni tanlang",
+      "description": "Rejalashtirishdan boshlang va ehtiyojingizga qarab kengaytiring.",
+      "plans": {
+        "free": {
+          "name": "Bepul",
+          "description": "Asosiy vositalar bilan tanishing",
+          "benefits": [
+            "Bitta loyiha bilan boshlang",
+            "Asosiy reja tuzilmasi",
+            "Hisob-kitob natijalarini ko‘ring"
+          ]
+        },
+        "pro": {
+          "name": "Pro",
+          "description": "Rejangizni chuqurroq ishlang",
+          "benefits": [
+            "Kengaytirilgan hisob-kitoblar",
+            "AI yordamida reja matni",
+            "Ko‘proq loyiha imkoniyatlari"
+          ]
+        },
+        "business": {
+          "name": "Business",
+          "description": "Jamoa bilan samarali ishlang",
+          "benefits": [
+            "Biznes uchun kengaytirilgan vositalar",
+            "Hamkorlar bilan ulashish",
+            "Ustuvor yordam"
+          ]
+        }
+      },
+      "cta": "Tariflarni solishtirish"
+    },
+    "investors": {
+      "eyebrow": "Investorlar uchun",
+      "title": "Tartibli ma’lumot asosida istiqbolli loyihalarni baholang",
+      "description": "Loyiha egalari rejalari va moliyaviy taxminlarini tushunarli shaklda tayyorlaydi — bu hamkorlik haqida mazmunli suhbatni boshlashga yordam beradi.",
+      "cta": "Loyiha rejasini ko‘rish"
+    },
+    "faq": {
+      "eyebrow": "Savol-javob",
+      "title": "Ko‘p beriladigan savollar",
+      "description": "FinAdvisor haqida bilishingiz kerak bo‘lgan asosiy ma’lumotlar.",
+      "items": {
+        "q1": {
+          "question": "FinAdvisor kimlar uchun mo‘ljallangan?",
+          "answer": "O‘zbekistonda kichik biznes boshlayotgan yoki rivojlantirayotgan tadbirkorlar uchun. Dastlab restoran loyihalariga e’tibor qaratamiz."
+        },
+        "q2": {
+          "question": "AI moliyaviy natijalarni o‘zi hisoblaydimi?",
+          "answer": "Yo‘q. Barcha moliyaviy hisob-kitoblarni alohida moliyaviy dvigatel bajaradi. AI faqat tayyor natijalarni izohlaydi va matn tuzadi."
+        },
+        "q3": {
+          "question": "Yaratilgan reja bank krediti kafolatimi?",
+          "answer": "Yo‘q. Biznes-reja ma’lumotni tartibga solishga yordam beradi, ammo kredit berish qarorini bank mustaqil qabul qiladi."
+        },
+        "q4": {
+          "question": "Qanday ma’lumotlarni tayyorlashim kerak?",
+          "answer": "Biznes formati va joylashuvi, taxminiy menyu va narxlar, xodimlar, uskunalar hamda moliyalashtirish maqsadi haqida ma’lumot."
+        },
+        "q5": {
+          "question": "Ma’lumotlarim bo‘yicha maslahat beriladimi?",
+          "answer": "FinAdvisor rejalashtirish vositasi bo‘lib, rasmiy moliyaviy, soliq yoki yuridik maslahat o‘rnini bosmaydi."
+        }
+      }
+    },
+    "cta": {
+      "eyebrow": "Birinchi qadam",
+      "title": "Biznes g‘oyangizni aniq rejaga aylantiring",
+      "description": "Kerakli ma’lumotlarni kiriting va rejalashtirishni boshlang.",
+      "button": "Bepul boshlash"
+    }
+  },
   "pricing": {},
   "auth": {
     "loginTitle": "Hisobingizga kiring",

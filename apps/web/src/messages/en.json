@@ -13,6 +13,197 @@
   "home": {
     "tagline": "Clear financial decisions for your business"
   },
+  "landing": {
+    "hero": {
+      "badge": "For Uzbekistan's small businesses",
+      "title": "Run your business with confidence and clear numbers",
+      "description": "Build a financial plan for your restaurant, understand costs and revenue, and prepare a bank-ready business plan.",
+      "primaryCta": "Start your plan",
+      "secondaryCta": "View sample PDF",
+      "footnote": "Calculations are exact. AI explains them in plain language.",
+      "calculator": {
+        "eyebrow": "Your restaurant plan",
+        "title": "Start with the essentials",
+        "seats": "Seats",
+        "seatsValue": "Set by you",
+        "dailyOrders": "Daily orders",
+        "dailyOrdersValue": "Set by you",
+        "estimate": "Your estimate",
+        "preview": "Preview",
+        "note": "Start with your business details"
+      },
+      "samplePlan": {
+        "title": "Business plan sample",
+        "description": "Preview the key sections that can make up your plan.",
+        "sections": {
+          "overview": "Project overview",
+          "market": "Market and customers",
+          "operations": "Team and operating plan",
+          "finance": "Financial plan and calculations"
+        },
+        "note": "This is a sample outline and does not contain actual financial forecasts."
+      }
+    },
+    "problem": {
+      "eyebrow": "The challenge",
+      "title": "A strong idea starts with a clear plan",
+      "description": "Starting a small business can make it difficult to get reliable answers to important financial questions.",
+      "cards": [
+        {
+          "title": "Costs are scattered",
+          "description": "Equipment, rent, and payroll costs are hard to bring together."
+        },
+        {
+          "title": "Revenue is hard to estimate",
+          "description": "The connection between goals and daily performance can be unclear."
+        },
+        {
+          "title": "Banks need a plan",
+          "description": "Financing applications need a structured, well-grounded business plan."
+        },
+        {
+          "title": "Decisions feel uncertain",
+          "description": "Making decisions without comparing the numbers can increase risk."
+        }
+      ]
+    },
+    "steps": {
+      "eyebrow": "The process",
+      "title": "From plan to next step in four stages",
+      "description": "A guided, simple process instead of complicated spreadsheets.",
+      "items": [
+        {
+          "title": "Tell us about your business",
+          "description": "Share your restaurant format, location, menu, and team."
+        },
+        {
+          "title": "Build a financial model",
+          "description": "The finance engine calculates revenue, costs, and key indicators."
+        },
+        {
+          "title": "Review your plan",
+          "description": "Results are presented in clear sections with helpful explanations."
+        },
+        {
+          "title": "Choose your next step",
+          "description": "Prepare your plan to discuss with a bank or business partner."
+        }
+      ]
+    },
+    "features": {
+      "eyebrow": "Features",
+      "title": "Tools for your business plan",
+      "description": "Keep your essential financial information in one workflow.",
+      "items": [
+        {
+          "title": "Business plan",
+          "description": "Plan sections tailored to your restaurant."
+        },
+        {
+          "title": "Financial calculations",
+          "description": "Key indicators calculated with clear explanations."
+        },
+        {
+          "title": "Cost planning",
+          "description": "Initial investment and ongoing expenses."
+        },
+        {
+          "title": "Team and payroll",
+          "description": "Plan headcount and payroll requirements."
+        },
+        {
+          "title": "Break-even point",
+          "description": "Understand the indicators needed to cover costs."
+        },
+        {
+          "title": "Compare scenarios",
+          "description": "Explore the impact of changes to your plan."
+        },
+        {
+          "title": "Clear explanations",
+          "description": "AI explains completed calculation results in plain language."
+        },
+        {
+          "title": "Ready to export",
+          "description": "Prepare your plan for a convenient document format."
+        }
+      ]
+    },
+    "pricing": {
+      "eyebrow": "Plans",
+      "title": "Choose a plan that fits your start",
+      "description": "Start planning and expand as your needs grow.",
+      "plans": {
+        "free": {
+          "name": "Free",
+          "description": "Explore the essential tools",
+          "benefits": [
+            "Start with one project",
+            "Core business plan structure",
+            "View calculation results"
+          ]
+        },
+        "pro": {
+          "name": "Pro",
+          "description": "Build a more detailed plan",
+          "benefits": [
+            "Advanced calculations",
+            "AI-assisted plan writing",
+            "More project options"
+          ]
+        },
+        "business": {
+          "name": "Business",
+          "description": "Work effectively with your team",
+          "benefits": [
+            "Expanded business tools",
+            "Share with partners",
+            "Priority support"
+          ]
+        }
+      },
+      "cta": "Compare plans"
+    },
+    "investors": {
+      "eyebrow": "For investors",
+      "title": "Evaluate promising projects with structured information",
+      "description": "Business owners can present plans and financial assumptions clearly, helping start a more meaningful conversation about partnership.",
+      "cta": "Explore a project plan"
+    },
+    "faq": {
+      "eyebrow": "Questions and answers",
+      "title": "Frequently asked questions",
+      "description": "The essentials you should know about FinAdvisor.",
+      "items": {
+        "q1": {
+          "question": "Who is FinAdvisor for?",
+          "answer": "Entrepreneurs starting or growing a small business in Uzbekistan. We are beginning with restaurant projects."
+        },
+        "q2": {
+          "question": "Does AI calculate financial results by itself?",
+          "answer": "No. A dedicated finance engine performs every financial calculation. AI only explains supplied results and writes text."
+        },
+        "q3": {
+          "question": "Does a business plan guarantee a bank loan?",
+          "answer": "No. A business plan helps organize information, but each bank makes its own lending decision."
+        },
+        "q4": {
+          "question": "What information should I prepare?",
+          "answer": "Your business format and location, an initial menu and pricing, staff, equipment, and financing goals."
+        },
+        "q5": {
+          "question": "Is this personalized financial advice?",
+          "answer": "FinAdvisor is a planning tool and does not replace formal financial, tax, or legal advice."
+        }
+      }
+    },
+    "cta": {
+      "eyebrow": "Your first step",
+      "title": "Turn your business idea into a clear plan",
+      "description": "Enter the details you have and start planning.",
+      "button": "Get started for free"
+    }
+  },
   "pricing": {},
   "auth": {
     "loginTitle": "Log in to your account",
