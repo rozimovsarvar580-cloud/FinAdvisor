@@ -34,3 +34,24 @@ test("theme control switches between dark and light without a flash", async ({
   await expect(page.locator("html")).not.toHaveClass(/dark/);
   await expect(toggle).toHaveAttribute("aria-pressed", "false");
 });
+
+test("auth pages translate and protected paths preserve the callback URL", async ({
+  page
+}) => {
+  await page.goto("/en/app/plan?from=wizard");
+
+  await expect(page).toHaveURL(
+    /\/en\/login\?callbackUrl=.*%2Fen%2Fapp%2Fplan/
+  );
+  await expect(
+    page.getByRole("heading", { name: "Log in to your account" })
+  ).toBeVisible();
+  await expect(page.getByLabel("Email")).toBeVisible();
+
+  await page.goto("/ru/signup");
+  await expect(
+    page.getByRole("heading", { name: "Создайте аккаунт" })
+  ).toBeVisible();
+  await expect(page.getByLabel("Тип аккаунта")).toBeVisible();
+  await expect(page.getByText("Принимаю условия использования и политику конфиденциальности")).toBeVisible();
+});

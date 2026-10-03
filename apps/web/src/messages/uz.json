@@ -14,7 +14,44 @@
     "tagline": "Biznesingiz uchun aniq moliyaviy qarorlar"
   },
   "pricing": {},
-  "auth": {},
+  "auth": {
+    "loginTitle": "Hisobingizga kiring",
+    "loginSubtitle": "Moliyaviy rejangizni davom ettiring",
+    "signupTitle": "Hisob yarating",
+    "signupSubtitle": "Biznesingiz uchun aniq reja tuzishni boshlang",
+    "name": "Ism",
+    "email": "Elektron pochta",
+    "password": "Parol",
+    "role": "Hisob turi",
+    "rememberMe": "Meni eslab qol",
+    "forgotPassword": "Parolni unutdingizmi?",
+    "termsConsent": "Foydalanish shartlari va maxfiylik siyosatiga roziman",
+    "terms": "Foydalanish shartlari",
+    "loginSubmit": "Kirish",
+    "signupSubmit": "Hisob yaratish",
+    "loading": "Yuklanmoqda...",
+    "noAccount": "Hisobingiz yo‘qmi?",
+    "haveAccount": "Hisobingiz bormi?",
+    "continueWith": "Yoki quyidagilar bilan davom eting",
+    "google": "Google bilan davom etish",
+    "facebook": "Facebook bilan davom etish",
+    "strength": "Parol kuchi",
+    "strengthLevels": {
+      "weak": "Zaif",
+      "fair": "O‘rtacha",
+      "good": "Yaxshi",
+      "strong": "Kuchli"
+    },
+    "roles": {
+      "tadbirkor": "Tadbirkor",
+      "buxgalter": "Buxgalter",
+      "investor": "Investor"
+    },
+    "artTitle": "Moliyangizni ishonch bilan rejalashtiring",
+    "artDescription": "Biznesingizning muhim ko‘rsatkichlarini bir joyda ko‘ring",
+    "revenue": "Oylik tushum",
+    "profit": "Sof foyda"
+  },
   "common": {
     "language": "Til",
     "theme": "Mavzuni almashtirish",
@@ -35,5 +72,15 @@
       "terms": "Foydalanish shartlari"
     }
   },
-  "errors": {}
+  "errors": {
+    "nameRequired": "Ismingizni kiriting",
+    "emailRequired": "To‘g‘ri elektron pochta manzilini kiriting",
+    "passwordTooShort": "Parol kamida 8 belgidan iborat bo‘lishi kerak",
+    "passwordTooLong": "Parol 128 belgidan oshmasligi kerak",
+    "termsRequired": "Davom etish uchun shartlarga rozilik bering",
+    "invalidCredentials": "Elektron pochta yoki parol noto‘g‘ri",
+    "emailInUse": "Bu elektron pochta bilan hisob allaqachon mavjud",
+    "signupFailed": "Hisob yaratib bo‘lmadi. Qayta urinib ko‘ring",
+    "connectionFailed": "Serverga ulanib bo‘lmadi. Keyinroq urinib ko‘ring"
+  }
 }

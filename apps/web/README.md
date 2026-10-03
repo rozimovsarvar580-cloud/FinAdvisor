@@ -5,6 +5,10 @@ Next.js 14 App Router application using TypeScript and Tailwind CSS.
 From the repository root, run `npm install`, then `npm run dev --workspace apps/web`.
 Visit `http://localhost:3000/uz`.
 
+Set `NEXTAUTH_SECRET` and `JWT_SECRET` in the repository `.env` file. Google and
+Facebook sign-in are enabled when their corresponding client ID and secret are
+configured; email/password authentication is handled by the FastAPI service.
+
 Checks: `npm run lint --workspace apps/web`, `npm test --workspace apps/web`,
 `npm run test:e2e --workspace apps/web`, and
 `npm run build --workspace apps/web`. Playwright's Chromium browser must be

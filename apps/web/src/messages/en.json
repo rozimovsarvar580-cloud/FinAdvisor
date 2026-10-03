@@ -14,7 +14,44 @@
     "tagline": "Clear financial decisions for your business"
   },
   "pricing": {},
-  "auth": {},
+  "auth": {
+    "loginTitle": "Log in to your account",
+    "loginSubtitle": "Continue building your financial plan",
+    "signupTitle": "Create an account",
+    "signupSubtitle": "Start building a clear plan for your business",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "role": "Account type",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "termsConsent": "I agree to the Terms of Service and Privacy Policy",
+    "terms": "Terms of Service",
+    "loginSubmit": "Log in",
+    "signupSubmit": "Create account",
+    "loading": "Loading...",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "continueWith": "Or continue with",
+    "google": "Continue with Google",
+    "facebook": "Continue with Facebook",
+    "strength": "Password strength",
+    "strengthLevels": {
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong"
+    },
+    "roles": {
+      "tadbirkor": "Business owner",
+      "buxgalter": "Accountant",
+      "investor": "Investor"
+    },
+    "artTitle": "Plan your finances with confidence",
+    "artDescription": "See your business's key metrics in one place",
+    "revenue": "Monthly revenue",
+    "profit": "Net profit"
+  },
   "common": {
     "language": "Language",
     "theme": "Toggle theme",
@@ -35,5 +72,15 @@
       "terms": "Terms of service"
     }
   },
-  "errors": {}
+  "errors": {
+    "nameRequired": "Enter your name",
+    "emailRequired": "Enter a valid email address",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordTooLong": "Password must be no longer than 128 characters",
+    "termsRequired": "Agree to the terms to continue",
+    "invalidCredentials": "Email or password is incorrect",
+    "emailInUse": "An account with this email already exists",
+    "signupFailed": "Could not create your account. Try again",
+    "connectionFailed": "Could not connect to the server. Try again later"
+  }
 }
