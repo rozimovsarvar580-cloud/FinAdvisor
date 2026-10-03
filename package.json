@@ -1,0 +1,12 @@
+{
+  "name": "finadvisor",
+  "private": true,
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "lint": "npm --workspace apps/web run lint",
+    "test": "npm --workspace apps/web run test",
+    "build": "npm --workspace apps/web run build"
+  }
+}

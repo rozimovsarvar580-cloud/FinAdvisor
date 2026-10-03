@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/finadvisor_api/__init__.py
+src/finadvisor_api/main.py
+src/finadvisor_api.egg-info/PKG-INFO
+src/finadvisor_api.egg-info/SOURCES.txt
+src/finadvisor_api.egg-info/dependency_links.txt
+src/finadvisor_api.egg-info/requires.txt
+src/finadvisor_api.egg-info/top_level.txt
+tests/test_health.py

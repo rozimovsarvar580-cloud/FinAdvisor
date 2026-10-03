@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+src/finadvisor_finance_engine.egg-info/PKG-INFO
+src/finadvisor_finance_engine.egg-info/SOURCES.txt
+src/finadvisor_finance_engine.egg-info/dependency_links.txt
+src/finadvisor_finance_engine.egg-info/requires.txt
+src/finadvisor_finance_engine.egg-info/top_level.txt
+src/finance_engine/__init__.py
+tests/test_package.py
