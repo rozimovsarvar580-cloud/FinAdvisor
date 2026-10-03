@@ -5,6 +5,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 import finadvisor_api.models
+import finadvisor_api.knowledge
 
 config = context.config
 if config.config_file_name is not None:
