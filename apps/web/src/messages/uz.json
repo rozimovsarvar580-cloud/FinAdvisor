@@ -1,0 +1,39 @@
+{
+  "nav": {
+    "features": "Imkoniyatlar",
+    "pricing": "Narxlar",
+    "about": "Biz haqimizda",
+    "login": "Kirish",
+    "signup": "Boshlash",
+    "openMenu": "Menyuni ochish",
+    "closeMenu": "Menyuni yopish",
+    "primaryNavigation": "Asosiy navigatsiya",
+    "mobileNavigation": "Mobil navigatsiya"
+  },
+  "home": {
+    "tagline": "Biznesingiz uchun aniq moliyaviy qarorlar"
+  },
+  "pricing": {},
+  "auth": {},
+  "common": {
+    "language": "Til",
+    "theme": "Mavzuni almashtirish",
+    "localeNames": {
+      "uz": "O‘zbekcha",
+      "ru": "Русский",
+      "en": "English"
+    },
+    "disclaimer": "FinAdvisor taqdim etgan ma’lumotlar umumiy maqsadlar uchun. Ular moliyaviy, soliq yoki yuridik maslahat o‘rnini bosmaydi.",
+    "footer": {
+      "product": "Mahsulot",
+      "company": "Kompaniya",
+      "resources": "Resurslar",
+      "account": "Hisob",
+      "help": "Yordam markazi",
+      "contact": "Bog‘lanish",
+      "privacy": "Maxfiylik siyosati",
+      "terms": "Foydalanish shartlari"
+    }
+  },
+  "errors": {}
+}

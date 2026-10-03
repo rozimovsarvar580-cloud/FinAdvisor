@@ -1,0 +1,39 @@
+{
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "about": "About us",
+    "login": "Log in",
+    "signup": "Get started",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "primaryNavigation": "Primary navigation",
+    "mobileNavigation": "Mobile navigation"
+  },
+  "home": {
+    "tagline": "Clear financial decisions for your business"
+  },
+  "pricing": {},
+  "auth": {},
+  "common": {
+    "language": "Language",
+    "theme": "Toggle theme",
+    "localeNames": {
+      "uz": "O‘zbekcha",
+      "ru": "Русский",
+      "en": "English"
+    },
+    "disclaimer": "FinAdvisor information is for general purposes and does not replace financial, tax, or legal advice.",
+    "footer": {
+      "product": "Product",
+      "company": "Company",
+      "resources": "Resources",
+      "account": "Account",
+      "help": "Help center",
+      "contact": "Contact",
+      "privacy": "Privacy policy",
+      "terms": "Terms of service"
+    }
+  },
+  "errors": {}
+}

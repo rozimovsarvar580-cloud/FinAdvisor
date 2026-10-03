@@ -6,4 +6,6 @@ From the repository root, run `npm install`, then `npm run dev --workspace apps/
 Visit `http://localhost:3000/uz`.
 
 Checks: `npm run lint --workspace apps/web`, `npm test --workspace apps/web`,
-and `npm run build --workspace apps/web`.
+`npm run test:e2e --workspace apps/web`, and
+`npm run build --workspace apps/web`. Playwright's Chromium browser must be
+installed with `npx playwright install chromium`.
