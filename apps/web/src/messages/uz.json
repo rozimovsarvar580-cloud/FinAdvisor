@@ -531,7 +531,9 @@
     "analysisFailed": "Hujjat tahlil qilinmadi. Faylni tekshirib, qayta urinib ko‘ring",
     "analysisUnavailable": "Hujjat tahlili xizmatiga ulanib bo‘lmadi",
     "chatAIUnavailable": "AI chat hozircha ishlamayapti. Keyinroq urinib ko‘ring",
-    "chatFailed": "Javob olishda xatolik yuz berdi. Qayta urinib ko‘ring"
+    "chatFailed": "Javob olishda xatolik yuz berdi. Qayta urinib ko‘ring",
+    "documentExportFailed": "Hujjatni yaratib bo‘lmadi. Qayta urinib ko‘ring",
+    "documentExportUnavailable": "Hujjat eksporti xizmatiga ulanib bo‘lmadi"
   },
   "finadvisor": {
     "title": "Moliyaviy rejangiz",
@@ -657,7 +659,9 @@
       "calculationsTitle": "Moliyaviy hisob-kitoblar",
       "sectionsTitle": "Biznes-reja bo‘limlari",
       "currency": "UZS",
-      "exportSoon": "Hujjat eksporti — keyingi bosqichda",
+      "exportPdf": "PDF yuklab olish",
+      "exportExcel": "Excel yuklab olish",
+      "exporting": "Tayyorlanmoqda...",
       "calculations": {
         "monthly_revenue": "Oylik tushum",
         "monthly_payroll": "Oylik ish haqi fondi",
@@ -676,5 +680,18 @@
         "dscr": "Qarz qoplash koeffitsiyenti"
       }
     }
+  },
+  "billing": {
+    "eyebrow": "Obuna",
+    "title": "To‘lov va obuna",
+    "openPage": "Obunani boshqarish",
+    "currentPlan": "Joriy tarif",
+    "billingPeriod": "To‘lov davri",
+    "price": "Tarif narxi",
+    "periods": { "weekly": "Haftalik", "monthly": "Oylik", "yearly": "Yillik" },
+    "plans": { "free": "Free", "pro": "Pro", "business": "Business" },
+    "status": { "active": "Faol", "trial": "Sinov muddati", "inactive": "Faol emas" },
+    "mockNotice": "Obuna holati hozircha namoyish uchun. To‘lov provayderi keyin ulanadi.",
+    "manageUnavailable": "Obunani boshqarish hozircha mavjud emas"
   }
 }

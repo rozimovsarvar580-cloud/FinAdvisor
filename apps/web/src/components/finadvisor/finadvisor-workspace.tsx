@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { type PlanResult } from "@/components/finadvisor/plan-wizard";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const PlanWizard = dynamic(
@@ -58,18 +59,27 @@ function PanelSkeleton() {
 
 export function FinAdvisorWorkspace() {
   const t = useTranslations("finadvisor");
+  const billing = useTranslations("billing");
   const [activeTab, setActiveTab] = useState<TabKey>("businessPlan");
   const [planResult, setPlanResult] = useState<PlanResult>();
 
   return (
     <main className="mx-auto min-h-[calc(100vh-4rem)] max-w-7xl px-page py-8">
-      <div className="mb-7">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-          FinAdvisor
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-          {t("title")}
-        </h1>
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            FinAdvisor
+          </p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+            {t("title")}
+          </h1>
+        </div>
+        <Link
+          className="rounded-xl border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+          href="/app/billing"
+        >
+          {billing("openPage")}
+        </Link>
       </div>
       <div className="grid gap-6 lg:grid-cols-[250px_minmax(0,1fr)]">
         <Card className="h-fit p-3">

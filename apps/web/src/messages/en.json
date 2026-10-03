@@ -531,7 +531,9 @@
     "analysisFailed": "The document could not be analyzed. Check it and try again",
     "analysisUnavailable": "Could not connect to the document analysis service",
     "chatAIUnavailable": "AI chat is unavailable right now. Try again later",
-    "chatFailed": "Could not get a response. Please try again"
+    "chatFailed": "Could not get a response. Please try again",
+    "documentExportFailed": "Could not create the document. Please try again",
+    "documentExportUnavailable": "The document export service is unavailable"
   },
   "finadvisor": {
     "title": "Your financial plan",
@@ -657,7 +659,9 @@
       "calculationsTitle": "Financial calculations",
       "sectionsTitle": "Business plan sections",
       "currency": "UZS",
-      "exportSoon": "Document export is coming in the next stage",
+      "exportPdf": "Download PDF",
+      "exportExcel": "Download Excel",
+      "exporting": "Preparing...",
       "calculations": {
         "monthly_revenue": "Monthly revenue",
         "monthly_payroll": "Monthly payroll",
@@ -674,7 +678,20 @@
         "loan_total_interest": "Total loan interest",
         "annual_debt_service": "Annual debt service",
         "dscr": "Debt service coverage ratio"
+        }
       }
-    }
+    },
+    "billing": {
+      "eyebrow": "Subscription",
+      "title": "Billing and subscription",
+      "openPage": "Manage subscription",
+      "currentPlan": "Current plan",
+      "billingPeriod": "Billing period",
+      "price": "Plan price",
+      "periods": { "weekly": "Weekly", "monthly": "Monthly", "yearly": "Yearly" },
+      "plans": { "free": "Free", "pro": "Pro", "business": "Business" },
+      "status": { "active": "Active", "trial": "Trial", "inactive": "Inactive" },
+      "mockNotice": "Subscription status is shown for demonstration. A payment provider can be connected later.",
+      "manageUnavailable": "Subscription management is not available yet"
   }
 }

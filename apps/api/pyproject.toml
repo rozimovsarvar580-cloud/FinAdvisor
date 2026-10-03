@@ -16,6 +16,8 @@ dependencies = [
   "pgvector>=0.3,<1",
   "psycopg[binary]>=3.2,<4",
   "pypdf>=5,<7",
+  "openpyxl>=3.1,<4",
+  "reportlab>=4.2,<5",
   "redis>=5,<6",
   "sqlalchemy>=2.0,<3",
   "python-docx>=1.1,<2",
@@ -34,7 +36,7 @@ dev = [
 where = ["src"]
 
 [tool.setuptools.package-data]
-finadvisor_api = ["knowledge_seed.json"]
+finadvisor_api = ["document_messages.json", "knowledge_seed.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

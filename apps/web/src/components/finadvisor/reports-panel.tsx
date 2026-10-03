@@ -1,10 +1,16 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import {
+  DocumentExportError,
+  requestPlanDocument,
+  type DocumentFormat
+} from "@/lib/documents";
 
 import { type PlanResult } from "@/components/finadvisor/plan-wizard";
 
@@ -28,6 +34,43 @@ const calculationKeys = [
 
 export function ReportsPanel({ planResult }: { planResult?: PlanResult }) {
   const t = useTranslations("finadvisor.reports");
+  const errors = useTranslations("errors");
+  const locale = useLocale();
+  const [exporting, setExporting] = useState<DocumentFormat>();
+  const [exportError, setExportError] = useState<string>();
+
+  async function exportDocument(plan: PlanResult, format: DocumentFormat) {
+    setExportError(undefined);
+    setExporting(format);
+    try {
+      const file = await requestPlanDocument(
+        crypto.randomUUID(),
+        format,
+        locale,
+        plan
+      );
+      const fileUrl = URL.createObjectURL(file.blob);
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.download = file.filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(fileUrl);
+    } catch (error) {
+      if (error instanceof DocumentExportError) {
+        setExportError(
+          error.kind === "unavailable"
+            ? "documentExportUnavailable"
+            : "documentExportFailed"
+        );
+      } else {
+        throw error;
+      }
+    } finally {
+      setExporting(undefined);
+    }
+  }
 
   if (!planResult) {
     return (
@@ -84,9 +127,29 @@ export function ReportsPanel({ planResult }: { planResult?: PlanResult }) {
           ))}
         </div>
         <div className="mt-6 border-t border-border pt-5">
-          <Button disabled type="button" variant="outline">
-            {t("exportSoon")}
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              disabled={exporting !== undefined}
+              onClick={() => void exportDocument(planResult, "pdf")}
+              type="button"
+              variant="outline"
+            >
+              {exporting === "pdf" ? t("exporting") : t("exportPdf")}
+            </Button>
+            <Button
+              disabled={exporting !== undefined}
+              onClick={() => void exportDocument(planResult, "excel")}
+              type="button"
+              variant="outline"
+            >
+              {exporting === "excel" ? t("exporting") : t("exportExcel")}
+            </Button>
+          </div>
+          {exportError ? (
+            <p className="mt-3 text-sm text-red-600" role="alert">
+              {errors(exportError)}
+            </p>
+          ) : null}
         </div>
       </Card>
     </div>
