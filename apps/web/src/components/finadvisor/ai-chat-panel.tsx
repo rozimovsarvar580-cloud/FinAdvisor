@@ -129,7 +129,7 @@ export function AIChatPanel({
     }
   }
 
-  function useQuickPrompt(prompt: string) {
+  function setQuickPrompt(prompt: string) {
     setDraft(prompt);
   }
 
@@ -170,7 +170,7 @@ export function AIChatPanel({
         {(["breakEven", "loan", "missingInfo"] as const).map((promptKey) => (
           <Button
             key={promptKey}
-            onClick={() => useQuickPrompt(t(`quickPrompts.${promptKey}`))}
+            onClick={() => setQuickPrompt(t(`quickPrompts.${promptKey}`))}
             type="button"
             variant="outline"
           >
