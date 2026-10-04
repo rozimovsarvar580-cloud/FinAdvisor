@@ -37,3 +37,28 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: Literal["bearer"] = "bearer"
     user: UserResponse
+
+
+class AgentDeviceRegisterRequest(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    name: str = Field(min_length=1, max_length=120)
+
+
+class AgentDeviceResponse(BaseModel):
+    id: str
+    name: str
+    status: str
+    created_at: datetime
+
+
+class AgentCommandResponse(BaseModel):
+    id: str
+    name: str
+    status: str
+    device_id: str | None
+    created_at: datetime
+
+
+class AgentSyncStatementRequest(BaseModel):
+    device_id: str = Field(min_length=1, max_length=64)

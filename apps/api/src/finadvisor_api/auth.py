@@ -83,8 +83,7 @@ def login(
     return _issue_response(user)
 
 
-@router.get("/me", response_model=UserResponse)
-def get_me(
+def get_current_user(
     credentials: Annotated[
         HTTPAuthorizationCredentials | None, Depends(bearer_scheme)
     ],
@@ -119,4 +118,11 @@ def get_me(
             detail="auth.user_not_found",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    return user
+
+
+@router.get("/me", response_model=UserResponse)
+def get_me(
+    user: Annotated[User, Depends(get_current_user)],
+) -> User:
     return user

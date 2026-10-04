@@ -2,9 +2,10 @@
 
 FastAPI service with SQLAlchemy and Alembic.
 
-Create a virtual environment, install with `pip install -e ".[dev]"`, then run
-`uvicorn finadvisor_api.main:app --reload` from `apps/api`. API tests run with
-`pytest`.
+Create a virtual environment, install the finance engine with
+`pip install -e ..\..\packages\finance-engine`, then install this project with
+`pip install -e ".[dev]"`. Run `uvicorn finadvisor_api.main:app --reload` from
+`apps/api`. API tests run with `pytest`.
 
 Set `DATABASE_URL` and `JWT_SECRET` from the repository's `.env` file before
 starting the service. Apply database migrations from the repository root with
@@ -30,3 +31,9 @@ Plan exports are available at `POST /documents/{plan_id}/pdf` and
 {...} }` using the plan response returned by `POST /plans/generate`; exports
 are generated on demand and are not persisted by this API. The PDF uses
 ReportLab, and the formula-linked multi-sheet workbook uses openpyxl.
+
+The desktop agent API is available at `/agent`: authenticated operators
+can register devices, list their own devices and command history, and queue
+statement-sync commands. Device and command records are persisted; a sync
+command is queued for processing and does not itself read local bank files or
+perform financial calculations.
