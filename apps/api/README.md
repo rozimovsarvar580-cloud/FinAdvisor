@@ -37,3 +37,11 @@ can register devices, list their own devices and command history, and queue
 statement-sync commands. Device and command records are persisted; a sync
 command is queued for processing and does not itself read local bank files or
 perform financial calculations.
+
+The investor marketplace exposes public, owner-published restaurant listings
+at `GET /marketplace/listings`. Authenticated business owners can publish a
+listing with `POST /marketplace/listings`, view their own listings at
+`GET /marketplace/listings/mine`, and change listing visibility through
+`PATCH /marketplace/listings/{id}/visibility`. Funding targets are exact UZS
+decimal strings supplied by the owner; the API does not calculate or claim
+returns, raised amounts, risk ratings, or independent verification.

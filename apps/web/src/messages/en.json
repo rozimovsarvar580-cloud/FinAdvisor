@@ -697,49 +697,58 @@
   "marketplace": {
     "hero": {
       "eyebrow": "Investor marketplace",
-      "title": "Discover matched investment opportunities",
-      "description": "Review financing-ready businesses and compare sector, stage, and risk before making contact."
+      "title": "Owner-published restaurant projects",
+      "description": "Browse restaurant projects that business owners have chosen to publish. Project details and funding requests are owner-provided."
     },
     "stats": {
-      "deals": "Deals",
-      "raised": "Raised",
-      "target": "Target",
-      "return": "Average return"
+      "listings": "Published projects"
     },
     "filters": {
-      "title": "Filters",
-      "sectorAll": "All sectors",
-      "stageAll": "All stages",
-      "riskAll": "All risks"
+      "title": "Filter by project stage"
     },
     "deal": {
-      "raised": "Raised",
-      "target": "Target",
-      "return": "Target return",
-      "risk": "Risk",
-      "cta": "Review plan"
+      "ownerFundingTarget": "Owner-requested funding (UZS)"
+    },
+    "stages": {
+      "all": "All stages",
+      "idea": "Idea",
+      "pilot": "Pilot",
+      "scale": "Scale"
+    },
+    "loading": "Loading published projects…",
+    "disclaimer": "Listings and funding targets are supplied by business owners and are not independently verified. No return, funding, or investment outcome is guaranteed.",
+    "form": {
+      "title": "Publish your restaurant project",
+      "disclaimer": "Only publish information you are authorized to share. The funding target is your stated request, not a verified valuation or investment offer.",
+      "businessName": "Project name",
+      "city": "City",
+      "stage": "Project stage",
+      "fundingTarget": "Requested funding (UZS)",
+      "summary": "Project summary",
+      "publish": "Publish listing",
+      "publishing": "Publishing…",
+      "published": "Your project is published.",
+      "unpublished": "Your project is no longer public.",
+      "myListings": "My listings",
+      "unpublish": "Unpublish",
+      "republish": "Publish again",
+      "ownerPrompt": "Are you a restaurant owner?",
+      "signUp": "Create an account",
+      "visibility": {
+        "published": "Public",
+        "unpublished": "Not public"
+      }
+    },
+    "errors": {
+      "loadFailed": "Published projects could not be loaded. Please try again.",
+      "publishFailed": "The project could not be published. Please try again.",
+      "visibilityFailed": "The listing visibility could not be changed.",
+      "invalidListing": "Check the project details and funding amount.",
+      "signInRequired": "Sign in as a business owner to manage listings."
     },
     "empty": {
-      "title": "No opportunities found",
-      "description": "Try a wider filter range to see more investments."
-    },
-    "deals": {
-      "azizCafe": {
-        "title": "Aziz Cafe",
-        "summary": "Urban café expansion with delivery-backed demand."
-      },
-      "samarkandMarket": {
-        "title": "Samarkand Market",
-        "summary": "Fresh food retail chain in a dense central district."
-      },
-      "qoshqadsayLogs": {
-        "title": "Qoshqadsay Logistics",
-        "summary": "Regional food logistics and cold-chain network."
-      },
-      "tashkentKitchen": {
-        "title": "Tashkent Kitchen",
-        "summary": "Multi-location restaurant group with high repeat demand."
-      }
+      "title": "No published projects yet",
+      "description": "When a restaurant owner publishes a project, it will appear here."
     }
   },
   "desktopAgent": {

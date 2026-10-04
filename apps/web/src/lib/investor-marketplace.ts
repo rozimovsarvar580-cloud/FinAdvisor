@@ -1,56 +1,37 @@
-export type MarketplaceDeal = {
+export type ListingStage = "idea" | "pilot" | "scale";
+
+export type MarketplaceListing = {
   id: string;
-  title: string;
-  sector: string;
-  stage: "Idea" | "Pilot" | "Scale";
-  risk: "Low" | "Medium" | "High";
-  raised: number;
-  target: number;
-  targetReturn: number;
+  business_name: string;
+  city: string;
+  stage: ListingStage;
+  funding_target: string;
+  currency: "UZS";
   summary: string;
+  is_published: boolean;
+  created_at: string;
 };
 
-export type DealFilters = {
-  sector?: string;
-  stage?: string;
-  risk?: string;
+export type ListingFilters = {
+  stage?: ListingStage | "all";
 };
 
-export function filterDeals(
-  deals: MarketplaceDeal[],
-  filters: DealFilters = {}
-): MarketplaceDeal[] {
-  const { sector, stage, risk } = filters;
-
-  return deals.filter((deal) => {
-    if (sector && sector !== "all" && deal.sector !== sector) {
-      return false;
-    }
-
-    if (stage && stage !== "all" && deal.stage !== stage) {
-      return false;
-    }
-
-    if (risk && risk !== "all" && deal.risk !== risk) {
-      return false;
-    }
-
-    return true;
-  });
+export function filterListings(
+  listings: MarketplaceListing[],
+  filters: ListingFilters = {}
+): MarketplaceListing[] {
+  const { stage } = filters;
+  return listings.filter(
+    (listing) => !stage || stage === "all" || listing.stage === stage
+  );
 }
 
-export function summarizeDeals(deals: MarketplaceDeal[]) {
-  const totalRaised = deals.reduce((sum, deal) => sum + deal.raised, 0);
-  const totalTarget = deals.reduce((sum, deal) => sum + deal.target, 0);
-  const averageReturn =
-    deals.length > 0
-      ? deals.reduce((sum, deal) => sum + deal.targetReturn, 0) / deals.length
-      : 0;
+export function summarizeListings(listings: MarketplaceListing[]) {
+  return { totalListings: listings.length };
+}
 
-  return {
-    totalDeals: deals.length,
-    totalRaised,
-    totalTarget,
-    averageReturn: Number(averageReturn.toFixed(1))
-  };
+export function formatMoneyString(value: string): string {
+  const [integer, fraction] = value.split(".");
+  const grouped = integer.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return fraction ? `${grouped},${fraction}` : grouped;
 }

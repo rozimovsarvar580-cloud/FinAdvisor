@@ -1,73 +1,58 @@
 import { describe, expect, it } from "vitest";
 
-import { filterDeals, summarizeDeals, type MarketplaceDeal } from "./investor-marketplace";
+import {
+  filterListings,
+  formatMoneyString,
+  summarizeListings,
+  type MarketplaceListing
+} from "./investor-marketplace";
 
-const deals: MarketplaceDeal[] = [
+const listings: MarketplaceListing[] = [
   {
-    id: "aziz-cafe",
-    title: "Aziz Cafe",
-    sector: "Food & Hospitality",
-    stage: "Pilot",
-    risk: "Medium",
-    raised: 250000,
-    target: 500000,
-    targetReturn: 18,
-    summary: "Urban café expansion with delivery-backed demand."
+    id: "project-1",
+    business_name: "Samarqand Oshxona",
+    city: "Samarqand",
+    stage: "pilot",
+    funding_target: "250000000.00",
+    currency: "UZS",
+    summary: "Owner provided restaurant project summary.",
+    is_published: true,
+    created_at: "2026-10-04T08:00:00Z"
   },
   {
-    id: "samarkand-market",
-    title: "Samarkand Market",
-    sector: "Retail",
-    stage: "Scale",
-    risk: "Low",
-    raised: 420000,
-    target: 650000,
-    targetReturn: 12,
-    summary: "Fresh food retail chain in a dense central district."
-  },
-  {
-    id: "qoshqadsay-logs",
-    title: "Qoshqadsay Logistics",
-    sector: "Logistics",
-    stage: "Idea",
-    risk: "High",
-    raised: 90000,
-    target: 300000,
-    targetReturn: 26,
-    summary: "Regional food logistics and cold-chain network."
+    id: "project-2",
+    business_name: "Toshkent Bistro",
+    city: "Toshkent",
+    stage: "scale",
+    funding_target: "1250000000",
+    currency: "UZS",
+    summary: "Owner provided restaurant project summary.",
+    is_published: true,
+    created_at: "2026-10-03T08:00:00Z"
   }
 ];
 
-describe("filterDeals", () => {
-  it("filters by sector, stage, and risk together", () => {
-    const result = filterDeals(deals, {
-      sector: "Food & Hospitality",
-      stage: "Pilot",
-      risk: "Medium"
-    });
-
-    expect(result).toHaveLength(1);
-    expect(result[0].id).toBe("aziz-cafe");
+describe("filterListings", () => {
+  it("filters by stage", () => {
+    const result = filterListings(listings, { stage: "pilot" });
+    expect(result.map((listing) => listing.id)).toEqual(["project-1"]);
   });
 
-  it("accepts the all selector for each filter", () => {
-    const result = filterDeals(deals, {
-      sector: "all",
-      risk: "all",
-      stage: "all"
-    });
-
-    expect(result).toHaveLength(3);
+  it("returns all listings for the all selector", () => {
+    expect(filterListings(listings, { stage: "all" })).toHaveLength(2);
   });
 });
 
-describe("summarizeDeals", () => {
-  it("adds the pipeline totals and average target return", () => {
-    const summary = summarizeDeals(deals);
+describe("summarizeListings", () => {
+  it("counts listings without computing financial figures", () => {
+    expect(summarizeListings(listings)).toEqual({ totalListings: 2 });
+    expect(summarizeListings([])).toEqual({ totalListings: 0 });
+  });
+});
 
-    expect(summary.totalDeals).toBe(3);
-    expect(summary.totalRaised).toBe(760000);
-    expect(summary.totalTarget).toBe(1450000);
-    expect(summary.averageReturn).toBe(18.7);
+describe("formatMoneyString", () => {
+  it("groups integer and fractional digits without converting to floating point", () => {
+    expect(formatMoneyString("1250000000.50")).toBe("1 250 000 000,50");
+    expect(formatMoneyString("250000000")).toBe("250 000 000");
   });
 });
