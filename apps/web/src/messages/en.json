@@ -524,6 +524,7 @@
     "planAIUnavailable": "The AI planning service is unavailable. Try again later",
     "planGenerationFailed": "The business plan could not be created. Check your inputs",
     "planServiceUnavailable": "Could not connect to the planning service",
+    "planSessionRequired": "Sign in again to save your generated business plan",
     "calculationFailed": "The calculation failed. Check your inputs",
     "scenarioFailed": "The scenario could not be calculated. Check your inputs",
     "unsupportedPlanFile": "Upload a PDF or DOCX document",
@@ -724,6 +725,9 @@
       "city": "City",
       "stage": "Project stage",
       "fundingTarget": "Requested funding (UZS)",
+      "savedPlan": "Business plan to publish",
+      "selectSavedPlan": "Select one of your saved business plans",
+      "noSavedPlans": "Generate and save a business plan first.",
       "summary": "Project summary",
       "publish": "Publish listing",
       "publishing": "Publishing…",
@@ -744,7 +748,12 @@
       "publishFailed": "The project could not be published. Please try again.",
       "visibilityFailed": "The listing visibility could not be changed.",
       "invalidListing": "Check the project details and funding amount.",
-      "signInRequired": "Sign in as a business owner to manage listings."
+      "signInRequired": "Sign in as a business owner to manage listings.",
+      "detailLoadFailed": "This published plan could not be found or is no longer public."
+    },
+    "detail": {
+      "unavailableTitle": "Plan unavailable",
+      "backToMarketplace": "Back to marketplace"
     },
     "empty": {
       "title": "No published projects yet",

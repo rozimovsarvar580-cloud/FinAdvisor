@@ -1,15 +1,25 @@
 
-from fastapi import APIRouter, HTTPException, status
+from typing import Annotated
+from uuid import uuid4
+
+from fastapi import APIRouter, Depends, HTTPException, status
 from finance_engine.operations import CapexItem, StaffPosition
 from finance_engine.restaurant import RestaurantProjection, calculate_restaurant_projection
 from pydantic import ValidationError
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from finadvisor_api.ai_client import AIClientError, generate
+from finadvisor_api.auth import get_current_user
+from finadvisor_api.database import get_db
+from finadvisor_api.models import SavedBusinessPlan, User
 from finadvisor_api.plan_schemas import (
     GeneratedPlanContent,
     PlanCalculations,
     PlanGenerateRequest,
     PlanGenerateResponse,
+    SavedPlanGenerateResponse,
+    SavedPlanSummary,
 )
 
 router = APIRouter(prefix="/plans", tags=["plans"])
@@ -65,8 +75,7 @@ def _format_calculations(projection: RestaurantProjection) -> PlanCalculations:
     )
 
 
-@router.post("/generate", response_model=PlanGenerateResponse)
-async def generate_plan(payload: PlanGenerateRequest) -> PlanGenerateResponse:
+async def _generate_plan(payload: PlanGenerateRequest) -> PlanGenerateResponse:
     try:
         projection = calculate_restaurant_projection(
             average_check=payload.average_check,
@@ -127,3 +136,66 @@ async def generate_plan(payload: PlanGenerateRequest) -> PlanGenerateResponse:
         sections=generated.sections,
         calculations=calculations,
     )
+
+
+def _require_business_owner(user: User) -> None:
+    if user.role != "tadbirkor":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="plans.business_owner_required",
+        )
+
+
+@router.post("/generate", response_model=PlanGenerateResponse)
+async def generate_plan(payload: PlanGenerateRequest) -> PlanGenerateResponse:
+    return await _generate_plan(payload)
+
+
+@router.post("/generate-and-save", response_model=SavedPlanGenerateResponse)
+async def generate_and_save_plan(
+    payload: PlanGenerateRequest,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> SavedPlanGenerateResponse:
+    _require_business_owner(user)
+    generated = await _generate_plan(payload)
+    saved = SavedBusinessPlan(
+        id=f"plan-{uuid4().hex}",
+        owner_id=user.id,
+        business_name=payload.business_name,
+        location=payload.location,
+        request_payload=payload.model_dump(mode="json"),
+        generated_plan=generated.model_dump(mode="json"),
+    )
+    db.add(saved)
+    db.commit()
+    return SavedPlanGenerateResponse(
+        plan_id=saved.id,
+        summary=generated.summary,
+        sections=generated.sections,
+        calculations=generated.calculations,
+    )
+
+
+@router.get("/mine", response_model=dict[str, list[SavedPlanSummary]])
+async def my_plans(
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> dict[str, list[SavedPlanSummary]]:
+    _require_business_owner(user)
+    plans = db.scalars(
+        select(SavedBusinessPlan)
+        .where(SavedBusinessPlan.owner_id == user.id)
+        .order_by(SavedBusinessPlan.created_at.desc())
+    ).all()
+    return {
+        "items": [
+            SavedPlanSummary(
+                id=plan.id,
+                business_name=plan.business_name,
+                location=plan.location,
+                created_at=plan.created_at,
+            )
+            for plan in plans
+        ]
+    }

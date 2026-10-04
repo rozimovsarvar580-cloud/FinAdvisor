@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Numeric, String, func
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Numeric, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from finadvisor_api.database import Base
@@ -55,11 +55,32 @@ class AgentCommand(Base):
     )
 
 
+class SavedBusinessPlan(Base):
+    __tablename__ = "saved_business_plans"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    owner_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    business_name: Mapped[str] = mapped_column(String(200))
+    location: Mapped[str] = mapped_column(String(300))
+    request_payload: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
+    generated_plan: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+
 class MarketplaceListing(Base):
     __tablename__ = "marketplace_listings"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
+    saved_plan_id: Mapped[str | None] = mapped_column(
+        ForeignKey("saved_business_plans.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
     business_name: Mapped[str] = mapped_column(String(200))
     city: Mapped[str] = mapped_column(String(120))
     stage: Mapped[str] = mapped_column(String(16))

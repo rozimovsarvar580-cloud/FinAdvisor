@@ -4,6 +4,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from finadvisor_api.calc_schemas import NonNegativeDecimal, StrictInput
+from finadvisor_api.plan_schemas import PlanGenerateResponse
 
 UserRole = Literal["tadbirkor", "buxgalter", "investor"]
 
@@ -67,8 +68,7 @@ class AgentSyncStatementRequest(BaseModel):
 
 
 class MarketplaceListingCreateRequest(StrictInput):
-    business_name: str = Field(min_length=1, max_length=200)
-    city: str = Field(min_length=1, max_length=120)
+    plan_id: str = Field(min_length=1, max_length=64)
     stage: Literal["idea", "pilot", "scale"]
     funding_target: Annotated[
         NonNegativeDecimal,
@@ -83,6 +83,7 @@ class MarketplaceListingVisibilityRequest(StrictInput):
 
 class MarketplaceListingResponse(BaseModel):
     id: str
+    plan_id: str | None
     business_name: str
     city: str
     stage: Literal["idea", "pilot", "scale"]
@@ -91,3 +92,7 @@ class MarketplaceListingResponse(BaseModel):
     summary: str
     is_published: bool
     created_at: datetime
+
+
+class MarketplaceListingDetailResponse(MarketplaceListingResponse):
+    plan: PlanGenerateResponse

@@ -524,6 +524,7 @@
     "planAIUnavailable": "AI reja xizmatiga hozir ulanib bo‘lmadi. Keyinroq urinib ko‘ring",
     "planGenerationFailed": "Biznes-reja yaratilmadi. Kiritilgan ma’lumotlarni tekshiring",
     "planServiceUnavailable": "Reja xizmatiga ulanib bo‘lmadi. Keyinroq urinib ko‘ring",
+    "planSessionRequired": "Yaratilgan biznes-rejani saqlash uchun qayta tizimga kiring",
     "calculationFailed": "Hisob-kitob bajarilmadi. Kiritilgan ma’lumotlarni tekshiring",
     "scenarioFailed": "Ssenariy hisoblanmadi. Kiritilgan ma’lumotlarni tekshiring",
     "unsupportedPlanFile": "Faqat PDF yoki DOCX hujjatlarini yuklang",
@@ -724,6 +725,9 @@
       "city": "Shahar",
       "stage": "Loyiha bosqichi",
       "fundingTarget": "So‘ralayotgan mablag‘ (UZS)",
+      "savedPlan": "E’lon qilinadigan biznes-reja",
+      "selectSavedPlan": "Saqlangan biznes-rejalaringizdan birini tanlang",
+      "noSavedPlans": "Avval biznes-reja yarating va saqlang.",
       "summary": "Loyiha haqida",
       "publish": "E’lon qilish",
       "publishing": "E’lon qilinmoqda…",
@@ -744,7 +748,12 @@
       "publishFailed": "Loyihani e’lon qilib bo‘lmadi. Qayta urinib ko‘ring.",
       "visibilityFailed": "E’lon ko‘rinishini o‘zgartirib bo‘lmadi.",
       "invalidListing": "Loyiha ma’lumotlari va mablag‘ miqdorini tekshiring.",
-      "signInRequired": "E’lonlarni boshqarish uchun biznes egasi sifatida kiring."
+      "signInRequired": "E’lonlarni boshqarish uchun biznes egasi sifatida kiring.",
+      "detailLoadFailed": "E’lon qilingan reja topilmadi yoki endi ommaga ochiq emas."
+    },
+    "detail": {
+      "unavailableTitle": "Reja mavjud emas",
+      "backToMarketplace": "Marketplace’ga qaytish"
     },
     "empty": {
       "title": "Hozircha e’lon qilingan loyiha yo‘q",

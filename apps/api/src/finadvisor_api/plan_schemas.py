@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal
 
 from pydantic import Field
@@ -67,3 +68,22 @@ class PlanGenerateResponse(StrictInput):
     summary: str
     sections: list[PlanSection]
     calculations: PlanCalculations
+
+
+class SavedPlanSummary(StrictInput):
+    id: str
+    business_name: str
+    location: str
+    created_at: datetime
+
+
+class SavedPlanGenerateResponse(PlanGenerateResponse):
+    plan_id: str
+
+
+class PublicPlanDetails(StrictInput):
+    plan_id: str
+    business_name: str
+    location: str
+    created_at: datetime
+    plan: PlanGenerateResponse

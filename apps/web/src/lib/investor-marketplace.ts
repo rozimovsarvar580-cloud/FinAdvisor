@@ -2,6 +2,7 @@ export type ListingStage = "idea" | "pilot" | "scale";
 
 export type MarketplaceListing = {
   id: string;
+  plan_id: string | null;
   business_name: string;
   city: string;
   stage: ListingStage;
@@ -10,6 +11,14 @@ export type MarketplaceListing = {
   summary: string;
   is_published: boolean;
   created_at: string;
+};
+
+export type MarketplaceListingDetail = MarketplaceListing & {
+  plan: {
+    summary: string;
+    sections: { title: string; content: string }[];
+    calculations: Record<string, string | number | null>;
+  };
 };
 
 export type ListingFilters = {

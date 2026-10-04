@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useSession } from "next-auth/react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ const restaurantFormatSchema = z.enum([
 ]);
 
 const planResultSchema = z.object({
+  plan_id: z.string().min(1),
   summary: z.string(),
   sections: z.array(z.object({ title: z.string(), content: z.string() })),
   calculations: planCalculationsSchema
@@ -129,6 +131,7 @@ export function PlanWizard({
   const t = useTranslations("finadvisor.wizard");
   const errors = useTranslations("errors");
   const locale = useLocale();
+  const { data: session } = useSession();
   const currentStepRef = useRef<HTMLFieldSetElement>(null);
   const [values, setValues] = useState<WizardValues>(initialValues);
   const [step, setStep] = useState(0);
@@ -181,6 +184,7 @@ export function PlanWizard({
       type?: "text" | "number";
       required?: boolean;
       min?: string;
+      max?: string;
       step?: string;
       placeholder?: string;
     } = {}
@@ -192,6 +196,7 @@ export function PlanWizard({
       <Input
         id={`wizard-${key}`}
         min={options.min}
+        max={options.max}
         placeholder={options.placeholder}
         required={options.required}
         step={options.step}
@@ -205,6 +210,10 @@ export function PlanWizard({
   async function submitPlan(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setRequestError(undefined);
+    if (!session?.accessToken) {
+      setRequestError("planSessionRequired");
+      return;
+    }
     setIsSubmitting(true);
     const payload = {
       locale,
@@ -246,9 +255,12 @@ export function PlanWizard({
     };
 
     try {
-      const response = await fetch("/api/plans/generate", {
+      const response = await fetch("/api/plans/generate-and-save", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify(payload)
       });
       const body: unknown = await response.json();

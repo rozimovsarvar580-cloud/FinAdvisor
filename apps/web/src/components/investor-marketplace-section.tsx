@@ -18,6 +18,13 @@ import {
 const stages = ["all", "idea", "pilot", "scale"] as const;
 
 type ListingResponse = { items: MarketplaceListing[] };
+type SavedPlan = {
+  id: string;
+  business_name: string;
+  location: string;
+  created_at: string;
+};
+type SavedPlanResponse = { items: SavedPlan[] };
 type ApiError = { detail?: string };
 
 export function InvestorMarketplaceSection() {
@@ -25,6 +32,7 @@ export function InvestorMarketplaceSection() {
   const { data: session, status: sessionStatus } = useSession();
   const [listings, setListings] = useState<MarketplaceListing[]>([]);
   const [myListings, setMyListings] = useState<MarketplaceListing[]>([]);
+  const [myPlans, setMyPlans] = useState<SavedPlan[]>([]);
   const [stage, setStage] = useState<(typeof stages)[number]>("all");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -48,17 +56,31 @@ export function InvestorMarketplaceSection() {
       setListings(body.items);
 
       if (ownerToken) {
-        const mineResponse = await fetch("/api/marketplace/listings?mine=true", {
-          headers: { Authorization: `Bearer ${ownerToken}` },
-          cache: "no-store"
-        });
-        const mineBody = (await mineResponse.json()) as ListingResponse | ApiError;
-        if (!mineResponse.ok || !("items" in mineBody)) {
+        const headers = { Authorization: `Bearer ${ownerToken}` };
+        const [mineResponse, plansResponse] = await Promise.all([
+          fetch("/api/marketplace/listings?mine=true", {
+            headers,
+            cache: "no-store"
+          }),
+          fetch("/api/plans/mine", { headers, cache: "no-store" })
+        ]);
+        const [mineBody, plansBody] = (await Promise.all([
+          mineResponse.json(),
+          plansResponse.json()
+        ])) as [(ListingResponse | ApiError), (SavedPlanResponse | ApiError)];
+        if (
+          !mineResponse.ok ||
+          !plansResponse.ok ||
+          !("items" in mineBody) ||
+          !("items" in plansBody)
+        ) {
           throw new Error("loadFailed");
         }
         setMyListings(mineBody.items);
+        setMyPlans(plansBody.items);
       } else {
         setMyListings([]);
+        setMyPlans([]);
       }
     } catch {
       setError(t("errors.loadFailed"));
@@ -92,8 +114,7 @@ export function InvestorMarketplaceSection() {
     const form = event.currentTarget;
     const formData = new FormData(form);
     const payload = {
-      business_name: String(formData.get("businessName") ?? ""),
-      city: String(formData.get("city") ?? ""),
+      plan_id: String(formData.get("planId") ?? ""),
       stage: String(formData.get("stage") ?? "idea"),
       funding_target: String(formData.get("fundingTarget") ?? "").replace(",", "."),
       summary: String(formData.get("summary") ?? "")
@@ -208,23 +229,28 @@ export function InvestorMarketplaceSection() {
               {t("form.disclaimer")}
             </p>
             <form className="mt-5 grid gap-4 md:grid-cols-2" onSubmit={publishListing}>
-              <label className="grid gap-2 text-sm font-medium">
-                {t("form.businessName")}
-                <input
+              <label className="grid gap-2 text-sm font-medium md:col-span-2">
+                {t("form.savedPlan")}
+                <select
                   className="h-11 rounded-md border border-input bg-background px-3 font-normal"
-                  maxLength={200}
-                  name="businessName"
+                  defaultValue=""
+                  name="planId"
                   required
-                />
-              </label>
-              <label className="grid gap-2 text-sm font-medium">
-                {t("form.city")}
-                <input
-                  className="h-11 rounded-md border border-input bg-background px-3 font-normal"
-                  maxLength={120}
-                  name="city"
-                  required
-                />
+                >
+                  <option disabled value="">
+                    {t("form.selectSavedPlan")}
+                  </option>
+                  {myPlans.map((plan) => (
+                    <option key={plan.id} value={plan.id}>
+                      {plan.business_name} — {plan.location}
+                    </option>
+                  ))}
+                </select>
+                {myPlans.length === 0 ? (
+                  <span className="font-normal text-muted-foreground">
+                    {t("form.noSavedPlans")}
+                  </span>
+                ) : null}
               </label>
               <label className="grid gap-2 text-sm font-medium">
                 {t("form.stage")}
@@ -261,7 +287,7 @@ export function InvestorMarketplaceSection() {
                 />
               </label>
               <div className="md:col-span-2">
-                <Button disabled={submitting} type="submit">
+                <Button disabled={submitting || myPlans.length === 0} type="submit">
                   {t(submitting ? "form.publishing" : "form.publish")}
                 </Button>
               </div>
@@ -332,6 +358,13 @@ export function InvestorMarketplaceSection() {
                   <p className="mt-1 font-semibold">
                     {formatMoneyString(listing.funding_target)} {listing.currency}
                   </p>
+                </div>
+                <div className="mt-5">
+                  <Button asChild variant="outline">
+                    <Link href={`/investors/${encodeURIComponent(listing.id)}`}>
+                      {t("deal.viewPlan")}
+                    </Link>
+                  </Button>
                 </div>
               </Card>
             ))

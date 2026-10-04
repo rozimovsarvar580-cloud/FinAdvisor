@@ -10,6 +10,7 @@ import {
 const listings: MarketplaceListing[] = [
   {
     id: "project-1",
+    plan_id: null,
     business_name: "Samarqand Oshxona",
     city: "Samarqand",
     stage: "pilot",
@@ -21,6 +22,7 @@ const listings: MarketplaceListing[] = [
   },
   {
     id: "project-2",
+    plan_id: null,
     business_name: "Toshkent Bistro",
     city: "Toshkent",
     stage: "scale",

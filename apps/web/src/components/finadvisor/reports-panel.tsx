@@ -43,11 +43,12 @@ export function ReportsPanel({ planResult }: { planResult?: PlanResult }) {
     setExportError(undefined);
     setExporting(format);
     try {
+      const { plan_id: planId, ...documentPlan } = plan;
       const file = await requestPlanDocument(
-        crypto.randomUUID(),
+        planId,
         format,
         locale,
-        plan
+        documentPlan
       );
       const fileUrl = URL.createObjectURL(file.blob);
       const link = document.createElement("a");
