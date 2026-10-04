@@ -34,6 +34,20 @@ const ReportsPanel = dynamic(
   () => import("./reports-panel").then((module) => module.ReportsPanel),
   { loading: () => <PanelSkeleton /> }
 );
+const InvestorMarketplaceSection = dynamic(
+  () =>
+    import("@/components/investor-marketplace-section").then(
+      (module) => module.InvestorMarketplaceSection
+    ),
+  { loading: () => <PanelSkeleton /> }
+);
+const DesktopAgentPanel = dynamic(
+  () =>
+    import("@/components/desktop-agent-panel").then(
+      (module) => module.DesktopAgentPanel
+    ),
+  { loading: () => <PanelSkeleton /> }
+);
 
 const tabKeys = [
   "businessPlan",
@@ -41,7 +55,9 @@ const tabKeys = [
   "whatIf",
   "analyzer",
   "chat",
-  "reports"
+  "reports",
+  "investorMarketplace",
+  "desktopAgent"
 ] as const;
 
 type TabKey = (typeof tabKeys)[number];
@@ -121,6 +137,10 @@ export function FinAdvisorWorkspace() {
           {activeTab === "reports" ? (
             <ReportsPanel planResult={planResult} />
           ) : null}
+          {activeTab === "investorMarketplace" ? (
+            <InvestorMarketplaceSection />
+          ) : null}
+          {activeTab === "desktopAgent" ? <DesktopAgentPanel /> : null}
         </section>
       </div>
     </main>

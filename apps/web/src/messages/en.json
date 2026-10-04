@@ -693,5 +693,68 @@
       "status": { "active": "Active", "trial": "Trial", "inactive": "Inactive" },
       "mockNotice": "Subscription status is shown for demonstration. A payment provider can be connected later.",
       "manageUnavailable": "Subscription management is not available yet"
+  },
+  "marketplace": {
+    "hero": {
+      "eyebrow": "Investor marketplace",
+      "title": "Discover matched investment opportunities",
+      "description": "Review financing-ready businesses and compare sector, stage, and risk before making contact."
+    },
+    "stats": {
+      "deals": "Deals",
+      "raised": "Raised",
+      "target": "Target",
+      "return": "Average return"
+    },
+    "filters": {
+      "title": "Filters",
+      "sectorAll": "All sectors",
+      "stageAll": "All stages",
+      "riskAll": "All risks"
+    },
+    "deal": {
+      "raised": "Raised",
+      "target": "Target",
+      "return": "Target return",
+      "risk": "Risk",
+      "cta": "Review plan"
+    },
+    "empty": {
+      "title": "No opportunities found",
+      "description": "Try a wider filter range to see more investments."
+    },
+    "deals": {
+      "azizCafe": {
+        "title": "Aziz Cafe",
+        "summary": "Urban café expansion with delivery-backed demand."
+      },
+      "samarkandMarket": {
+        "title": "Samarkand Market",
+        "summary": "Fresh food retail chain in a dense central district."
+      },
+      "qoshqadsayLogs": {
+        "title": "Qoshqadsay Logistics",
+        "summary": "Regional food logistics and cold-chain network."
+      },
+      "tashkentKitchen": {
+        "title": "Tashkent Kitchen",
+        "summary": "Multi-location restaurant group with high repeat demand."
+      }
+    }
+  },
+  "desktopAgent": {
+    "eyebrow": "Desktop agent",
+    "title": "Local workflow sync",
+    "description": "This agent orders local sync tasks by urgency while leaving all financial calculations in the finance engine.",
+    "stats": {
+      "queued": "Queued",
+      "highPriority": "High priority",
+      "blocked": "Blocked"
+    },
+    "tasks": {
+      "syncPlan": "Sync plan changes",
+      "syncPricing": "Refresh pricing assumptions",
+      "syncBankRules": "Update bank readiness rules"
+    }
   }
 }

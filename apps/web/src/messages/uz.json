@@ -693,5 +693,68 @@
     "status": { "active": "Faol", "trial": "Sinov muddati", "inactive": "Faol emas" },
     "mockNotice": "Obuna holati hozircha namoyish uchun. To‘lov provayderi keyin ulanadi.",
     "manageUnavailable": "Obunani boshqarish hozircha mavjud emas"
+  },
+  "marketplace": {
+    "hero": {
+      "eyebrow": "Investorlar bozori",
+      "title": "Mos keladigan investitsiya imkoniyatlarini toping",
+      "description": "Mablag‘ tayyorligi ko‘rsatkichlarini ko‘rib chiqing va sektor, bosqich va xavf darajasini solishtiring."
+    },
+    "stats": {
+      "deals": "Takliflar",
+      "raised": "To‘plangan",
+      "target": "Maqsad",
+      "return": "O‘rtacha daromad"
+    },
+    "filters": {
+      "title": "Filtrlar",
+      "sectorAll": "Barcha sektorlar",
+      "stageAll": "Barcha bosqichlar",
+      "riskAll": "Barcha xavf darajalari"
+    },
+    "deal": {
+      "raised": "To‘plangan",
+      "target": "Maqsad",
+      "return": "Maqsadli daromad",
+      "risk": "Xavf",
+      "cta": "Rejani ko‘rish"
+    },
+    "empty": {
+      "title": "Mos taklif topilmadi",
+      "description": "Ko‘proq imkoniyatlarni ko‘rish uchun filtrlarni kengaytiring."
+    },
+    "deals": {
+      "azizCafe": {
+        "title": "Aziz Cafe",
+        "summary": "Shahar kafesini yetkazib berish va takroriy buyurtmalar bilan kengaytirish."
+      },
+      "samarkandMarket": {
+        "title": "Samarkand Market",
+        "summary": "Yuqori zichlikdagi shahar hududida tezkor va yangi mahsulotlar bilan ishlovchi chakana savdo."
+      },
+      "qoshqadsayLogs": {
+        "title": "Qoshqadsay Logistics",
+        "summary": "Hududiy oziq-ovqat logistikasini va sovuq zanjirini yaratish."
+      },
+      "tashkentKitchen": {
+        "title": "Tashkent Kitchen",
+        "summary": "Yuqori takroriy mijozlar oqimi bilan ko‘p filialli restoran guruhi."
+      }
+    }
+  },
+  "desktopAgent": {
+    "eyebrow": "Desktop agent",
+    "title": "Lokal ish jarayonlarini sinxronlash",
+    "description": "Agent mahalliy sinxronlash vazifalarini ustuvorlik bo‘yicha tartibga soladi, moliyaviy hisob-kitoblar esa moliyaviy dvigatelda qoladi.",
+    "stats": {
+      "queued": "Navbatda",
+      "highPriority": "Yuqori ustuvorlik",
+      "blocked": "Bloklangan"
+    },
+    "tasks": {
+      "syncPlan": "Reja o‘zgarishlarini sinxronlash",
+      "syncPricing": "Narx taxminlarini yangilash",
+      "syncBankRules": "Bank tayyorligi qoidalarini yangilash"
+    }
   }
 }
