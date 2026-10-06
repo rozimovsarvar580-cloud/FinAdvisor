@@ -517,6 +517,7 @@
     "emailInUse": "An account with this email already exists",
     "signupFailed": "Could not create your account. Try again",
     "connectionFailed": "Could not connect to the server. Try again later",
+    "oauthSetupFailed": "Could not start social sign-in. Try again later",
     "calculatorUnavailable": "Could not connect to the calculator service. Try again later",
     "calculatorFailed": "Could not calculate the commission. Check the value you entered",
     "draftInvalid": "The saved draft is invalid. Start a new plan",

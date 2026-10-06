@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Numeric, String, func
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Index, Numeric, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from finadvisor_api.database import Base
@@ -10,6 +10,14 @@ from finadvisor_api.database import Base
 
 class User(Base):
     __tablename__ = "users"
+    __table_args__ = (
+        Index(
+            "ix_users_auth_provider_subject",
+            "auth_provider",
+            "provider_user_id",
+            unique=True,
+        ),
+    )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4())
@@ -19,6 +27,7 @@ class User(Base):
     avatar_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     role: Mapped[str] = mapped_column(String(24), default="tadbirkor")
     auth_provider: Mapped[str] = mapped_column(String(24), default="credentials")
+    provider_user_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
     email_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(

@@ -81,6 +81,40 @@ test("auth pages translate and protected paths preserve the callback URL", async
   await expect(page.getByText("Принимаю условия использования и политику конфиденциальности")).toBeVisible();
 });
 
+test("social signup requires consent and forwards the selected role", async ({
+  page
+}) => {
+  await page.route("**/api/auth/oauth-role", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true })
+    });
+  });
+  await page.route("**/api/auth/signin/google", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ url: "/uz?oauth-started=1" })
+    });
+  });
+  await page.goto("/uz/signup");
+
+  const googleButton = page.getByRole("button", {
+    name: "Google bilan davom etish"
+  });
+  await expect(googleButton).toBeDisabled();
+  await page.locator("#signup-role").selectOption("investor");
+  await expect(page.locator("#signup-role")).toHaveValue("investor");
+  await page.locator('input[type="checkbox"]').check();
+  await expect(googleButton).toBeEnabled();
+  const roleRequest = page.waitForRequest("**/api/auth/oauth-role");
+  await googleButton.click();
+
+  expect((await roleRequest).postDataJSON().role).toBe("investor");
+  await expect(page).toHaveURL(/\/uz\?oauth-started=1$/);
+});
+
 test("landing page shows the key sections and an accessible FAQ accordion", async ({
   page
 }) => {

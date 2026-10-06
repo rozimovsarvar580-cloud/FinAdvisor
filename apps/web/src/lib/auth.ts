@@ -1,24 +1,48 @@
 import type { NextAuthOptions, User } from "next-auth";
+import { cookies } from "next/headers";
 import CredentialsProvider from "next-auth/providers/credentials";
 import FacebookProvider from "next-auth/providers/facebook";
 import GoogleProvider from "next-auth/providers/google";
+import { z } from "zod";
 
-type ApiUser = {
-  id: string;
-  email: string;
-  name: string;
-  role: "tadbirkor" | "buxgalter" | "investor";
-};
+const loginResultSchema = z.object({
+  access_token: z.string().min(1),
+  user: z.object({
+    id: z.string().min(1),
+    email: z.string().email(),
+    name: z.string(),
+    role: z.enum(["tadbirkor", "buxgalter", "investor"])
+  })
+});
 
-type LoginResult = {
-  access_token: string;
-  user: ApiUser;
-};
+type LoginResult = z.infer<typeof loginResultSchema>;
+
+type OAuthProvider = "google" | "facebook";
+export type UserRole = "tadbirkor" | "buxgalter" | "investor";
 
 type FinAdvisorUser = User & {
-  role: ApiUser["role"];
+  role: UserRole;
   accessToken: string;
 };
+
+export async function exchangeOAuthAccount(
+  provider: OAuthProvider,
+  accessToken: string,
+  role: UserRole = "tadbirkor"
+): Promise<LoginResult> {
+  const apiUrl = process.env.FINADVISOR_API_URL ?? "http://127.0.0.1:8000";
+  const response = await fetch(`${apiUrl}/auth/oauth`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ provider, access_token: accessToken, role }),
+    cache: "no-store"
+  });
+  if (!response.ok) {
+    throw new Error(`OAuth exchange failed with status ${response.status}`);
+  }
+
+  return loginResultSchema.parse(await response.json());
+}
 
 const providers: NextAuthOptions["providers"] = [
   CredentialsProvider({
@@ -47,7 +71,7 @@ const providers: NextAuthOptions["providers"] = [
         throw new Error(`Authentication service returned ${response.status}`);
       }
 
-      const result = (await response.json()) as LoginResult;
+      const result = loginResultSchema.parse(await response.json());
       return {
         id: result.user.id,
         name: result.user.name,
@@ -82,7 +106,36 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET,
   session: { strategy: "jwt" },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      if (
+        account &&
+        (account.provider === "google" || account.provider === "facebook")
+      ) {
+        if (!account.access_token) {
+          throw new Error("OAuth provider did not return an access token");
+        }
+        const cookieStore = cookies();
+        const roleIntent = cookieStore.get("finadvisor_oauth_role")?.value;
+        const role: UserRole =
+          roleIntent === "buxgalter" || roleIntent === "investor"
+            ? roleIntent
+            : "tadbirkor";
+        let result: LoginResult;
+        try {
+          result = await exchangeOAuthAccount(
+            account.provider,
+            account.access_token,
+            role
+          );
+        } finally {
+          cookieStore.delete("finadvisor_oauth_role");
+        }
+        token.sub = result.user.id;
+        token.role = result.user.role;
+        token.accessToken = result.access_token;
+        return token;
+      }
+
       if (user) {
         token.role = user.role;
         token.accessToken = user.accessToken;

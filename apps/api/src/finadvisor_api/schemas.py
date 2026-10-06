@@ -23,6 +23,14 @@ class LoginRequest(BaseModel):
     password: str = Field(min_length=1, max_length=128)
 
 
+class OAuthExchangeRequest(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    provider: Literal["google", "facebook"]
+    access_token: str = Field(min_length=1, max_length=4096)
+    role: UserRole = "tadbirkor"
+
+
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

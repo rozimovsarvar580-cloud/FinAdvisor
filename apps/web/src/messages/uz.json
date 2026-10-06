@@ -517,6 +517,7 @@
     "emailInUse": "Bu elektron pochta bilan hisob allaqachon mavjud",
     "signupFailed": "Hisob yaratib bo‘lmadi. Qayta urinib ko‘ring",
     "connectionFailed": "Serverga ulanib bo‘lmadi. Keyinroq urinib ko‘ring",
+    "oauthSetupFailed": "Ijtimoiy tarmoq orqali kirishni boshlab bo‘lmadi. Keyinroq urinib ko‘ring",
     "calculatorUnavailable": "Hisoblagich xizmatiga ulanib bo‘lmadi. Keyinroq urinib ko‘ring",
     "calculatorFailed": "Komissiyani hisoblab bo‘lmadi. Kiritilgan qiymatni tekshiring",
     "draftInvalid": "Saqlangan qoralama yaroqsiz. Yangi reja boshlang",

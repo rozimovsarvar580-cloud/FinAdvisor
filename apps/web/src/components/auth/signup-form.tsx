@@ -50,6 +50,7 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
     }
   });
   const passwordStrength = getPasswordStrength(watch("password") ?? "");
+  const selectedRole = watch("role") ?? "tadbirkor";
   const strengthLabel = [
     "",
     t("strengthLevels.weak"),
@@ -216,7 +217,11 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
         <span className="text-xs text-muted-foreground">{t("continueWith")}</span>
         <span aria-hidden="true" className="h-px flex-1 bg-border" />
       </div>
-      <SocialSignInButtons callbackUrl={callbackUrl} />
+      <SocialSignInButtons
+        callbackUrl={callbackUrl}
+        disabled={!watch("terms")}
+        role={selectedRole}
+      />
       <p className="mt-7 text-center text-sm text-muted-foreground">
         {t("haveAccount")}{" "}
         <Link

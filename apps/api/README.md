@@ -11,10 +11,10 @@ Set `DATABASE_URL` and `JWT_SECRET` from the repository's `.env` file before
 starting the service. Apply database migrations from the repository root with
 `alembic -c apps/api/alembic.ini upgrade head`.
 
-Authentication routes: `POST /auth/register`, `POST /auth/login`, and
-`GET /auth/me` (Bearer JWT). Social identity sign-in uses NextAuth in the web
-application; provision linked social users through a trusted identity exchange
-before enabling those providers for persistent API-account access.
+Authentication routes: `POST /auth/register`, `POST /auth/login`,
+`POST /auth/oauth`, and `GET /auth/me`. The OAuth exchange verifies Google and
+Facebook access tokens directly with the provider, stores stable provider
+subject IDs, and never implicitly links an existing email account.
 
 `POST /pricing/commission` accepts an annual revenue string and returns a
 progressive commission breakdown calculated by `packages/finance-engine`.

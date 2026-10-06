@@ -7,7 +7,9 @@ Visit `http://localhost:3000/uz`.
 
 Set `NEXTAUTH_SECRET` and `JWT_SECRET` in the repository `.env` file. Google and
 Facebook sign-in are enabled when their corresponding client ID and secret are
-configured; email/password authentication is handled by the FastAPI service.
+configured. OAuth sign-in exchanges the provider access token with FastAPI;
+email/password authentication is also handled by the API. Configure
+`FINADVISOR_API_URL` when the API is not running at `http://127.0.0.1:8000`.
 
 Checks: `npm run lint --workspace apps/web`, `npm test --workspace apps/web`,
 `npm run test:e2e --workspace apps/web`, and
