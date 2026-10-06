@@ -49,7 +49,7 @@ export function Footer() {
                 {group.links.map((link) => (
                   <li key={link.href}>
                     <Link
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      className="text-sm text-muted-foreground transition-colors hover:translate-x-0.5 hover:text-primary"
                       href={link.href}
                     >
                       {link.label}

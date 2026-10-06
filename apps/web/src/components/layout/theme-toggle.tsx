@@ -14,9 +14,13 @@ export function ThemeToggle() {
       aria-label={t("theme")}
       aria-pressed={resolvedTheme === "dark"}
       data-testid="theme-toggle"
-      onClick={() =>
-        setTheme(resolvedTheme === "dark" ? "light" : "dark")
-      }
+      onClick={() => {
+        document.documentElement.classList.add("theme-transition");
+        setTheme(resolvedTheme === "dark" ? "light" : "dark");
+        window.setTimeout(() => {
+          document.documentElement.classList.remove("theme-transition");
+        }, 300);
+      }}
       size="icon"
       variant="ghost"
     >

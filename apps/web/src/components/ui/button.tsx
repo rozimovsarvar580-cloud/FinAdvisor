@@ -5,15 +5,32 @@ import { cn } from "@/lib/utils";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   asChild?: boolean;
-  variant?: "default" | "secondary" | "outline" | "ghost" | "destructive";
+  variant?:
+    | "primary"
+    | "gradient"
+    | "accent"
+    | "outline"
+    | "ghost"
+    | "default"
+    | "secondary"
+    | "destructive";
   size?: "default" | "sm" | "lg" | "icon";
 };
 
 const variants = {
-  default: "bg-primary text-primary-foreground hover:opacity-90",
-  secondary: "bg-secondary text-secondary-foreground hover:opacity-80",
-  outline: "border border-border bg-background hover:bg-muted",
-  ghost: "hover:bg-muted",
+  primary:
+    "bg-primary text-primary-foreground shadow-md hover:shadow-xl hover:shadow-primary/30",
+  gradient:
+    "bg-[image:var(--gradient-brand)] bg-[length:200%_100%] text-white shadow-lg hover:bg-right hover:shadow-primary/40",
+  accent:
+    "bg-accent text-accent-foreground hover:brightness-110 hover:shadow-lg",
+  outline:
+    "border border-border bg-card hover:border-primary hover:bg-primary/5",
+  ghost: "hover:bg-primary/10",
+  default:
+    "bg-primary text-primary-foreground shadow-md hover:shadow-xl hover:shadow-primary/30",
+  secondary:
+    "bg-secondary text-secondary-foreground shadow-sm hover:shadow-md",
   destructive: "bg-red-600 text-white hover:bg-red-700"
 };
 
@@ -37,7 +54,7 @@ export function Button({
   return (
     <Component
       className={cn(
-        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
+        "relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         sizes[size],
         className

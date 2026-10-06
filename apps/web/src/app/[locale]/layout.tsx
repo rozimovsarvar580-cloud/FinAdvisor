@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
@@ -8,6 +9,18 @@ import { Header } from "@/components/layout/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { isSupportedLocale } from "@/lib/locales";
 import "../globals.css";
+
+const plusJakarta = Plus_Jakarta_Sans({
+  display: "swap",
+  subsets: ["latin", "latin-ext", "cyrillic-ext"],
+  variable: "--font-plus-jakarta"
+});
+
+const inter = Inter({
+  display: "swap",
+  subsets: ["latin", "latin-ext", "cyrillic"],
+  variable: "--font-inter"
+});
 
 export function generateStaticParams() {
   return ["uz", "ru", "en"].map((locale) => ({ locale }));
@@ -29,7 +42,9 @@ export default async function LocaleLayout({
 
   return (
     <html lang={params.locale} suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
+      <body
+        className={`${plusJakarta.variable} ${inter.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
+      >
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <Header />

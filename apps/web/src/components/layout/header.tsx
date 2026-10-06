@@ -11,10 +11,18 @@ import { ThemeToggle } from "./theme-toggle";
 export function Header() {
   const t = useTranslations("nav");
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const updateScroll = () => setScrolled(window.scrollY > 8);
+    const updateScroll = () => {
+      setScrolled(window.scrollY > 8);
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(
+        scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0
+      );
+    };
     updateScroll();
     window.addEventListener("scroll", updateScroll, { passive: true });
     return () => window.removeEventListener("scroll", updateScroll);
@@ -27,11 +35,24 @@ export function Header() {
   ];
 
   return (
-    <header
-      className={`sticky top-0 z-40 border-b border-border/70 transition-colors ${
-        scrolled ? "bg-background/85 shadow-sm backdrop-blur-xl" : "bg-background"
-      }`}
-    >
+    <>
+      <div
+        aria-hidden="true"
+        className="fixed inset-x-0 top-0 z-50 h-0.5"
+        data-testid="scroll-progress"
+      >
+        <div
+          className="h-full bg-primary transition-[width] duration-150"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
+      <header
+        className={`sticky top-0 z-40 border-b border-border/70 transition-colors ${
+          scrolled
+            ? "bg-background/85 shadow-sm backdrop-blur-xl"
+            : "bg-background"
+        }`}
+      >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-page">
         <Link
           aria-label="FinAdvisor"
@@ -48,7 +69,7 @@ export function Header() {
         >
           {links.map((link) => (
             <Link
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="text-sm font-medium text-muted-foreground transition-all hover:-translate-y-0.5 hover:text-primary"
               href={link.href}
               key={link.href}
             >
@@ -119,6 +140,7 @@ export function Header() {
           </div>
         </nav>
       ) : null}
-    </header>
+      </header>
+    </>
   );
 }

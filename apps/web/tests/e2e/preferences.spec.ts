@@ -35,6 +35,31 @@ test("theme control switches between dark and light without a flash", async ({
   await expect(toggle).toHaveAttribute("aria-pressed", "false");
 });
 
+test("scroll progress updates and reduced motion disables smooth scrolling", async ({
+  page
+}) => {
+  await page.goto("/uz");
+  const progress = page.getByTestId("scroll-progress");
+  await expect(progress).toBeVisible();
+
+  await page.evaluate(() =>
+    window.scrollTo(0, document.documentElement.scrollHeight)
+  );
+  await expect(progress.locator("div")).toHaveAttribute(
+    "style",
+    /width:\s*100%/
+  );
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => getComputedStyle(document.documentElement).scrollBehavior
+      )
+    )
+    .toBe("auto");
+});
+
 test("auth pages translate and protected paths preserve the callback URL", async ({
   page
 }) => {

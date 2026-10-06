@@ -11,6 +11,9 @@ const config: Config = {
         "card-foreground": "hsl(var(--card-foreground))",
         primary: "hsl(var(--primary))",
         "primary-foreground": "hsl(var(--primary-foreground))",
+        accent: "hsl(var(--accent))",
+        "accent-foreground": "hsl(var(--accent-foreground))",
+        success: "hsl(var(--success))",
         secondary: "hsl(var(--secondary))",
         "secondary-foreground": "hsl(var(--secondary-foreground))",
         muted: "hsl(var(--muted))",
@@ -27,7 +30,8 @@ const config: Config = {
         section: "var(--section-space)"
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"]
+        sans: ["var(--font-sans)"],
+        heading: ["var(--font-heading)"]
       }
     }
   },
