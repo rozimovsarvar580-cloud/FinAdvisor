@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Prepare route directories",
+			"type": "shell",
+			"command": "cmd /c \"if not exist \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\components\\investors\" mkdir \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\components\\investors\" && if not exist \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\components\\desktop-agent\" mkdir \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\components\\desktop-agent\" && if not exist \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\app\\[locale]\\investors\" mkdir \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\app\\[locale]\\investors\" && if not exist \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\app\\[locale]\\desktop-agent\" mkdir \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\app\\[locale]\\desktop-agent\"\"",
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

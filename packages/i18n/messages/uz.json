@@ -1,0 +1,52 @@
+{
+  "home": {
+    "title": "FinAdvisor",
+    "description": "Tadbirkorlar uchun ishonchli moliyaviy reja.",
+    "action": "Reja tuzishni boshlash"
+  },
+  "common": {
+    "theme": "Mavzu",
+    "light": "Yorug‘",
+    "dark": "Qorong‘i",
+    "loading": "Yuklanmoqda",
+    "errorTitle": "Xatolik yuz berdi",
+    "errorDescription": "Sahifani qayta yuklab ko‘ring.",
+    "retry": "Qayta urinish",
+    "language": "Til",
+    "features": "Imkoniyatlar",
+    "pricing": "Narxlar",
+    "investors": "Investorlar",
+    "about": "Biz haqimizda",
+    "login": "Kirish",
+    "getStarted": "Boshlash",
+    "product": "Mahsulot",
+    "download": "Yuklab olish",
+    "help": "Yordam",
+    "privacy": "Maxfiylik",
+    "terms": "Shartlar",
+    "disclaimer": "Ogohlantirish",
+    "disclaimerText": "AI natijalari moliyaviy yoki yuridik maslahat emas.",
+    "reliablePlanning": "Ishonchli moliyaviy reja.",
+    "faq": "Savol-javob"
+  },
+  "features": {
+    "title": "Imkoniyatlar",
+    "description": "FinAdvisor tadbirkorning moliyaviy qarorlarini aniqroq qilishga yordam beradi.",
+    "items": [
+      ["AI reja generatori", "Moliyaviy engine natijalari asosida tushunarli va audit qilinadigan ish jarayoni."],
+      ["Kalkulyatorlar", "Moliyaviy engine natijalari asosida tushunarli va audit qilinadigan ish jarayoni."],
+      ["Bank-Readiness", "Moliyaviy engine natijalari asosida tushunarli va audit qilinadigan ish jarayoni."],
+      ["What-if stsenariylar", "Moliyaviy engine natijalari asosida tushunarli va audit qilinadigan ish jarayoni."],
+      ["PDF va Excel hisobot", "Moliyaviy engine natijalari asosida tushunarli va audit qilinadigan ish jarayoni."],
+      ["Investorlar bilan aloqa", "Moliyaviy engine natijalari asosida tushunarli va audit qilinadigan ish jarayoni."]
+    ]
+  },
+  "faq": {
+    "title": "Savol-javob",
+    "items": [
+      ["Hisob-kitoblarni kim bajaradi?", "Finance-engine hisoblaydi; AI faqat tushuntiradi."],
+      ["AI maslahat moliyaviy maslahatmi?", "Yo‘q, natijalar qaror qabul qilishga yordamchi vosita."],
+      ["Qaysi tillar bor?", "O‘zbek, rus va ingliz tillari."]
+    ]
+  }
+}

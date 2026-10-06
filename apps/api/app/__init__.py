@@ -1,0 +1,1 @@
+"""FinAdvisor API application."""

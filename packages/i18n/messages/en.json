@@ -1,0 +1,52 @@
+{
+  "home": {
+    "title": "FinAdvisor",
+    "description": "Reliable financial planning for entrepreneurs.",
+    "action": "Start planning"
+  },
+  "common": {
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "loading": "Loading",
+    "errorTitle": "Something went wrong",
+    "errorDescription": "Please try refreshing the page.",
+    "retry": "Try again",
+    "language": "Language",
+    "features": "Features",
+    "pricing": "Pricing",
+    "investors": "Investors",
+    "about": "About",
+    "login": "Login",
+    "getStarted": "Get started",
+    "product": "Product",
+    "download": "Download",
+    "help": "Help",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "disclaimer": "Disclaimer",
+    "disclaimerText": "AI output is not financial or legal advice.",
+    "reliablePlanning": "Reliable financial planning.",
+    "faq": "FAQ"
+  },
+  "features": {
+    "title": "Features",
+    "description": "FinAdvisor helps entrepreneurs make more accurate financial decisions.",
+    "items": [
+      ["AI plan generator", "A clear and auditable workflow based on finance-engine results."],
+      ["Calculators", "A clear and auditable workflow based on finance-engine results."],
+      ["Bank readiness", "A clear and auditable workflow based on finance-engine results."],
+      ["What-if scenarios", "A clear and auditable workflow based on finance-engine results."],
+      ["PDF and Excel reports", "A clear and auditable workflow based on finance-engine results."],
+      ["Investor communication", "A clear and auditable workflow based on finance-engine results."]
+    ]
+  },
+  "faq": {
+    "title": "FAQ",
+    "items": [
+      ["Who performs calculations?", "The finance engine calculates; AI only explains."],
+      ["Is the AI answer financial advice?", "No, the results are decision-support information."],
+      ["Which languages are available?", "Uzbek, Russian, and English."]
+    ]
+  }
+}
