@@ -1,7 +1,7 @@
 """Create user accounts.
 
 Revision ID: 20261003_01
-Revises:
+Revises: 0005_create_email_verifications
 Create Date: 2026-10-03
 """
 from collections.abc import Sequence
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 revision: str = "20261003_01"
-down_revision: str | None = None
+down_revision: str | None = "0005_create_email_verifications"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

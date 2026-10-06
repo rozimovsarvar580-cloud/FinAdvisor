@@ -1,4 +1,4 @@
-from app.rate_limit import InMemoryRateLimiter
+from finadvisor_api.legacy.rate_limit import InMemoryRateLimiter
 
 
 def test_rate_limiter_blocks_after_limit():

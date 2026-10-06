@@ -546,7 +546,9 @@
       "whatIf": "What-if ssenariysi",
       "analyzer": "Reja tahlilchisi",
       "chat": "AI chat",
-      "reports": "Hisobotlar"
+      "reports": "Hisobotlar",
+      "investorMarketplace": "Investorlar bozori",
+      "desktopAgent": "Desktop agent"
     },
     "wizard": {
       "eyebrow": "Restoran shabloni",

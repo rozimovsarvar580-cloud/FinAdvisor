@@ -546,7 +546,9 @@
       "whatIf": "Сценарий what-if",
       "analyzer": "Анализ плана",
       "chat": "AI-чат",
-      "reports": "Отчёты"
+      "reports": "Отчёты",
+      "investorMarketplace": "Маркетплейс инвесторов",
+      "desktopAgent": "Десктопный агент"
     },
     "wizard": {
       "eyebrow": "Шаблон ресторана",

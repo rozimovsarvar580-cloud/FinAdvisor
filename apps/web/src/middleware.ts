@@ -9,10 +9,12 @@ const handleI18nRouting = createMiddleware(routing);
 
 export default async function middleware(request: NextRequest) {
   const [, locale, ...segments] = request.nextUrl.pathname.split("/");
-  if (locale && isSupportedLocale(locale) && segments[0] === "app") {
+  const protectedSection = segments[0] === "app" || segments[0] === "dashboard";
+  if (locale && isSupportedLocale(locale) && protectedSection) {
     const secret = process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET;
     const token = secret ? await getToken({ req: request, secret }) : null;
-    if (!token) {
+    const legacyToken = request.cookies.get("finadvisor_token")?.value;
+    if (!token && !legacyToken) {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = `/${locale}/login`;
       loginUrl.search = "";

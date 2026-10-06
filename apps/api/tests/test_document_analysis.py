@@ -49,6 +49,7 @@ def test_analyze_endpoint_accepts_docx_upload() -> None:
     document.save(content)
 
     from fastapi.testclient import TestClient
+
     from finadvisor_api.main import app
 
     response = TestClient(app).post(

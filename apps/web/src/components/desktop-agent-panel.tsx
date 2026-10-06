@@ -7,6 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { buildSyncQueue, getQueueSummary, type SyncTask } from "@/lib/desktop-agent";
 
+const taskTranslationKeys: Record<string, string> = {
+  "sync-plan": "syncPlan",
+  "sync-pricing": "syncPricing",
+  "sync-bank-rules": "syncBankRules"
+};
+
 const tasks: SyncTask[] = [
   {
     id: "sync-plan",
@@ -60,7 +66,9 @@ export function DesktopAgentPanel() {
               variant={activeTask?.id === task.id ? "default" : "ghost"}
             >
               <span>
-                <span className="block font-medium">{t(`tasks.${task.id}`)}</span>
+                <span className="block font-medium">
+                  {t(`tasks.${taskTranslationKeys[task.id]}`)}
+                </span>
                 <span className="text-xs opacity-75">{task.priority}</span>
               </span>
               <span className="text-xs">{task.estimatedMinutes}m</span>
@@ -69,7 +77,13 @@ export function DesktopAgentPanel() {
         </div>
 
         <Card className="p-6">
-          <h3 className="text-xl font-semibold">{t(`tasks.${activeTask?.id ?? "syncPlan"}`)}</h3>
+          <h3 className="text-xl font-semibold">
+            {t(
+              `tasks.${
+                activeTask ? taskTranslationKeys[activeTask.id] : "syncPlan"
+              }`
+            )}
+          </h3>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl bg-muted p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">

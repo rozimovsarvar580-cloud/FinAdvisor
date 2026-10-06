@@ -1,8 +1,8 @@
 from fastapi.testclient import TestClient
 
-from app.main import app
-from app.db import SessionLocal
-from app.session_repository import create_session
+from finadvisor_api.legacy.db import SessionLocal
+from finadvisor_api.legacy.main import app
+from finadvisor_api.legacy.session_repository import create_session
 
 client = TestClient(app)
 

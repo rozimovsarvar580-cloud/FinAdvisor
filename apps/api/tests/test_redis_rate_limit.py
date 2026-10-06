@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from app.redis_rate_limit import RedisRateLimiter
+from finadvisor_api.legacy.redis_rate_limit import RedisRateLimiter
 
 
 def test_redis_rate_limiter_sets_expiry_on_first_hit():

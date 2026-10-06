@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from app.main import app
+from finadvisor_api.legacy.main import app
 
 client = TestClient(app)
 HEADERS = {"Authorization": "Bearer demo-token"}

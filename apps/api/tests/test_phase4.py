@@ -1,8 +1,9 @@
-from fastapi.testclient import TestClient
 from io import BytesIO
+
+from fastapi.testclient import TestClient
 from openpyxl import load_workbook
 
-from app.main import app
+from finadvisor_api.legacy.main import app
 
 client = TestClient(app)
 

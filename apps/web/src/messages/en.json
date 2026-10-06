@@ -546,7 +546,9 @@
       "whatIf": "What-if scenario",
       "analyzer": "Plan analyzer",
       "chat": "AI chat",
-      "reports": "Reports"
+      "reports": "Reports",
+      "investorMarketplace": "Investor marketplace",
+      "desktopAgent": "Desktop agent"
     },
     "wizard": {
       "eyebrow": "Restaurant template",

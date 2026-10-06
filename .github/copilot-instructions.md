@@ -3,9 +3,9 @@
 ## Product scope
 
 FinAdvisor helps small-business owners in Uzbekistan, starting with restaurants,
-prepare financially grounded business plans. Build only the currently requested
-MVP scope; do not start the future investor marketplace or desktop agent without
-explicit approval.
+prepare financially grounded business plans. Stages 0-7 of the approved ROADMAP
+are in scope, including the investor marketplace and desktop agent. Do not start
+work beyond those stages without explicit approval.
 
 ## Non-negotiable engineering rules
 

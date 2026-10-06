@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-from app.db import Base
-from app.session_repository import create_session, get_active_session
+from finadvisor_api.legacy.db import Base
+from finadvisor_api.legacy.session_repository import create_session, get_active_session
 
 
 def test_auth_session_can_be_created_and_loaded():
