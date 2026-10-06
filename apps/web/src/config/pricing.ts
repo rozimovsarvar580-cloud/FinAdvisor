@@ -17,8 +17,8 @@ export const pricingPlans = [
     id: "pro",
     priceByPeriod: {
       weekly: "$10",
-      monthly: "$40",
-      yearly: "$480"
+      monthly: "$39",
+      yearly: "$390"
     },
     featureKeys: ["unlimitedPlans", "aiPlanWriting", "documentExport"],
     highlighted: true
@@ -27,8 +27,8 @@ export const pricingPlans = [
     id: "business",
     priceByPeriod: {
       weekly: "$20",
-      monthly: "$80",
-      yearly: "$960"
+      monthly: "$79",
+      yearly: "$790"
     },
     featureKeys: ["teamAccess", "advancedReports", "prioritySupport"],
     highlighted: false
