@@ -767,6 +767,9 @@
     "eyebrow": "Desktop agent",
     "title": "Local workflow sync",
     "description": "This agent orders local sync tasks by urgency while leaving all financial calculations in the finance engine.",
+    "downloadFor": "Download for",
+    "recommended": "Recommended package: {platform}",
+    "detected": "Detected: {platform}",
     "stats": {
       "queued": "Queued",
       "highPriority": "High priority",

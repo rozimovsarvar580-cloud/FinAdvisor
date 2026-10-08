@@ -12,8 +12,8 @@ FinAdvisor helps Uzbek entrepreneurs build reliable restaurant financial plans.
 ## Quick start
 
 1. Copy `.env.example` to `.env`.
-2. Start infrastructure: `docker compose up -d postgres redis`.
-3. Start the API:
+2. Start the full stack: `docker compose up -d postgres redis api web`.
+3. Or run services locally:
 
    ```powershell
    cd apps\api
@@ -24,21 +24,20 @@ FinAdvisor helps Uzbek entrepreneurs build reliable restaurant financial plans.
    uvicorn finadvisor_api.main:app --reload
    ```
 
-4. Start the web app in another terminal:
-
    ```powershell
    cd apps\web
    npm install
    npm run dev
    ```
 
-The API health check is available at `http://localhost:8000/health`.
+The API health check is available at `http://localhost:8000/health` and the web app at `http://localhost:3000`.
 
 The API uses PostgreSQL and Redis configuration from `DATABASE_URL` and
 `REDIS_URL`. Local development defaults to SQLite when `DATABASE_URL` is not
-set; Docker Compose supplies PostgreSQL. SQLAlchemy's initial `Plan` model is in `apps/api/app/models.py`;
-database migrations are kept under `apps/api/migrations`.
+set; Docker Compose supplies PostgreSQL and Redis. Database migrations are kept under `apps/api/migrations`.
 
-Protected accounting and agent routes require a Bearer session token. The
+Publishing metadata is generated for all locale-prefixed pages, with `sitemap.xml`, `robots.txt`, `Open Graph` metadata, and locale-specific `hreflang` alternates. The desktop agent and web app are prepared to emit release assets in the GitHub Actions workflow.
+
+Protected accounting and agent routes require a valid auth Bearer session token. The
 desktop agent only queues synchronization commands; financial calculations
 remain in `packages/finance-engine`.

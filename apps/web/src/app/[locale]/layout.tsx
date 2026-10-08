@@ -8,6 +8,7 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { isSupportedLocale } from "@/lib/locales";
+import { buildMetadata } from "@/lib/site-metadata";
 import "../globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -24,6 +25,14 @@ const inter = Inter({
 
 export function generateStaticParams() {
   return ["uz", "ru", "en"].map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params
+}: {
+  params: { locale: string };
+}) {
+  return buildMetadata({ locale: params.locale, pathname: "/" });
 }
 
 export default async function LocaleLayout({

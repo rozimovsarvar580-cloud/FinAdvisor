@@ -115,6 +115,34 @@ test("social signup requires consent and forwards the selected role", async ({
   await expect(page).toHaveURL(/\/uz\?oauth-started=1$/);
 });
 
+test("release metadata exposes locale-aware canonical tags and crawl routes", async ({
+  page
+}) => {
+  await page.goto("/en");
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    /https:\/\/finadvisor\.uz\/en$/
+  );
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    "content",
+    /FinAdvisor/
+  );
+
+  const robotsResponse = await page.request.get("/robots.txt");
+  expect(robotsResponse.ok()).toBeTruthy();
+  const robotsText = await robotsResponse.text();
+  expect(robotsText).toContain("Sitemap: https://finadvisor.uz/sitemap.xml");
+  expect(robotsText).toContain("Disallow: /api/");
+
+  const sitemapResponse = await page.request.get("/sitemap.xml");
+  expect(sitemapResponse.ok()).toBeTruthy();
+  const sitemapText = await sitemapResponse.text();
+  expect(sitemapText).toContain("/uz");
+  expect(sitemapText).toContain("/ru/pricing");
+  expect(sitemapText).toContain("/en/desktop-agent");
+});
+
 test("landing page shows the key sections and an accessible FAQ accordion", async ({
   page
 }) => {

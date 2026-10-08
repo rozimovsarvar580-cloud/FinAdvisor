@@ -18,10 +18,11 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src ipc: http://ipc.localhost"
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 https://api.finadvisor.uz ipc: http://ipc.localhost"
     }
   },
   "bundle": {
-    "active": false
+    "active": true,
+    "targets": ["msi", "nsis", "dmg"]
   }
 }

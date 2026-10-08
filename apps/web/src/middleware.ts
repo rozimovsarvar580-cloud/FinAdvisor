@@ -6,8 +6,50 @@ import { routing } from "./i18n/routing";
 import { isSupportedLocale } from "./lib/locales";
 
 const handleI18nRouting = createMiddleware(routing);
+const rateLimitWindowMs = 60_000;
+const maxRequestsPerWindow = 120;
+const rateLimitBuckets = new Map<string, { count: number; resetAt: number }>();
+
+function getClientKey(request: NextRequest) {
+  const forwardedFor = request.headers.get("x-forwarded-for") ?? "";
+  const ip = forwardedFor.split(",")[0]?.trim() || "unknown";
+  return ip;
+}
+
+function enforceRateLimit(request: NextRequest) {
+  const key = getClientKey(request);
+  const now = Date.now();
+  const entry = rateLimitBuckets.get(key);
+
+  if (!entry || entry.resetAt <= now) {
+    rateLimitBuckets.set(key, { count: 1, resetAt: now + rateLimitWindowMs });
+    return false;
+  }
+
+  if (entry.count >= maxRequestsPerWindow) {
+    return true;
+  }
+
+  entry.count += 1;
+  return false;
+}
 
 export default async function middleware(request: NextRequest) {
+  if (enforceRateLimit(request)) {
+    const retryAfter = Math.max(1, Math.ceil((rateLimitBuckets.get(getClientKey(request))?.resetAt ?? Date.now()) - Date.now()) / 1000);
+    return NextResponse.json(
+      { error: "Too many requests" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(retryAfter),
+          "X-RateLimit-Limit": String(maxRequestsPerWindow),
+          "X-RateLimit-Remaining": "0"
+        }
+      }
+    );
+  }
+
   const [, locale, ...segments] = request.nextUrl.pathname.split("/");
   const protectedSection = segments[0] === "app" || segments[0] === "dashboard";
   if (locale && isSupportedLocale(locale) && protectedSection) {

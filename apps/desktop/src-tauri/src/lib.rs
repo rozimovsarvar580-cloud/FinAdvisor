@@ -1,5 +1,6 @@
 use std::{sync::Mutex, time::Duration};
 
+use keyring::Entry;
 use reqwest::{Client, RequestBuilder, Url};
 use serde::{Deserialize, Serialize};
 use tauri::State;
@@ -72,8 +73,8 @@ struct SyncStatementRequest<'a> {
 fn normalize_api_base_url(value: &str) -> Result<String, String> {
     let mut url = Url::parse(value.trim()).map_err(|_| "invalid_api_url".to_string())?;
     let host = url.host_str().unwrap_or_default();
-    let is_local_http = url.scheme() == "http"
-        && matches!(host, "localhost" | "127.0.0.1" | "[::1]");
+    let is_local_http =
+        url.scheme() == "http" && matches!(host, "localhost" | "127.0.0.1" | "[::1]");
 
     if (url.scheme() != "https" && !is_local_http)
         || !url.username().is_empty()
@@ -87,6 +88,30 @@ fn normalize_api_base_url(value: &str) -> Result<String, String> {
     let path = url.path().trim_end_matches('/').to_string();
     url.set_path(&path);
     Ok(url.as_str().trim_end_matches('/').to_string())
+}
+
+fn session_entry() -> Result<Entry, String> {
+    Entry::new("uz.finadvisor.agent", "session").map_err(|_| "internal_error".to_string())
+}
+
+fn save_session_token(token: &str) -> Result<(), String> {
+    session_entry()?
+        .set_password(token)
+        .map_err(|_| "internal_error".to_string())
+}
+
+fn load_session_token() -> Result<Option<String>, String> {
+    match session_entry()?.get_password() {
+        Ok(token) => Ok(Some(token)),
+        Err(keyring::Error::NoEntry) => Ok(None),
+        Err(_) => Err("internal_error".to_string()),
+    }
+}
+
+fn clear_session_token() -> Result<(), String> {
+    session_entry()?
+        .delete_password()
+        .map_err(|_| "internal_error".to_string())
 }
 
 fn active_session(state: &AgentState) -> Result<AgentSession, String> {
@@ -177,8 +202,10 @@ async fn login(
         .lock()
         .map_err(|_| "internal_error".to_string())? = Some(AgentSession {
         api_base_url,
-        token,
+        token: token.clone(),
     });
+
+    save_session_token(&token)?;
 
     Ok(LoginInfo { email })
 }
@@ -268,7 +295,26 @@ fn logout(state: State<'_, AgentState>) -> Result<(), String> {
         .session
         .lock()
         .map_err(|_| "internal_error".to_string())? = None;
+    clear_session_token()?;
     Ok(())
+}
+
+#[tauri::command]
+fn restore_session(state: State<'_, AgentState>, api_base_url: String) -> Result<bool, String> {
+    let token = match load_session_token()? {
+        Some(value) => value,
+        None => return Ok(false),
+    };
+
+    let normalized = normalize_api_base_url(&api_base_url)?;
+    *state
+        .session
+        .lock()
+        .map_err(|_| "internal_error".to_string())? = Some(AgentSession {
+        api_base_url: normalized,
+        token,
+    });
+    Ok(true)
 }
 
 pub fn run() {
@@ -286,7 +332,8 @@ pub fn run() {
             load_dashboard,
             register_device,
             queue_statement_sync,
-            logout
+            logout,
+            restore_session
         ])
         .run(tauri::generate_context!())
         .expect("error while running FinAdvisor Agent");

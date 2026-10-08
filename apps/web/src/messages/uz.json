@@ -767,6 +767,9 @@
     "eyebrow": "Desktop agent",
     "title": "Lokal ish jarayonlarini sinxronlash",
     "description": "Agent mahalliy sinxronlash vazifalarini ustuvorlik bo‘yicha tartibga soladi, moliyaviy hisob-kitoblar esa moliyaviy dvigatelda qoladi.",
+    "downloadFor": "Uchun yuklab oling",
+    "recommended": "Tavsiya etilgan paket: {platform}",
+    "detected": "Aniqlandi: {platform}",
     "stats": {
       "queued": "Navbatda",
       "highPriority": "Yuqori ustuvorlik",
