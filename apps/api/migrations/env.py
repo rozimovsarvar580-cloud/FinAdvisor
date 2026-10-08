@@ -1,19 +1,19 @@
-import os
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-import finadvisor_api.models
 import finadvisor_api.knowledge
+import finadvisor_api.models
+from finadvisor_api.config import get_settings
 
 config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-database_url = os.getenv("DATABASE_URL")
-if database_url:
-    config.set_main_option("sqlalchemy.url", database_url.replace("%", "%%"))
+settings = get_settings()
+if settings.database_url_is_set:
+    config.set_main_option("sqlalchemy.url", settings.database_url.replace("%", "%%"))
 
 target_metadata = finadvisor_api.models.Base.metadata
 

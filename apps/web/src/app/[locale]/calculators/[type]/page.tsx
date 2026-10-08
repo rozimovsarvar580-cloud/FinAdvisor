@@ -3,22 +3,16 @@
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const locales = ["uz", "ru", "en"] as const;
 const allowed = ["credit", "capex", "revenue", "break-even", "reverse"] as const;
 type CalculatorType = (typeof allowed)[number];
 
-const labels: Record<CalculatorType, string> = {
-  credit: "Credit calculator",
-  capex: "Startup cost calculator",
-  revenue: "Revenue and profit calculator",
-  "break-even": "Break-even calculator",
-  reverse: "Reverse credit calculator",
-};
-
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
 export default function CalculatorPage() {
+  const t = useTranslations("routeCopy");
   const params = useParams<{ locale: string; type: string }>();
   const { locale, type } = params;
   const [values, setValues] = useState<Record<string, string>>({
@@ -47,39 +41,39 @@ export default function CalculatorPage() {
   const fields = useMemo(() => {
     if (calculatorType === "capex") {
       return [
-        ["item_amount", "Equipment amount (UZS)"],
-        ["working_capital", "Working capital (UZS)"],
-        ["contingency_rate", "Contingency (%)"],
+        ["item_amount", t("calculator.fields.itemAmount")],
+        ["working_capital", t("calculator.fields.workingCapital")],
+        ["contingency_rate", t("calculator.fields.contingency")],
       ];
     }
     if (calculatorType === "revenue") {
       return [
-        ["units", "Units per period"],
-        ["price_per_unit", "Price per unit (UZS)"],
-        ["fixed_costs", "Fixed costs (UZS)"],
-        ["variable_cost_rate", "Variable costs (%)"],
+        ["units", t("calculator.fields.units")],
+        ["price_per_unit", t("calculator.fields.pricePerUnit")],
+        ["fixed_costs", t("calculator.fields.fixedCosts")],
+        ["variable_cost_rate", t("calculator.fields.variableCosts")],
       ];
     }
     if (calculatorType === "break-even") {
       return [
-        ["fixed_costs", "Fixed costs (UZS)"],
-        ["price_per_unit", "Price per unit (UZS)"],
-        ["variable_cost_per_unit", "Variable cost per unit (UZS)"],
+        ["fixed_costs", t("calculator.fields.fixedCosts")],
+        ["price_per_unit", t("calculator.fields.pricePerUnit")],
+        ["variable_cost_per_unit", t("calculator.fields.variableCostPerUnit")],
       ];
     }
     if (calculatorType === "reverse") {
       return [
-        ["monthly_payment", "Monthly payment (UZS)"],
-        ["annual_rate", "Annual rate (%)"],
-        ["months", "Term (months)"],
+        ["monthly_payment", t("calculator.fields.monthlyPayment")],
+        ["annual_rate", t("calculator.fields.annualRate")],
+        ["months", t("calculator.fields.term")],
       ];
     }
     return [
-      ["principal", "Principal (UZS)"],
-      ["annual_rate", "Annual rate (%)"],
-      ["months", "Term (months)"],
+      ["principal", t("calculator.fields.principal")],
+      ["annual_rate", t("calculator.fields.annualRate")],
+      ["months", t("calculator.fields.term")],
     ];
-  }, [calculatorType]);
+  }, [calculatorType, t]);
 
   function updateValue(key: string, value: string) {
     setValues((current) => ({ ...current, [key]: value }));
@@ -94,14 +88,14 @@ export default function CalculatorPage() {
     if (calculatorType === "capex") {
       endpoint = "/api/v1/calc/capex";
       payload = {
-        items: [{ name: "Main investment", amount: values.item_amount }],
+        items: [{ name: t("calculator.mainInvestment"), amount: values.item_amount }],
         working_capital: values.working_capital,
         contingency_rate: values.contingency_rate,
       };
     } else if (calculatorType === "revenue") {
       endpoint = "/api/v1/calc/revenue-profit";
       payload = {
-        streams: [{ name: "Main revenue", units: values.units, price_per_unit: values.price_per_unit }],
+        streams: [{ name: t("calculator.mainRevenue"), units: values.units, price_per_unit: values.price_per_unit }],
         fixed_costs: values.fixed_costs,
         variable_cost_rate: values.variable_cost_rate,
       };
@@ -134,12 +128,12 @@ export default function CalculatorPage() {
       });
       const body = await response.json();
       if (!response.ok) {
-        setError(body.message ?? "Calculation failed.");
+        setError(body.message ?? t("calculator.errors.calculationFailed"));
       } else {
         setResult(body.rows[0]);
       }
     } catch {
-      setError("The calculation service is unavailable.");
+      setError(t("calculator.errors.serviceUnavailable"));
     } finally {
       setLoading(false);
     }
@@ -147,7 +141,7 @@ export default function CalculatorPage() {
 
   return (
     <main style={{ maxWidth: 720 }}>
-      <h1>{labels[calculatorType]}</h1>
+      <h1>{t(`calculator.labels.${calculatorType}`)}</h1>
       <div style={{ display: "grid", gap: 12 }}>
         {fields.map(([key, label]) => (
           <label key={key}>
@@ -155,12 +149,12 @@ export default function CalculatorPage() {
             <input value={values[key]} onChange={(event) => updateValue(key, event.target.value)} inputMode="decimal" />
           </label>
         ))}
-        <button onClick={calculate} disabled={loading}>{loading ? "Calculating..." : "Calculate"}</button>
+        <button onClick={calculate} disabled={loading}>{loading ? t("common.calculating") : t("common.calculate")}</button>
       </div>
       {error && <p role="alert">{error}</p>}
       {result && (
         <section className="card">
-          <h2>Result</h2>
+          <h2>{t("common.result")}</h2>
           <div style={{ display: "grid", gap: 8 }}>
             {Object.entries(result).filter(([key]) => key !== "formula").map(([key, value]) => (
               <p key={key}><strong>{key.replaceAll("_", " ")}:</strong> {value}</p>
@@ -169,7 +163,7 @@ export default function CalculatorPage() {
           <p>{result.formula}</p>
         </section>
       )}
-      <Link href={`/${locale}/calculators`}>Back to calculators</Link>
+      <Link href={`/${locale}/calculators`}>{t("common.backToCalculators")}</Link>
     </main>
   );
 }

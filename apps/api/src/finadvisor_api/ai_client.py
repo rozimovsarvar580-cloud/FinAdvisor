@@ -1,10 +1,11 @@
 import asyncio
 import json
-import os
 from collections.abc import AsyncIterator, Callable
 from typing import Any
 
 import httpx
+
+from finadvisor_api.config import get_settings
 
 
 class AIClientError(RuntimeError):
@@ -122,13 +123,14 @@ class OpenAIClient:
 
 
 async def generate(prompt: str, context: dict[str, object]) -> str:
-    api_key = os.getenv("OPENAI_API_KEY")
+    config = get_settings()
+    api_key = config.openai_api_key
     if not api_key:
         raise AIClientError("OPENAI_API_KEY must be configured")
     client = OpenAIClient(
         api_key=api_key,
-        model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
-        timeout=float(os.getenv("OPENAI_TIMEOUT_SECONDS", "30")),
+        model=config.openai_model,
+        timeout=config.openai_timeout_seconds,
     )
     return await client.generate(prompt, context)
 
@@ -136,13 +138,14 @@ async def generate(prompt: str, context: dict[str, object]) -> str:
 async def stream(
     prompt: str, context: dict[str, object]
 ) -> AsyncIterator[str]:
-    api_key = os.getenv("OPENAI_API_KEY")
+    config = get_settings()
+    api_key = config.openai_api_key
     if not api_key:
         raise AIClientError("OPENAI_API_KEY must be configured")
     client = OpenAIClient(
         api_key=api_key,
-        model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
-        timeout=float(os.getenv("OPENAI_TIMEOUT_SECONDS", "30")),
+        model=config.openai_model,
+        timeout=config.openai_timeout_seconds,
     )
     async for part in client.stream(prompt, context):
         yield part

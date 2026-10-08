@@ -26,7 +26,10 @@ export function Footer() {
       title: footer("resources"),
       links: [
         { label: footer("help"), href: "mailto:hello@finadvisor.uz" },
-        { label: footer("terms"), href: "/terms" }
+        { label: footer("terms"), href: "/terms" },
+        { label: footer("privacy"), href: "/privacy" },
+        { label: footer("refund"), href: "/refund" },
+        { label: footer("aiDisclaimer"), href: "/ai-disclaimer" }
       ]
     },
     {
@@ -49,7 +52,7 @@ export function Footer() {
                 {group.links.map((link) => (
                   <li key={link.href}>
                     <Link
-                      className="text-sm text-muted-foreground transition-colors hover:translate-x-0.5 hover:text-primary"
+                      className="text-sm text-muted-foreground transition-colors hover:translate-x-0.5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       href={link.href}
                     >
                       {link.label}

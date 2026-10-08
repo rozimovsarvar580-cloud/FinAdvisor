@@ -1,6 +1,6 @@
 """Revenue and operating profit calculations using Decimal arithmetic."""
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
 from pydantic import BaseModel, Field
 
@@ -19,9 +19,9 @@ class RevenueProfitInput(BaseModel):
     """Revenue and cost assumptions for one reporting period."""
 
     streams: list[RevenueStream] = Field(min_length=1)
-    fixed_costs: Decimal = Field(default=Decimal("0"), ge=0)
-    variable_cost_rate: Decimal = Field(default=Decimal("0"), ge=0, le=100)
-    other_costs: Decimal = Field(default=Decimal("0"), ge=0)
+    fixed_costs: Decimal = Field(default=Decimal(0), ge=0)
+    variable_cost_rate: Decimal = Field(default=Decimal(0), ge=0, le=100)
+    other_costs: Decimal = Field(default=Decimal(0), ge=0)
 
 
 class RevenueProfitResult(BaseModel):
@@ -45,15 +45,15 @@ def calculate_revenue_profit(data: RevenueProfitInput) -> RevenueProfitResult:
     """Calculate revenue and operating profit for the supplied period."""
     revenue = sum(
         (stream.units * stream.price_per_unit for stream in data.streams),
-        Decimal("0"),
+        Decimal(0),
     )
-    variable_costs = revenue * data.variable_cost_rate / Decimal("100")
+    variable_costs = revenue * data.variable_cost_rate / Decimal(100)
     total_costs = variable_costs + data.fixed_costs + data.other_costs
     operating_profit = revenue - total_costs
     margin = (
-        operating_profit / revenue * Decimal("100")
+        operating_profit / revenue * Decimal(100)
         if revenue
-        else Decimal("0")
+        else Decimal(0)
     )
     return RevenueProfitResult(
         revenue=_money(revenue),
@@ -68,8 +68,8 @@ def calculate_revenue_profit(data: RevenueProfitInput) -> RevenueProfitResult:
 
 
 __all__ = [
-    "RevenueStream",
     "RevenueProfitInput",
     "RevenueProfitResult",
+    "RevenueStream",
     "calculate_revenue_profit",
 ]

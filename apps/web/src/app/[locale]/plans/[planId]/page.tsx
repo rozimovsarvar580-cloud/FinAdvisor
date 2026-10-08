@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import en from "@legacy-messages/en.json";
 import ru from "@legacy-messages/ru.json";
@@ -20,20 +21,21 @@ export default async function PlanDetailsPage({ params }: { params: Promise<{ lo
   if (!(locale in messages)) notFound();
 
   const home = messages[locale as keyof typeof messages].home;
+  const t = await getTranslations({ locale, namespace: "routeCopy" });
 
   return (
     <main style={{ maxWidth: 640 }}>
       <h1>{home.title}</h1>
-      <h2>Plan: {planId}</h2>
+      <h2>{t("plans.detailsTitle", { planId })}</h2>
       <ul>
-        <li>Currency: UZS</li>
-        <li>Monthly revenue: 248,000,000</li>
-        <li>Monthly profit: 42,700,000</li>
+        <li>{t("plans.currency")}: UZS</li>
+        <li>{t("plans.monthlyRevenue")}: 248,000,000</li>
+        <li>{t("plans.monthlyProfit")}: 42,700,000</li>
       </ul>
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <a href={`${apiUrl}/api/v1/plans/${planId}/export.csv`}>Download CSV</a>
-        <a href={`${apiUrl}/api/v1/plans/${planId}/export.xlsx`}>Download Excel</a>
-        <a href={`${apiUrl}/api/v1/plans/${planId}/report`}>View report data</a>
+        <a href={`${apiUrl}/api/v1/plans/${planId}/export.csv`}>{t("common.downloadCsv")}</a>
+        <a href={`${apiUrl}/api/v1/plans/${planId}/export.xlsx`}>{t("common.downloadExcel")}</a>
+        <a href={`${apiUrl}/api/v1/plans/${planId}/report`}>{t("plans.viewReport")}</a>
       </div>
       <WhatIfPanel planId={planId} />
       <PlanEditor
@@ -46,7 +48,7 @@ export default async function PlanDetailsPage({ params }: { params: Promise<{ lo
         planId={planId}
         result={{ monthly_revenue: "248000000", monthly_profit: "42700000", currency: "UZS" }}
       />
-      <Link href={`/${locale}/plans`}>Back to plans</Link>
+      <Link href={`/${locale}/plans`}>{t("common.backToPlans")}</Link>
     </main>
   );
 }

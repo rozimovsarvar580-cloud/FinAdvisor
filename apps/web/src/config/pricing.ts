@@ -1,39 +1,60 @@
-export const billingPeriods = ["weekly", "monthly", "yearly"] as const;
+import pricingCatalogJson from "../../../api/src/finadvisor_api/pricing_catalog.json";
+
+type PricingPeriod = "weekly" | "monthly" | "yearly";
+type FreePlan = {
+  id: "free";
+  priceByPeriod: Record<PricingPeriod, string>;
+  featureKeys: readonly ["onePlan", "basicCalculations", "webPreview"];
+  highlighted: false;
+};
+type ProPlan = {
+  id: "pro";
+  priceByPeriod: Record<PricingPeriod, string>;
+  featureKeys: readonly [
+    "aiAnalysis",
+    "credit",
+    "tax",
+    "revenue",
+    "profit",
+    "calculators",
+    "businessPlan"
+  ];
+  highlighted: true;
+};
+type BusinessPlan = {
+  id: "business";
+  priceByPeriod: Record<PricingPeriod, string>;
+  featureKeys: readonly [
+    "aiAnalysis",
+    "credit",
+    "tax",
+    "revenue",
+    "profit",
+    "calculators",
+    "businessPlan",
+    "agentSynergy",
+    "desktopAgent",
+    "accountantOwnerAccounts"
+  ];
+  highlighted: false;
+};
+type PricingCatalog = {
+  billingPeriods: readonly PricingPeriod[];
+  placeholderMarker: "TODO(DECISION D1)";
+  placeholderPeriods: readonly PricingPeriod[];
+  plans: readonly [FreePlan, ProPlan, BusinessPlan];
+};
+
+const pricingCatalog = pricingCatalogJson as unknown as PricingCatalog;
+
+export const billingPeriods = pricingCatalog.billingPeriods;
 
 export type BillingPeriod = (typeof billingPeriods)[number];
 
-export const pricingPlans = [
-  {
-    id: "free",
-    priceByPeriod: {
-      weekly: "$0",
-      monthly: "$0",
-      yearly: "$0"
-    },
-    featureKeys: ["onePlan", "basicCalculations", "webPreview"],
-    highlighted: false
-  },
-  {
-    id: "pro",
-    priceByPeriod: {
-      weekly: "$10",
-      monthly: "$39",
-      yearly: "$390"
-    },
-    featureKeys: ["unlimitedPlans", "aiPlanWriting", "documentExport"],
-    highlighted: true
-  },
-  {
-    id: "business",
-    priceByPeriod: {
-      weekly: "$20",
-      monthly: "$79",
-      yearly: "$790"
-    },
-    featureKeys: ["teamAccess", "advancedReports", "prioritySupport"],
-    highlighted: false
-  }
-] as const;
+export const pricingPlans = pricingCatalog.plans;
+
+export const placeholderPricingPeriods = pricingCatalog.placeholderPeriods;
+export const pricingPlaceholderMarker = pricingCatalog.placeholderMarker;
 
 export const comparisonFeatures = [
   "plans",

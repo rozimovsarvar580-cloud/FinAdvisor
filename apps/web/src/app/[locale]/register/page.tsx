@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import RegisterForm from "./RegisterForm";
 
 import en from "@legacy-messages/en.json";
@@ -16,12 +17,13 @@ export default async function RegisterPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   if (!(locale in messages)) notFound();
   const copy = messages[locale as keyof typeof messages].home;
+  const t = await getTranslations({ locale, namespace: "routeCopy" });
   return (
     <main style={{ maxWidth: 460 }}>
       <h1>{copy.title}</h1>
-      <h2>Create account</h2>
+      <h2>{t("register.title")}</h2>
       <RegisterForm />
-      <p>Already have an account? <Link href={`/${locale}/login`}>Sign in</Link></p>
+      <p>{t("register.haveAccount")} <Link href={`/${locale}/login`}>{t("common.signIn")}</Link></p>
     </main>
   );
 }

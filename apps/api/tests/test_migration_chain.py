@@ -5,7 +5,9 @@ from alembic.script import ScriptDirectory
 
 
 def test_migrations_form_one_linear_chain() -> None:
-    config = Config(str(Path(__file__).resolve().parents[1] / "alembic.ini"))
+    api_root = Path(__file__).resolve().parents[1]
+    config = Config(str(api_root / "alembic.ini"))
+    config.set_main_option("script_location", str(api_root / "migrations"))
     script = ScriptDirectory.from_config(config)
     revisions = list(script.walk_revisions())
     bases = [revision for revision in revisions if revision.down_revision is None]

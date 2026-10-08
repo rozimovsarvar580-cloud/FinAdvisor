@@ -1,11 +1,11 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -19,6 +19,7 @@ import { Link } from "@/i18n/navigation";
 const pathSteps = ["01", "02", "03", "04"];
 const audiences = ["owner", "accountant", "investor"] as const;
 const comparisons = ["calculations", "localRules", "explanations", "documents"] as const;
+const values = ["accuracy", "transparency", "empowerment"] as const;
 
 function AboutReveal({
   children,
@@ -71,6 +72,20 @@ export function AboutPage() {
             </Button>
           </AboutReveal>
         </div>
+      </section>
+
+      <section className="py-section">
+        <AboutReveal className="mx-auto max-w-4xl px-page text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+            {t("mission.eyebrow")}
+          </p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            {t("mission.title")}
+          </h2>
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-muted-foreground">
+            {t("mission.description")}
+          </p>
+        </AboutReveal>
       </section>
 
       <section className="py-section">
@@ -164,6 +179,33 @@ export function AboutPage() {
         </div>
       </section>
 
+      <section className="bg-muted/40 py-section">
+        <div className="mx-auto max-w-7xl px-page">
+          <AboutReveal className="mx-auto max-w-2xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+              {t("values.eyebrow")}
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              {t("values.title")}
+            </h2>
+          </AboutReveal>
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {values.map((value) => (
+              <AboutReveal key={value}>
+                <Card className="h-full p-6">
+                  <h3 className="text-lg font-semibold">
+                    {t(`values.items.${value}.title`)}
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                    {t(`values.items.${value}.description`)}
+                  </p>
+                </Card>
+              </AboutReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="py-section">
         <div className="mx-auto max-w-5xl px-page">
           <AboutReveal className="mx-auto max-w-2xl text-center">
@@ -174,23 +216,23 @@ export function AboutPage() {
               {t("audience.title")}
             </h2>
           </AboutReveal>
-          <TabsPrimitive.Root className="mt-10" defaultValue="owner">
-            <TabsPrimitive.List
+          <Tabs className="mt-10" defaultValue="owner">
+            <TabsList
               aria-label={t("audience.tabsLabel")}
               className="mx-auto grid h-auto max-w-2xl grid-cols-3 rounded-xl bg-muted p-1"
             >
               {audiences.map((audience) => (
-                <TabsPrimitive.Trigger
+                <TabsTrigger
                   className="rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground transition-colors data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
                   key={audience}
                   value={audience}
                 >
                   {t(`audience.roles.${audience}.label`)}
-                </TabsPrimitive.Trigger>
+                </TabsTrigger>
               ))}
-            </TabsPrimitive.List>
+            </TabsList>
             {audiences.map((audience) => (
-              <TabsPrimitive.Content
+              <TabsContent
                 className="mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 key={audience}
                 value={audience}
@@ -203,9 +245,9 @@ export function AboutPage() {
                     {t(`audience.roles.${audience}.description`)}
                   </p>
                 </Card>
-              </TabsPrimitive.Content>
+              </TabsContent>
             ))}
-          </TabsPrimitive.Root>
+          </Tabs>
         </div>
       </section>
 

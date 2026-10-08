@@ -8,6 +8,9 @@ import { Link } from "@/i18n/navigation";
 import { LocaleSwitcher } from "./locale-switcher";
 import { ThemeToggle } from "./theme-toggle";
 
+const navLinkClassName =
+  "relative inline-flex rounded-sm py-1 text-sm font-medium text-muted-foreground transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:rounded-full after:bg-primary after:transition-transform after:duration-200 hover:text-primary hover:after:scale-x-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:after:scale-x-100 motion-reduce:after:transition-none";
+
 export function Header() {
   const t = useTranslations("nav");
   const [scrolled, setScrolled] = useState(false);
@@ -20,16 +23,36 @@ export function Header() {
       const scrollable =
         document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(
-        scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0
+        scrollable > 0
+          ? Math.min(100, Math.max(0, (window.scrollY / scrollable) * 100))
+          : 0
       );
     };
     updateScroll();
     window.addEventListener("scroll", updateScroll, { passive: true });
-    return () => window.removeEventListener("scroll", updateScroll);
+    window.addEventListener("resize", updateScroll);
+    return () => {
+      window.removeEventListener("scroll", updateScroll);
+      window.removeEventListener("resize", updateScroll);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+
+      setMenuOpen(false);
+      document.getElementById("mobile-menu-toggle")?.focus();
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
 
   const links = [
     { href: "/#features", label: t("features") },
+    { href: "/business", label: t("business") },
     { href: "/pricing", label: t("pricing") },
     { href: "/about", label: t("about") }
   ];
@@ -69,7 +92,7 @@ export function Header() {
         >
           {links.map((link) => (
             <Link
-              className="text-sm font-medium text-muted-foreground transition-all hover:-translate-y-0.5 hover:text-primary"
+              className={navLinkClassName}
               href={link.href}
               key={link.href}
             >
@@ -92,7 +115,9 @@ export function Header() {
             </Button>
           </div>
           <Button
+            id="mobile-menu-toggle"
             aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
             aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
             className="md:hidden"
             data-testid="mobile-menu-toggle"
@@ -105,15 +130,18 @@ export function Header() {
         </div>
       </div>
 
-      {menuOpen ? (
-        <nav
-          aria-label={t("mobileNavigation")}
-          className="absolute inset-x-0 top-16 border-b border-border bg-background p-5 shadow-lg md:hidden"
-        >
+      <nav
+        id="mobile-navigation"
+        aria-label={t("mobileNavigation")}
+        className={`absolute inset-x-0 top-16 border-b border-border bg-background p-5 shadow-lg md:hidden ${
+          menuOpen ? "" : "hidden"
+        }`}
+        hidden={!menuOpen}
+      >
           <div className="mx-auto flex max-w-7xl flex-col gap-4">
             {links.map((link) => (
               <Link
-                className="py-1 text-sm font-medium"
+                className={navLinkClassName}
                 href={link.href}
                 key={link.href}
                 onClick={() => setMenuOpen(false)}
@@ -138,8 +166,7 @@ export function Header() {
               </Button>
             </div>
           </div>
-        </nav>
-      ) : null}
+      </nav>
       </header>
     </>
   );

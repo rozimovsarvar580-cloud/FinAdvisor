@@ -2,14 +2,16 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import * as Accordion from "@radix-ui/react-accordion";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
+import { CountUp } from "@/components/motion/count-up";
+import { LandingDashboardPreview } from "@/components/landing/landing-dashboard-preview";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Modal } from "@/components/ui/modal";
 import { Link } from "@/i18n/navigation";
 
-const problemIcons = ["◈", "◷", "▤", "◎"];
+const problemIcons = ["◈", "◉", "▤", "◎", "◇"];
 const featureIcons = ["▦", "◉", "⌁", "▣", "◫", "↗", "◷", "✓"];
 const stepIcons = ["01", "02", "03", "04"];
 const faqKeys = ["q1", "q2", "q3", "q4", "q5"] as const;
@@ -64,9 +66,12 @@ function SectionHeading({
 
 export function LandingPage() {
   const t = useTranslations("landing");
+  const nav = useTranslations("nav");
+  const locale = useLocale();
 
   return (
-    <main>
+    <>
+      <main>
       <section className="relative isolate overflow-hidden">
         <div
           aria-hidden="true"
@@ -128,76 +133,45 @@ export function LandingPage() {
           </Reveal>
 
           <Reveal className="relative mx-auto w-full max-w-lg">
-            <div
-              aria-hidden="true"
-              className="absolute -inset-5 rounded-[2rem] bg-primary/10 blur-2xl"
+            <LandingDashboardPreview
+              ariaLabel={t("hero.dashboard.ariaLabel")}
+              cashFlowLabel={t("hero.dashboard.cashFlow")}
+              costsLabel={t("hero.dashboard.costs")}
+              revenueLabel={t("hero.dashboard.revenue")}
+              subtitle={t("hero.dashboard.subtitle")}
+              title={t("hero.dashboard.title")}
+              visualNote={t("hero.dashboard.visualNote")}
             />
-            <Card className="relative overflow-hidden rounded-3xl p-6 shadow-xl sm:p-8">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {t("hero.calculator.eyebrow")}
-                  </p>
-                  <h2 className="mt-2 text-xl font-semibold">
-                    {t("hero.calculator.title")}
-                  </h2>
-                </div>
-                <span
-                  aria-hidden="true"
-                  className="rounded-xl bg-primary/10 p-3 text-xl text-primary"
-                >
-                  ↗
-                </span>
-              </div>
-              <div className="mt-7 space-y-5">
-                <div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {t("hero.calculator.seats")}
-                    </span>
-                    <span className="font-semibold">
-                      {t("hero.calculator.seatsValue")}
-                    </span>
-                  </div>
-                  <div className="mt-2 h-2 rounded-full bg-muted">
-                    <div className="h-2 w-3/5 rounded-full bg-primary" />
-                  </div>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {t("hero.calculator.dailyOrders")}
-                    </span>
-                    <span className="font-semibold">
-                      {t("hero.calculator.dailyOrdersValue")}
-                    </span>
-                  </div>
-                  <div className="mt-2 h-2 rounded-full bg-muted">
-                    <div className="h-2 w-4/5 rounded-full bg-primary/60" />
-                  </div>
-                </div>
-              </div>
-              <div className="mt-7 rounded-2xl bg-muted p-5">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-xs text-muted-foreground">
-                      {t("hero.calculator.estimate")}
-                    </p>
-                    <p className="mt-1 text-2xl font-semibold">—</p>
-                  </div>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                    {t("hero.calculator.preview")}
+          </Reveal>
+        </div>
+      </section>
+
+      <section
+        aria-label={t("stats.ariaLabel")}
+        className="border-y border-border bg-muted/30 py-8 sm:py-10"
+      >
+        <div className="mx-auto max-w-7xl px-page">
+          <p className="mb-6 text-center text-xs font-medium text-muted-foreground">
+            {t("stats.note")}
+          </p>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:gap-8">
+            {[
+              { key: "questions", value: 5 },
+              { key: "steps", value: 4 },
+              { key: "languages", value: 3 }
+            ].map(({ key, value }) => (
+              <Reveal key={key}>
+                <div className="flex items-center justify-center gap-3 text-center">
+                  <span className="text-3xl font-semibold tracking-tight text-primary">
+                    <CountUp duration={1} locale={locale} value={value} />
+                  </span>
+                  <span className="max-w-36 text-left text-sm leading-5 text-muted-foreground">
+                    {t(`stats.items.${key}`)}
                   </span>
                 </div>
-              </div>
-              <div className="mt-5 flex items-center gap-3 text-xs text-muted-foreground">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  ✓
-                </span>
-                {t("hero.calculator.note")}
-              </div>
-            </Card>
-          </Reveal>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -210,10 +184,10 @@ export function LandingPage() {
               title={t("problem.title")}
             />
           </Reveal>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {problemIcons.map((icon, index) => (
               <Reveal key={index}>
-                <Card className="h-full p-6 transition-transform duration-200 hover:-translate-y-1">
+                <Card className="h-full p-6 motion-safe:transition-transform motion-safe:duration-200 motion-safe:hover:-translate-y-1 motion-reduce:transition-none">
                   <span
                     aria-hidden="true"
                     className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-xl text-primary"
@@ -366,6 +340,50 @@ export function LandingPage() {
         </div>
       </section>
 
+      <section className="bg-muted/45 py-section" id="desktop-agent">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-page lg:grid-cols-[1fr_1fr]">
+          <Reveal>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
+              {t("desktop.eyebrow")}
+            </p>
+            <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
+              {t("desktop.title")}
+            </h2>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">
+              {t("desktop.description")}
+            </p>
+            <Button asChild className="mt-7" variant="outline">
+              <Link href="/desktop-agent">
+                {t("desktop.cta")}
+                <span aria-hidden="true">→</span>
+              </Link>
+            </Button>
+          </Reveal>
+          <Reveal>
+            <Card className="p-6 sm:p-8">
+              <ul className="space-y-5">
+                {(["windowsMacos", "deviceHistory", "statementSync"] as const).map(
+                  (key) => (
+                    <li className="flex items-start gap-3" key={key}>
+                      <span
+                        aria-hidden="true"
+                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm text-primary"
+                      >
+                        ✓
+                      </span>
+                      <span className="text-sm leading-6">{t(`desktop.benefits.${key}`)}</span>
+                    </li>
+                  )
+                )}
+              </ul>
+              <p className="mt-6 border-t border-border pt-5 text-xs leading-5 text-muted-foreground">
+                {t("desktop.note")}
+              </p>
+            </Card>
+          </Reveal>
+        </div>
+      </section>
+
       <section className="py-section">
         <div className="mx-auto max-w-3xl px-page">
           <Reveal>
@@ -383,17 +401,17 @@ export function LandingPage() {
             {faqKeys.map((key) => (
               <Accordion.Item className="py-1" key={key} value={key}>
                 <Accordion.Header>
-                  <Accordion.Trigger className="group flex w-full items-center justify-between gap-4 py-5 text-left text-sm font-semibold [&[data-state=open]>span]:rotate-45">
+                  <Accordion.Trigger className="group flex w-full items-center justify-between gap-4 py-5 text-left text-sm font-semibold transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none [&[data-state=open]>span]:rotate-45">
                     {t(`faq.items.${key}.question`)}
                     <span
                       aria-hidden="true"
-                      className="text-lg text-primary transition-transform"
+                      className="text-lg text-primary transition-transform motion-reduce:transition-none"
                     >
                       +
                     </span>
                   </Accordion.Trigger>
                 </Accordion.Header>
-                <Accordion.Content className="max-w-2xl pb-5 text-sm leading-6 text-muted-foreground data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+                <Accordion.Content className="max-w-2xl pb-5 text-sm leading-6 text-muted-foreground data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down motion-reduce:animate-none">
                   {t(`faq.items.${key}.answer`)}
                 </Accordion.Content>
               </Accordion.Item>
@@ -421,6 +439,42 @@ export function LandingPage() {
           </Button>
         </Reveal>
       </section>
-    </main>
+      </main>
+
+      <footer className="border-t border-border bg-card">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-page py-8 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <Link
+              className="inline-flex rounded-sm text-lg font-bold tracking-tight text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              href="/"
+            >
+              FinAdvisor
+            </Link>
+            <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">
+              {t("footer.tagline")}
+            </p>
+          </div>
+          <nav
+            aria-label={t("footer.ariaLabel")}
+            className="flex flex-wrap gap-x-6 gap-y-3"
+          >
+            {[
+              { href: "/#how-it-works", label: t("footer.howItWorks") },
+              { href: "/#features", label: nav("features") },
+              { href: "/pricing", label: nav("pricing") },
+              { href: "/about", label: nav("about") }
+            ].map((link) => (
+              <Link
+                className="rounded-sm text-sm text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                href={link.href}
+                key={link.href}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </footer>
+    </>
   );
 }

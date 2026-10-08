@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import en from "@legacy-messages/en.json";
 import ru from "@legacy-messages/ru.json";
@@ -16,16 +17,22 @@ export default async function PlansPage({ params }: { params: Promise<{ locale: 
   if (!(locale in messages)) notFound();
 
   const home = messages[locale as keyof typeof messages].home;
+  const t = await getTranslations({ locale, namespace: "routeCopy" });
+  const plans = [
+    { id: "plan-001", name: "Samarqand Bistro", status: t("plans.draft") },
+    { id: "plan-002", name: "Shahar Qosh", status: t("plans.review") }
+  ];
 
   return (
     <main style={{ maxWidth: 960 }}>
       <h1>{home.title}</h1>
-      <h2>Business plans</h2>
+      <h2>{t("plans.title")}</h2>
       <ul>
-        <li><Link href={`/${locale}/plans/plan-001`}>Samarqand Bistro</Link> — Draft</li>
-        <li><Link href={`/${locale}/plans/plan-002`}>Shahar Qosh</Link> — Review</li>
+        {plans.map((plan) => (
+          <li key={plan.id}><Link href={`/${locale}/plans/${plan.id}`}>{plan.name}</Link> — {plan.status}</li>
+        ))}
       </ul>
-      <Link href={`/${locale}/plans/new`}>Create new plan</Link>
+      <Link href={`/${locale}/plans/new`}>{t("common.createPlan")}</Link>
     </main>
   );
 }

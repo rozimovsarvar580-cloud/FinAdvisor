@@ -1,6 +1,6 @@
 """Core investment and operating metrics."""
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -61,7 +61,7 @@ def calculate_payback(data: PaybackInput) -> PaybackResult:
             return PaybackResult(
                 payback_periods=payback.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP),
                 recovered=True,
-                unrecovered_amount=Decimal("0"),
+                unrecovered_amount=Decimal(0),
                 formula="payback_periods = completed_periods + remaining_investment / current_period_cash_flow",
             )
         remaining -= cash_flow

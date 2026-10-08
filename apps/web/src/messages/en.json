@@ -2,6 +2,7 @@
   "nav": {
     "features": "Features",
     "pricing": "Pricing",
+    "business": "Business",
     "about": "About us",
     "login": "Log in",
     "signup": "Get started",
@@ -13,24 +14,31 @@
   "home": {
     "tagline": "Clear financial decisions for your business"
   },
+  "businessPage": {
+    "hero": {
+      "eyebrow": "For Business",
+      "title": "See how the desktop agent commission is estimated",
+      "description": "Explore a progressive estimate based on annual revenue recorded by the desktop agent."
+    },
+    "commissionTitle": "Estimate your annual commission",
+    "commissionDescription": "Use the slider or enter an amount to see the progressive calculation."
+  },
   "landing": {
     "hero": {
       "badge": "For Uzbekistan's small businesses",
       "title": "Run your business with confidence and clear numbers",
       "description": "Build a financial plan for your restaurant, understand costs and revenue, and prepare a bank-ready business plan.",
       "primaryCta": "Start your plan",
-      "secondaryCta": "View sample PDF",
+      "secondaryCta": "View sample plan",
       "footnote": "Calculations are exact. AI explains them in plain language.",
-      "calculator": {
-        "eyebrow": "Your restaurant plan",
-        "title": "Start with the essentials",
-        "seats": "Seats",
-        "seatsValue": "Set by you",
-        "dailyOrders": "Daily orders",
-        "dailyOrdersValue": "Set by you",
-        "estimate": "Your estimate",
-        "preview": "Preview",
-        "note": "Start with your business details"
+      "dashboard": {
+        "ariaLabel": "Illustrative business-planning dashboard",
+        "title": "Plan overview",
+        "subtitle": "Illustrative workspace",
+        "revenue": "Revenue",
+        "costs": "Costs",
+        "cashFlow": "Cash flow",
+        "visualNote": "Illustrative visual only. No financial data or projections are shown."
       },
       "samplePlan": {
         "title": "Business plan sample",
@@ -44,12 +52,26 @@
         "note": "This is a sample outline and does not contain actual financial forecasts."
       }
     },
+    "stats": {
+      "ariaLabel": "FinAdvisor product scope",
+      "note": "Tool capabilities, not business outcome statistics.",
+      "items": {
+        "questions": "planning questions",
+        "steps": "guided planning steps",
+        "languages": "interface languages"
+      }
+    },
     "about": {
       "hero": {
         "eyebrow": "About FinAdvisor",
         "title": "Why FinAdvisor?",
         "description": "We make financial planning clear, grounded, and accessible for small-business owners.",
         "cta": "Start your plan"
+      },
+      "mission": {
+        "eyebrow": "Our mission",
+        "title": "Make financial planning more understandable",
+        "description": "We help entrepreneurs, accountants, and investors work with structured business plans and clear assumptions, so they can have more informed conversations about the next step."
       },
       "story": {
         "eyebrow": "A restaurant example",
@@ -119,6 +141,24 @@
           }
         }
       },
+      "values": {
+        "eyebrow": "What guides us",
+        "title": "Principles behind every plan",
+        "items": {
+          "accuracy": {
+            "title": "Grounded calculations",
+            "description": "Financial figures come from the dedicated calculation engine and the information entered into the plan."
+          },
+          "transparency": {
+            "title": "Clear assumptions",
+            "description": "Plans make assumptions visible so owners and their partners can review and update them."
+          },
+          "empowerment": {
+            "title": "Useful decisions",
+            "description": "We organize information to support better conversations, without promising business outcomes."
+          }
+        }
+      },
       "comparison": {
         "eyebrow": "A focused approach",
         "title": "FinAdvisor and general-purpose AI",
@@ -166,23 +206,27 @@
     "problem": {
       "eyebrow": "The challenge",
       "title": "A strong idea starts with a clear plan",
-      "description": "Starting a small business can make it difficult to get reliable answers to important financial questions.",
+      "description": "A business plan starts with practical questions. Organize your assumptions before making decisions.",
       "cards": [
         {
-          "title": "Costs are scattered",
-          "description": "Equipment, rent, and payroll costs are hard to bring together."
+          "title": "How much money do I need?",
+          "description": "Bring startup and operating-cost assumptions into one plan, using your own inputs."
         },
         {
-          "title": "Revenue is hard to estimate",
-          "description": "The connection between goals and daily performance can be unclear."
+          "title": "How many staff do I need?",
+          "description": "Outline roles, shifts, and payroll based on the team you plan to build."
         },
         {
-          "title": "Banks need a plan",
-          "description": "Financing applications need a structured, well-grounded business plan."
+          "title": "Which bank should I approach?",
+          "description": "Organize project details and compare requirements you verify with each bank."
         },
         {
-          "title": "Decisions feel uncertain",
-          "description": "Making decisions without comparing the numbers can increase risk."
+          "title": "What taxes may apply?",
+          "description": "Review sourced, dated rule settings and confirm how they apply to your business."
+        },
+        {
+          "title": "Could my business use credit?",
+          "description": "Explore a financing scenario; a plan does not guarantee approval."
         }
       ]
     },
@@ -289,6 +333,18 @@
       "description": "Business owners can present plans and financial assumptions clearly, helping start a more meaningful conversation about partnership.",
       "cta": "Explore a project plan"
     },
+    "desktop": {
+      "eyebrow": "Desktop agent",
+      "title": "Keep your business workflow connected",
+      "description": "The Windows and macOS companion supports device registration, command history, and statement-sync requests.",
+      "benefits": {
+        "windowsMacos": "Available for Windows and macOS.",
+        "deviceHistory": "Register a device and review its command history.",
+        "statementSync": "Queue statement-sync requests; the agent does not read local bank files."
+      },
+      "note": "Financial calculations stay in the web service, which remains the source of truth.",
+      "cta": "Explore the desktop agent"
+    },
     "faq": {
       "eyebrow": "Questions and answers",
       "title": "Frequently asked questions",
@@ -321,6 +377,11 @@
       "title": "Turn your business idea into a clear plan",
       "description": "Enter the details you have and start planning.",
       "button": "Get started for free"
+    },
+    "footer": {
+      "ariaLabel": "Footer navigation",
+      "howItWorks": "How it works",
+      "tagline": "Small-business planning tools with clear financial information."
     }
   },
   "pricing": {
@@ -341,7 +402,31 @@
     },
     "popular": "Popular",
     "selectPlan": "Choose plan",
+    "viewBilling": "View billing",
     "checkingSession": "Checking...",
+    "derivedPricePlaceholder": "Monthly and yearly prices are placeholders, not finalized ({marker}).",
+    "periodSelectorLabel": "Billing period",
+    "paymentNotice": "Online checkout is not connected yet. Choose a plan to continue to signup, or view your current billing overview if you are signed in; this does not start a payment.",
+    "refundDraftNotice": "Refund wording is a draft only and is not a promise or final policy. It requires legal review before use (TODO(H8)).",
+    "faq": {
+      "eyebrow": "Plan questions",
+      "title": "Questions about plans and payments",
+      "description": "What to know before choosing a plan.",
+      "items": {
+        "q1": {
+          "question": "What is included in each plan?",
+          "answer": "Review the features listed on each plan card and in the comparison table. Availability may change as the product develops."
+        },
+        "q2": {
+          "question": "Are monthly and yearly prices final?",
+          "answer": "No. Monthly and yearly amounts are placeholders derived from the weekly prices and are marked TODO(DECISION D1) until the pricing decision is confirmed."
+        },
+        "q3": {
+          "question": "Can I pay for a plan online now?",
+          "answer": "Online checkout is not connected yet. Selecting a plan takes you to signup or, if you are signed in, to the billing overview; it does not charge you or change your subscription."
+        }
+      }
+    },
     "plans": {
       "free": {
         "name": "Free",
@@ -356,18 +441,29 @@
         "name": "Pro",
         "description": "For in-depth planning",
         "features": {
-          "unlimitedPlans": "More business plans",
-          "aiPlanWriting": "AI-assisted plan writing",
-          "documentExport": "Document exports"
+          "aiAnalysis": "AI analysis",
+          "credit": "Credit analysis",
+          "tax": "Tax analysis",
+          "revenue": "Revenue analysis",
+          "profit": "Profit analysis",
+          "calculators": "Financial calculators",
+          "businessPlan": "Business plan"
         }
       },
       "business": {
         "name": "Business",
         "description": "For collaborative teams",
         "features": {
-          "teamAccess": "Team access",
-          "advancedReports": "Advanced reports",
-          "prioritySupport": "Priority support"
+          "aiAnalysis": "AI analysis",
+          "credit": "Credit analysis",
+          "tax": "Tax analysis",
+          "revenue": "Revenue analysis",
+          "profit": "Profit analysis",
+          "calculators": "Financial calculators",
+          "businessPlan": "Business plan",
+          "agentSynergy": "Agent-Synergy strategy",
+          "desktopAgent": "Windows/macOS desktop agent",
+          "accountantOwnerAccounts": "Accountant and owner accounts"
         }
       }
     },
@@ -425,6 +521,7 @@
       "eyebrow": "Transparent calculation",
       "title": "Estimate from annual revenue",
       "description": "Enter annual revenue. Each rate applies only to the portion in its corresponding bracket.",
+      "agentRevenueNote": "This estimate is based on annual revenue recorded by the desktop agent.",
       "tiers": {
         "first": "First UZS 100 million — 4%",
         "second": "Next UZS 900 million — 2%",
@@ -432,6 +529,8 @@
       },
       "progressiveNote": "This is progressive: each higher rate applies only to its bracket, not to all revenue.",
       "inputLabel": "Annual revenue",
+      "sliderLabel": "Adjust annual revenue",
+      "sliderLimitHint": "Use the slider up to UZS 1 billion; enter larger amounts in the field above.",
       "placeholder": "For example, 250000000",
       "currency": "UZS",
       "calculate": "Calculate commission",
@@ -460,7 +559,7 @@
     "role": "Account type",
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot password?",
-    "termsConsent": "I agree to the Terms of Service and Privacy Policy",
+    "termsConsent": "I agree to the <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>.",
     "terms": "Terms of Service",
     "loginSubmit": "Log in",
     "signupSubmit": "Create account",
@@ -504,8 +603,129 @@
       "help": "Help center",
       "contact": "Contact",
       "privacy": "Privacy policy",
-      "terms": "Terms of service"
+      "terms": "Terms of service",
+      "refund": "Refund policy",
+      "aiDisclaimer": "AI disclaimer"
     }
+  },
+  "legal": {
+    "terms": {
+      "draftLabel": "Legal draft",
+      "title": "Terms of Service",
+      "draftNotice": "DRAFT — TODO(LEGAL): A qualified lawyer must review and approve this document, including governing law, service-provider details, and consumer rights, before publication.",
+      "introduction": "These draft terms describe proposed rules for using FinAdvisor. They are not final terms and do not create a substitute for a signed agreement.",
+      "sections": {
+        "service": {
+          "title": "1. The service",
+          "body": "FinAdvisor provides tools for organizing business-plan information, viewing calculations produced by its finance engine, and receiving explanatory content. TODO(LEGAL): Confirm the precise service description and any contractual commitments."
+        },
+        "accounts": {
+          "title": "2. Accounts and access",
+          "body": "Users should provide accurate account information and protect their sign-in credentials. TODO(LEGAL): Confirm account suspension, age, and identity-verification rules."
+        },
+        "acceptableUse": {
+          "title": "3. Acceptable use",
+          "body": "Do not use the service unlawfully, attempt unauthorized access, or submit information you have no right to use. TODO(LEGAL): Confirm prohibited-use language and the process for reporting issues."
+        },
+        "availability": {
+          "title": "4. Service availability and limitations",
+          "body": "The service and its outputs may change or be temporarily unavailable. FinAdvisor does not guarantee a loan, profit, funding, or investment outcome. TODO(LEGAL): Confirm warranties, liability limits, and required consumer disclosures."
+        },
+        "changes": {
+          "title": "5. Changes and contact",
+          "body": "TODO(LEGAL): Specify the contracting entity, governing law, dispute process, effective date, notice for changes, and official contact details."
+        }
+      }
+    },
+    "privacy": {
+      "draftLabel": "Legal draft",
+      "title": "Privacy Policy",
+      "draftNotice": "DRAFT — TODO(LEGAL): Confirm the data controller, lawful bases, cross-border transfers, retention periods, and user-rights process with qualified counsel before publication.",
+      "introduction": "This draft explains the categories of information that may be processed when using FinAdvisor. The final policy must match actual product operations and applicable law.",
+      "sections": {
+        "data": {
+          "title": "1. Information that may be processed",
+          "body": "This may include account and contact details, business and plan information entered by users, support communications, and basic technical or security event data. TODO(LEGAL): Verify the exact data inventory, cookies, analytics, and sensitive-data handling."
+        },
+        "use": {
+          "title": "2. How information may be used",
+          "body": "Information may be used to provide account access and requested planning features, maintain security, respond to support requests, and meet legal obligations. TODO(LEGAL): Confirm purposes and lawful bases for each processing activity."
+        },
+        "sharing": {
+          "title": "3. Service providers and sharing",
+          "body": "Some information may be processed by infrastructure, authentication, payment, or AI service providers when needed to operate requested features. TODO(LEGAL): Identify providers, locations, safeguards, and any other sharing before publication."
+        },
+        "retention": {
+          "title": "4. Retention and storage",
+          "body": "TODO(LEGAL): Set retention periods, deletion rules, backup handling, and storage locations. Do not rely on this draft as a statement of configured retention."
+        },
+        "security": {
+          "title": "5. Security",
+          "body": "FinAdvisor intends to use appropriate safeguards, but no online system can be guaranteed completely secure. TODO(LEGAL): Describe verified security practices and applicable breach-notification commitments."
+        },
+        "rights": {
+          "title": "6. Your choices and contact",
+          "body": "TODO(LEGAL): Add the rights available in each relevant jurisdiction, how to make a request, response timelines, and the verified privacy contact. Add the effective date after review."
+        }
+      }
+    },
+    "refund": {
+      "draftLabel": "Legal draft",
+      "title": "Refund Policy",
+      "draftNotice": "DRAFT — TODO(LEGAL): The proposed policy below is not final. A qualified lawyer must confirm statutory rights, eligibility, and payment-provider requirements before it is offered to customers.",
+      "introduction": "This draft summarizes a proposed approach to subscription refunds. It does not limit any rights that cannot legally be excluded.",
+      "sections": {
+        "subscription": {
+          "title": "1. Subscription purchases",
+          "body": "Proposed default (TODO(DECISION D5; LEGAL)): a refund may be available for a first subscription purchase when requested within 7 days and the service has been barely used. The meaning of “barely used,” eligible charges, and how to request a refund must be confirmed."
+        },
+        "request": {
+          "title": "2. How to request a review",
+          "body": "Contact TODO(LEGAL: verified support address) with the account email, purchase reference, and reason for the request. TODO(LEGAL): Confirm identity checks, review steps, response time, and payment-processing time."
+        },
+        "commission": {
+          "title": "3. Business commission statements",
+          "body": "Proposed default (TODO(DECISION D4; D5; LEGAL)): commission statements are not refundable except to correct a calculation error. The underlying contract terms and correction process require legal review."
+        },
+        "changes": {
+          "title": "4. Statutory rights and updates",
+          "body": "Nothing in this draft removes mandatory consumer rights. TODO(LEGAL): Confirm the applicable law, exceptions, cancellation rights, and how policy updates are communicated."
+        }
+      }
+    },
+    "aiDisclaimer": {
+      "draftLabel": "Legal draft",
+      "title": "AI and Financial Information Disclaimer",
+      "draftNotice": "DRAFT — TODO(LEGAL): Review the wording against the service’s actual features and applicable consumer-protection and professional-advice rules.",
+      "introduction": "FinAdvisor provides planning tools and explanatory content to help users organize information. Review all inputs and outputs before relying on them.",
+      "sections": {
+        "estimates": {
+          "title": "1. Outputs are estimates",
+          "body": "AI-generated text and planning outputs are estimates based on information provided and configured assumptions. They may be incomplete, inaccurate, or out of date."
+        },
+        "notAdvice": {
+          "title": "2. Not professional advice",
+          "body": "FinAdvisor outputs are not financial, investment, tax, accounting, or legal advice and do not establish a professional advisory relationship."
+        },
+        "review": {
+          "title": "3. Verify before acting",
+          "body": "Check assumptions and figures, consult qualified professionals where appropriate, and independently confirm current rules, bank requirements, and other external conditions."
+        },
+        "decisions": {
+          "title": "4. No guaranteed outcomes",
+          "body": "A plan or AI response does not guarantee credit approval, revenue, profit, funding, or investment returns. Users remain responsible for their business decisions. TODO(LEGAL): Confirm required limitations and disclosures."
+        }
+      }
+    }
+  },
+  "routeStates": {
+    "loading": "Loading page",
+    "notFoundTitle": "Page not found",
+    "notFoundDescription": "The page may have moved, or the address may be incorrect.",
+    "errorTitle": "Something went wrong",
+    "errorDescription": "This page could not be loaded. Try again, or return to the home page.",
+    "retry": "Try again",
+    "home": "Go to home"
   },
   "errors": {
     "nameRequired": "Enter your name",
@@ -520,6 +740,7 @@
     "oauthSetupFailed": "Could not start social sign-in. Try again later",
     "calculatorUnavailable": "Could not connect to the calculator service. Try again later",
     "calculatorFailed": "Could not calculate the commission. Check the value you entered",
+    "invalidRevenue": "Enter a non-negative amount with up to two decimal places.",
     "draftInvalid": "The saved draft is invalid. Start a new plan",
     "draftUnavailable": "The draft could not be saved on this device",
     "planAIUnavailable": "The AI planning service is unavailable. Try again later",
@@ -760,8 +981,15 @@
     },
     "empty": {
       "title": "No published projects yet",
-      "description": "When a restaurant owner publishes a project, it will appear here."
-    }
+      "description": "When a restaurant owner publishes a project, it will appear here.",
+      "filteredTitle": "No projects match this stage",
+      "filteredDescription": "Choose another project stage to see more published projects."
+    },
+    "myListingsEmpty": {
+      "title": "No listings yet",
+      "description": "Projects you publish will appear here so you can manage their visibility."
+    },
+    "amountPlaceholder": "250000000"
   },
   "desktopAgent": {
     "eyebrow": "Desktop agent",
@@ -779,6 +1007,241 @@
       "syncPlan": "Sync plan changes",
       "syncPricing": "Refresh pricing assumptions",
       "syncBankRules": "Update bank readiness rules"
+    }
+  },
+  "routeCopy": {
+    "common": {
+      "back": "Back",
+      "backToDashboard": "Back to dashboard",
+      "backToPlans": "Back to plans",
+      "backToCalculators": "Back to calculators",
+      "backToWizard": "Back to wizard",
+      "backToLogin": "Back to login",
+      "backToPlan": "Back to plan",
+      "createPlan": "Create new plan",
+      "createAccount": "Create account",
+      "signIn": "Sign in",
+      "saveDraft": "Save draft",
+      "saveNewVersion": "Save new version",
+      "downloadCsv": "Download CSV",
+      "downloadExcel": "Download Excel",
+      "menu": "Menu",
+      "overview": "Overview",
+      "plans": "Plans",
+      "calculators": "Calculators",
+      "reports": "Reports",
+      "billing": "Billing",
+      "settings": "Settings",
+      "signOut": "Sign out",
+      "applicationNavigation": "Application navigation",
+      "email": "Email",
+      "fullName": "Full name",
+      "password": "Password",
+      "register": "Register",
+      "creating": "Creating...",
+      "calculate": "Calculate",
+      "calculating": "Calculating...",
+      "result": "Result",
+      "verifyEmail": "Verify email",
+      "verifying": "Verifying..."
+    },
+    "accounting": {
+      "workspace": "Accounting workspace",
+      "dailyTitle": "Daily entries",
+      "sales": "Sales",
+      "supplies": "Supplies",
+      "importTitle": "Import statement",
+      "importDescription": "CSV/XLSX statement upload will be processed here.",
+      "inventoryTitle": "Inventory",
+      "rice": "Rice",
+      "cookingOil": "Cooking oil",
+      "reorder": "reorder",
+      "loansTitle": "Loans",
+      "principal": "Principal",
+      "nextPayment": "Next payment",
+      "payrollTitle": "Payroll",
+      "chef": "Chef",
+      "waiter": "Waiter",
+      "taxTitle": "Tax",
+      "estimatedDue": "Estimated due",
+      "source": "Source"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "monthlyRevenue": "Monthly revenue",
+      "monthlyProfit": "Monthly profit",
+      "breakEven": "Break-even",
+      "breakEvenDays": "{days} days",
+      "onboarding": "Onboarding",
+      "settings": "Settings",
+      "notifications": "Notifications",
+      "notificationsTitle": "Notifications",
+      "taxReminder": "Tax filing reminder",
+      "cashReserveNotice": "Cash reserve below target",
+      "unread": "unread",
+      "read": "read",
+      "onboardingTitle": "Onboarding",
+      "companyProfile": "Complete company profile",
+      "connectCashFlow": "Connect cash flow",
+      "buildPlan": "Build financial plan",
+      "done": "done",
+      "inProgress": "in progress",
+      "pending": "pending",
+      "settingsTitle": "Settings",
+      "currency": "Currency",
+      "language": "Language",
+      "emailNotifications": "Email notifications",
+      "enabled": "enabled"
+    },
+    "admin": {
+      "title": "Admin console",
+      "users": "Users",
+      "planModeration": "Plan moderation",
+      "kycReview": "KYC review",
+      "auditLog": "Audit log",
+      "featureFlags": "Feature flags"
+    },
+    "agent": {
+      "title": "Desktop agent",
+      "devices": "Devices",
+      "notConnected": "not connected",
+      "commandHistory": "Command history",
+      "queued": "queued"
+    },
+    "analysis": {
+      "title": "Plan analysis: {planId}",
+      "score": "Bank-readiness score: {score}/100",
+      "strengths": "Strengths",
+      "positiveProfit": "Positive operating profit",
+      "scenarioData": "Scenario data is present",
+      "risks": "Risks",
+      "cashReserve": "Cash reserve should cover at least three months",
+      "aiDisclaimer": "This explanation uses finance-engine results; the AI does not calculate financial values."
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "Reports are generated from deterministic finance-engine outputs.",
+      "monthlyProfit": "Monthly profit: {amount} UZS",
+      "bankReadiness": "Bank readiness",
+      "openAnalysis": "Open analysis and risk explanation."
+    },
+    "appSettings": {
+      "title": "Settings",
+      "activeSession": "Active session",
+      "sessionProtected": "Your browser session is protected by the FinAdvisor token.",
+      "signOutHint": "To end it on this device, use Sign out in the sidebar.",
+      "profileSettings": "Open profile settings"
+    },
+    "contact": {
+      "title": "Contact",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "send": "Send",
+      "contactInfo": "Telegram: {telegram} · Email: {email}"
+    },
+    "calculator": {
+      "title": "Calculators",
+      "description": "With results and formula explanations.",
+      "mainInvestment": "Main investment",
+      "mainRevenue": "Main revenue",
+      "labels": {
+        "credit": "Credit calculator",
+        "capex": "Startup cost calculator",
+        "revenue": "Revenue and profit calculator",
+        "break-even": "Break-even calculator",
+        "reverse": "Reverse credit calculator"
+      },
+      "fields": {
+        "itemAmount": "Equipment amount (UZS)",
+        "workingCapital": "Working capital (UZS)",
+        "contingency": "Contingency (%)",
+        "units": "Units per period",
+        "pricePerUnit": "Price per unit (UZS)",
+        "fixedCosts": "Fixed costs (UZS)",
+        "variableCosts": "Variable costs (%)",
+        "variableCostPerUnit": "Variable cost per unit (UZS)",
+        "monthlyPayment": "Monthly payment (UZS)",
+        "annualRate": "Annual rate (%)",
+        "term": "Term (months)",
+        "principal": "Principal (UZS)"
+      },
+      "errors": {
+        "calculationFailed": "Calculation failed.",
+        "serviceUnavailable": "The calculation service is unavailable."
+      }
+    },
+    "download": {
+      "title": "FinAdvisor Agent",
+      "windows": "Windows",
+      "macos": "macOS",
+      "comingSoon": "Coming soon."
+    },
+    "investors": {
+      "inboxTitle": "Investor inbox",
+      "fundingQuestions": "Funding questions",
+      "kycTitle": "KYC profile",
+      "status": "Status",
+      "identitySourceAgreement": "Identity, source of funds, agreement",
+      "savedTitle": "Saved plans"
+    },
+    "plans": {
+      "title": "Business plans",
+      "draft": "Draft",
+      "review": "Review",
+      "newTitle": "Create plan",
+      "name": "Plan name",
+      "restaurantName": "Restaurant name",
+      "detailsTitle": "Plan: {planId}",
+      "currency": "Currency",
+      "monthlyRevenue": "Monthly revenue",
+      "monthlyProfit": "Monthly profit",
+      "viewReport": "View report data",
+      "savedVersion": "Saved as version {version}.",
+      "editTitle": "Edit plan",
+      "scenarioTitle": "What-if scenario",
+      "scenarioDescription": "Adjust assumptions without changing the saved plan.",
+      "revenueChange": "Revenue change (%)",
+      "costChange": "Cost change (%)",
+      "runScenario": "Run scenario",
+      "scenarioRevenue": "Scenario revenue:",
+      "scenarioProfit": "Scenario profit:",
+      "askAboutResult": "Ask about the result",
+      "assistantDescription": "The assistant explains finance-engine outputs and does not calculate them.",
+      "explain": "Explain",
+      "questionPlaceholder": "What should I pay attention to in this result?",
+      "errors": {
+        "scenarioFailed": "Scenario calculation failed.",
+        "saveFailed": "Could not save the plan.",
+        "explanationUnavailable": "Explanation is unavailable."
+      }
+    },
+    "register": {
+      "title": "Create account",
+      "haveAccount": "Already have an account?",
+      "verificationCode": "Verification code",
+      "passwordHint": "Password must contain at least 8 characters.",
+      "verificationSent": "Verification code: {code}",
+      "verificationSuccess": "Email verified successfully.",
+      "errors": {
+        "registrationFailed": "Registration failed.",
+        "verificationFailed": "Verification failed."
+      }
+    },
+    "resetPassword": {
+      "title": "Reset password",
+      "sendLink": "Send reset link",
+      "sent": "If the address is registered, a password reset link will be sent.",
+      "error": "Unable to send reset link."
+    },
+    "wizard": {
+      "title": "Plan wizard",
+      "profile": "Restaurant profile",
+      "setupCosts": "Setup costs",
+      "staffing": "Staffing",
+      "scenarioReview": "Scenario review",
+      "start": "Start wizard",
+      "stepsTitle": "Wizard steps"
     }
   }
 }

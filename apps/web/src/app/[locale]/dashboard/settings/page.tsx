@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 import en from "@legacy-messages/en.json";
 import ru from "@legacy-messages/ru.json";
@@ -16,17 +17,18 @@ export default async function SettingsPage({ params }: { params: Promise<{ local
   if (!(locale in messages)) notFound();
 
   const home = messages[locale as keyof typeof messages].home;
+  const t = await getTranslations({ locale, namespace: "routeCopy" });
 
   return (
     <main style={{ maxWidth: 640 }}>
       <h1>{home.title}</h1>
-      <h2>Settings</h2>
+      <h2>{t("dashboard.settingsTitle")}</h2>
       <ul>
-        <li>Currency: UZS</li>
-        <li>Language: {locale}</li>
-        <li>Email notifications: enabled</li>
+        <li>{t("dashboard.currency")}: UZS</li>
+        <li>{t("dashboard.language")}: {locale}</li>
+        <li>{t("dashboard.emailNotifications")}: {t("dashboard.enabled")}</li>
       </ul>
-      <Link href={`/${locale}/dashboard`}>Back to dashboard</Link>
+      <Link href={`/${locale}/dashboard`}>{t("common.backToDashboard")}</Link>
     </main>
   );
 }

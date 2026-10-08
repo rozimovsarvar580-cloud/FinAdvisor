@@ -1,0 +1,7 @@
+
+# --- loop kit ---
+.loop/
+apps/api/ai.config.json
+.env
+.env.*
+!.env.example

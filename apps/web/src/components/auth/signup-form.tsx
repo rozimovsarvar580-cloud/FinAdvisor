@@ -187,14 +187,28 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
           </Select>
         </div>
 
-        <label className="flex cursor-pointer items-start gap-2 text-sm text-muted-foreground">
+        <div className="flex items-start gap-2 text-sm text-muted-foreground">
           <input
+            aria-labelledby="signup-terms-consent"
             className="mt-0.5 h-4 w-4 rounded border-input accent-primary"
             type="checkbox"
             {...register("terms")}
           />
-          <span>{t("termsConsent")}</span>
-        </label>
+          <span id="signup-terms-consent">
+            {t.rich("termsConsent", {
+              terms: (chunks) => (
+                <Link className="text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" href="/terms">
+                  {chunks}
+                </Link>
+              ),
+              privacy: (chunks) => (
+                <Link className="text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" href="/privacy">
+                  {chunks}
+                </Link>
+              )
+            })}
+          </span>
+        </div>
         {formErrors.terms?.message ? (
           <p className="text-sm text-red-600" role="alert">
             {errors(formErrors.terms.message)}

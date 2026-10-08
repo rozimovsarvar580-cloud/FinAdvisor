@@ -58,7 +58,7 @@ export function SocialSignInButtons({
       >
         <span
           aria-hidden="true"
-          className="bg-gradient-to-r from-[#4285F4] via-[#34A853] to-[#EA4335] bg-clip-text font-bold text-transparent"
+          className={/* allow-hex */ "bg-gradient-to-r from-[#4285F4] via-[#34A853] to-[#EA4335] bg-clip-text font-bold text-transparent"}
         >
           G
         </span>
@@ -72,7 +72,7 @@ export function SocialSignInButtons({
       >
         <span
           aria-hidden="true"
-          className="flex h-5 w-5 items-center justify-center rounded-sm bg-[#0866FF] font-bold text-white"
+          className={/* allow-hex */ "flex h-5 w-5 items-center justify-center rounded-sm bg-[#0866FF] font-bold text-white"}
         >
           f
         </span>

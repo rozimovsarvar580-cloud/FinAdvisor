@@ -1,8 +1,4 @@
-import os
+from finadvisor_api.config import settings
 
-
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "sqlite:///./finadvisor.db",
-)
-REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+DATABASE_URL = settings.database_url
+REDIS_URL = settings.redis_url

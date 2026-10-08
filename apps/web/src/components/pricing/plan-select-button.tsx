@@ -18,13 +18,19 @@ export function PlanSelectButton({ plan }: { plan: string }) {
       onClick={() =>
         router.push(
           status === "authenticated"
-            ? `/app/finadvisor?plan=${plan}`
+            ? "/app/billing"
             : `/signup?plan=${plan}`
         )
       }
       variant={plan === "pro" ? "default" : "outline"}
     >
-      {t(status === "loading" ? "checkingSession" : "selectPlan")}
+      {t(
+        status === "loading"
+          ? "checkingSession"
+          : status === "authenticated"
+            ? "viewBilling"
+            : "selectPlan"
+      )}
     </Button>
   );
 }

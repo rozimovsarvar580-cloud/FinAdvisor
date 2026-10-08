@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 const locales = ["uz", "ru", "en"] as const;
 
@@ -10,5 +11,6 @@ export function generateStaticParams() {
 export default async function KycPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!locales.includes(locale as (typeof locales)[number])) notFound();
-  return <main><h1>KYC profile</h1><p>Status: pending</p><p>Identity, source of funds, agreement</p><Link href={`/${locale}/investors`}>Back</Link></main>;
+  const t = await getTranslations({ locale, namespace: "routeCopy" });
+  return <main><h1>{t("investors.kycTitle")}</h1><p>{t("investors.status")}: {t("dashboard.pending")}</p><p>{t("investors.identitySourceAgreement")}</p><Link href={`/${locale}/investors`}>{t("common.back")}</Link></main>;
 }

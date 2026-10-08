@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
@@ -12,6 +13,7 @@ type PlanEditorProps = {
 };
 
 export default function PlanEditor({ planId, initialName, initialRevenue, initialProfit }: PlanEditorProps) {
+  const t = useTranslations("routeCopy");
   const [name, setName] = useState(initialName);
   const [revenue, setRevenue] = useState(initialRevenue);
   const [profit, setProfit] = useState(initialProfit);
@@ -29,28 +31,28 @@ export default function PlanEditor({ planId, initialName, initialRevenue, initia
     });
     const body = await response.json();
     if (!response.ok) {
-      setError(body.message ?? "Could not save the plan.");
+      setError(body.message ?? t("plans.errors.saveFailed"));
       return;
     }
-    setMessage(`Saved as version ${body.version}.`);
+    setMessage(t("plans.savedVersion", { version: body.version }));
   }
 
   return (
     <form onSubmit={save} className="card" style={{ display: "grid", gap: 12, marginTop: 24 }}>
-      <h2>Edit plan</h2>
+      <h2>{t("plans.editTitle")}</h2>
       <label>
-        Plan name
+        {t("plans.name")}
         <input value={name} onChange={(event) => setName(event.target.value)} required minLength={2} />
       </label>
       <label>
-        Monthly revenue (UZS)
+        {t("plans.monthlyRevenue")} (UZS)
         <input value={revenue} onChange={(event) => setRevenue(event.target.value)} inputMode="decimal" required />
       </label>
       <label>
-        Monthly profit (UZS)
+        {t("plans.monthlyProfit")} (UZS)
         <input value={profit} onChange={(event) => setProfit(event.target.value)} inputMode="decimal" required />
       </label>
-      <button type="submit">Save new version</button>
+      <button type="submit">{t("common.saveNewVersion")}</button>
       {message && <p role="status">{message}</p>}
       {error && <p role="alert">{error}</p>}
     </form>

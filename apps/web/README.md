@@ -1,3 +1,9 @@
+---
+noteId: "a1a52960c32811f1b92d93b180ce68c9"
+tags: []
+
+---
+
 # FinAdvisor Web
 
 Next.js 14 App Router application using TypeScript and Tailwind CSS.

@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import {
   filterListings,
@@ -273,7 +275,7 @@ export function InvestorMarketplaceSection() {
                   inputMode="decimal"
                   name="fundingTarget"
                   pattern="[0-9]+([.,][0-9]{1,2})?"
-                  placeholder="250000000"
+                  placeholder={t("amountPlaceholder")}
                   required
                 />
               </label>
@@ -306,32 +308,51 @@ export function InvestorMarketplaceSection() {
           <div className="mt-10">
             <h3 className="mb-4 text-xl font-semibold">{t("form.myListings")}</h3>
             <div className="grid gap-4">
-              {myListings.map((listing) => (
-                <Card className="flex flex-wrap items-center justify-between gap-4 p-5" key={listing.id}>
-                  <div>
-                    <p className="font-semibold">{listing.business_name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {t(`form.visibility.${listing.is_published ? "published" : "unpublished"}`)}
-                    </p>
-                  </div>
-                  <Button
-                    onClick={() => void setVisibility(listing, !listing.is_published)}
-                    size="sm"
-                    variant="outline"
-                  >
-                    {t(listing.is_published ? "form.unpublish" : "form.republish")}
-                  </Button>
-                </Card>
-              ))}
+              {loading ? (
+                <div aria-label={t("loading")} aria-busy="true" role="status">
+                  <Skeleton className="h-24 motion-reduce:animate-none" />
+                </div>
+              ) : myListings.length > 0 ? (
+                myListings.map((listing) => (
+                  <Card className="flex flex-wrap items-center justify-between gap-4 p-5" key={listing.id}>
+                    <div>
+                      <p className="font-semibold">{listing.business_name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {t(`form.visibility.${listing.is_published ? "published" : "unpublished"}`)}
+                      </p>
+                    </div>
+                    <Button
+                      onClick={() => void setVisibility(listing, !listing.is_published)}
+                      size="sm"
+                      variant="outline"
+                    >
+                      {t(listing.is_published ? "form.unpublish" : "form.republish")}
+                    </Button>
+                  </Card>
+                ))
+              ) : !error ? (
+                <EmptyState
+                  description={t("myListingsEmpty.description")}
+                  title={t("myListingsEmpty.title")}
+                />
+              ) : null}
             </div>
           </div>
         ) : null}
 
         <div className="mt-10 grid gap-5 lg:grid-cols-2">
           {loading ? (
-            <Card className="col-span-full p-10 text-center" aria-live="polite">
-              {t("loading")}
-            </Card>
+            <div className="col-span-full" aria-label={t("loading")} aria-busy="true" role="status">
+              <div className="grid gap-5 lg:grid-cols-2">
+                {Array.from({ length: 2 }, (_, index) => (
+                  <Card className="space-y-4 p-6" key={index}>
+                    <Skeleton className="h-6 w-2/3 motion-reduce:animate-none" />
+                    <Skeleton className="h-4 w-full motion-reduce:animate-none" />
+                    <Skeleton className="h-4 w-4/5 motion-reduce:animate-none" />
+                  </Card>
+                ))}
+              </div>
+            </div>
           ) : visibleListings.length > 0 ? (
             visibleListings.map((listing) => (
               <Card className="p-6" key={listing.id}>
@@ -368,12 +389,13 @@ export function InvestorMarketplaceSection() {
                 </div>
               </Card>
             ))
-          ) : (
-            <Card className="col-span-full p-10 text-center">
-              <h3 className="text-xl font-semibold">{t("empty.title")}</h3>
-              <p className="mt-3 text-muted-foreground">{t("empty.description")}</p>
-            </Card>
-          )}
+          ) : !error ? (
+            <EmptyState
+              className="col-span-full"
+              description={t(listings.length > 0 ? "empty.filteredDescription" : "empty.description")}
+              title={t(listings.length > 0 ? "empty.filteredTitle" : "empty.title")}
+            />
+          ) : null}
         </div>
         <p className="mt-6 text-sm text-muted-foreground">{t("disclaimer")}</p>
       </div>

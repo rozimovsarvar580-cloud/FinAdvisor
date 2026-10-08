@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 
+from finadvisor_api.legacy.main import app as legacy_app
 from finadvisor_api.main import app
 
 
@@ -16,3 +17,7 @@ def test_legacy_routes_are_registered_on_canonical_api() -> None:
 
     for path, expected_status in routes.items():
         assert client.get(path).status_code == expected_status
+
+
+def test_legacy_entrypoint_aliases_canonical_api() -> None:
+    assert legacy_app is app

@@ -1,3 +1,7 @@
+
+# --- loop kit ---
+.loop/
+apps/api/ai.config.json
 .env
 .env.*
 !.env.example
@@ -8,7 +12,6 @@ playwright-report/
 test-results/
 dist/
 build/
-target/
 *.egg-info/
 .venv/
 __pycache__/

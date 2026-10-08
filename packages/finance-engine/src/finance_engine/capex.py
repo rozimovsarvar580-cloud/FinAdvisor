@@ -1,6 +1,6 @@
 """Capital expenditure models and deterministic calculations."""
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
 from pydantic import BaseModel, Field
 
@@ -18,8 +18,8 @@ class CapexInput(BaseModel):
     """Inputs for a capital expenditure plan."""
 
     items: list[CapexItem] = Field(min_length=1)
-    working_capital: Decimal = Field(default=Decimal("0"), ge=0)
-    contingency_rate: Decimal = Field(default=Decimal("0"), ge=0, le=100)
+    working_capital: Decimal = Field(default=Decimal(0), ge=0)
+    contingency_rate: Decimal = Field(default=Decimal(0), ge=0, le=100)
 
 
 class CapexResult(BaseModel):
@@ -38,8 +38,8 @@ def _money(value: Decimal) -> Decimal:
 
 def calculate_capex(data: CapexInput) -> CapexResult:
     """Calculate item costs, contingency, and total funding required."""
-    item_total = sum((item.amount for item in data.items), Decimal("0"))
-    contingency = item_total * data.contingency_rate / Decimal("100")
+    item_total = sum((item.amount for item in data.items), Decimal(0))
+    contingency = item_total * data.contingency_rate / Decimal(100)
     total = item_total + contingency + data.working_capital
     return CapexResult(
         item_total=_money(item_total),
@@ -50,4 +50,4 @@ def calculate_capex(data: CapexInput) -> CapexResult:
     )
 
 
-__all__ = ["CapexItem", "CapexInput", "CapexResult", "calculate_capex"]
+__all__ = ["CapexInput", "CapexItem", "CapexResult", "calculate_capex"]

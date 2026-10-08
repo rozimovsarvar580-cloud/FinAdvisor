@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from hashlib import sha256
 
 from sqlalchemy.orm import Session
@@ -11,10 +11,10 @@ VERIFICATION_CODE = "123456"
 def issue_verification(db: Session, email: str, ttl_minutes: int = 10) -> None:
     record = db.get(EmailVerification, email)
     if record is None:
-        record = EmailVerification(email=email, code_hash="", expires_at=datetime.now(timezone.utc))
+        record = EmailVerification(email=email, code_hash="", expires_at=datetime.now(UTC))
         db.add(record)
     record.code_hash = sha256(VERIFICATION_CODE.encode("utf-8")).hexdigest()
-    record.expires_at = datetime.now(timezone.utc) + timedelta(minutes=ttl_minutes)
+    record.expires_at = datetime.now(UTC) + timedelta(minutes=ttl_minutes)
     db.commit()
 
 
@@ -24,9 +24,9 @@ def consume_verification(db: Session, email: str, code: str) -> bool:
         return False
     expires_at = record.expires_at
     if expires_at.tzinfo is None:
-        expires_at = expires_at.replace(tzinfo=timezone.utc)
+        expires_at = expires_at.replace(tzinfo=UTC)
     expected_hash = sha256(code.encode("utf-8")).hexdigest()
-    if expires_at <= datetime.now(timezone.utc) or record.code_hash != expected_hash:
+    if expires_at <= datetime.now(UTC) or record.code_hash != expected_hash:
         return False
     db.delete(record)
     db.commit()

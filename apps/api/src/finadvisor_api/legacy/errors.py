@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from fastapi.encoders import jsonable_encoder
 
 
 def error_payload(request: Request, code: str, message: str, details: object) -> dict[str, object]:
