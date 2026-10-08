@@ -4,8 +4,8 @@ Revision ID: 0001_create_plans
 Revises:
 """
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision = "0001_create_plans"
 down_revision = None

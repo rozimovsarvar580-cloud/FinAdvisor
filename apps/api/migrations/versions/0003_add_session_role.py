@@ -4,8 +4,8 @@ Revision ID: 0003_add_session_role
 Revises: 0002_create_auth_sessions
 """
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision = "0003_add_session_role"
 down_revision = "0002_create_auth_sessions"

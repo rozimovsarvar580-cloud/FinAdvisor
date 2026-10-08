@@ -1,4 +1,3 @@
-import os
 from typing import Annotated, Literal
 
 import httpx
@@ -11,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from finadvisor_api.config import get_settings
 from finadvisor_api.database import get_db
 from finadvisor_api.models import User
 from finadvisor_api.schemas import (
@@ -235,7 +235,7 @@ def get_current_user(
     ],
     db: Annotated[Session, Depends(get_db)],
 ) -> User:
-    secret = os.getenv("JWT_SECRET")
+    secret = get_settings().jwt_secret
     if not secret:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

@@ -1,4 +1,6 @@
+import json
 from decimal import Decimal
+from importlib.resources import files
 from typing import Literal
 
 from fastapi import APIRouter
@@ -6,6 +8,15 @@ from finance_engine import calculate_progressive_commission
 from pydantic import BaseModel, ConfigDict, Field
 
 router = APIRouter(prefix="/pricing", tags=["pricing"])
+
+PRICING_CATALOG = json.loads(
+    files("finadvisor_api").joinpath("pricing_catalog.json").read_text(encoding="utf-8")
+)
+
+
+@router.get("/plans")
+def get_pricing_plans() -> dict[str, object]:
+    return PRICING_CATALOG
 
 
 class CommissionRequest(BaseModel):

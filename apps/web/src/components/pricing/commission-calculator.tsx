@@ -23,6 +23,10 @@ const commissionResultSchema = z.object({
 
 type CommissionResult = z.infer<typeof commissionResultSchema>;
 
+const sliderMaximum = 1_000_000_000;
+const sliderStep = 1_000_000;
+const annualRevenuePattern = /^\d+(?:\.\d{1,2})?$/;
+
 export function CommissionCalculator() {
   const t = useTranslations("pricing");
   const errors = useTranslations("errors");
@@ -30,11 +34,21 @@ export function CommissionCalculator() {
   const [result, setResult] = useState<CommissionResult>();
   const [requestError, setRequestError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
+  const numericRevenue = annualRevenuePattern.test(annualRevenue)
+    ? Number(annualRevenue)
+    : 0;
+  const sliderValue = Number.isFinite(numericRevenue)
+    ? Math.min(Math.max(numericRevenue, 0), sliderMaximum)
+    : sliderMaximum;
 
   async function calculateCommission(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setRequestError(undefined);
     setResult(undefined);
+    if (!annualRevenuePattern.test(annualRevenue)) {
+      setRequestError("invalidRevenue");
+      return;
+    }
     setIsLoading(true);
 
     try {
@@ -80,6 +94,9 @@ export function CommissionCalculator() {
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
           {t("commission.description")}
         </p>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">
+          {t("commission.agentRevenueNote")}
+        </p>
         <ul className="mt-5 space-y-2 text-sm text-muted-foreground">
           {(["first", "second", "third"] as const).map((tier) => (
             <li className="flex items-start gap-2" key={tier}>
@@ -96,29 +113,68 @@ export function CommissionCalculator() {
       </div>
 
       <div>
-        <form className="space-y-4" onSubmit={calculateCommission}>
+        <form
+          aria-busy={isLoading}
+          className="space-y-4"
+          onSubmit={calculateCommission}
+        >
           <div className="space-y-2">
             <label className="text-sm font-medium" htmlFor="annual-revenue">
               {t("commission.inputLabel")}
             </label>
             <div className="relative">
               <Input
+                aria-describedby="annual-revenue-hint"
+                aria-invalid={requestError === "invalidRevenue"}
                 autoComplete="off"
                 id="annual-revenue"
                 inputMode="decimal"
-                min="0"
-                pattern="[0-9]+([.][0-9]{1,2})?"
                 placeholder={t("commission.placeholder")}
-                required
-                step="0.01"
-                type="number"
+                type="text"
                 value={annualRevenue}
-                onChange={(event) => setAnnualRevenue(event.target.value)}
+                onChange={(event) => {
+                  setAnnualRevenue(event.target.value);
+                  setRequestError(undefined);
+                  setResult(undefined);
+                }}
+                disabled={isLoading}
               />
               <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                 {t("commission.currency")}
               </span>
             </div>
+            <p
+              className="text-xs leading-5 text-muted-foreground"
+              id="annual-revenue-hint"
+            >
+              {t("commission.sliderLimitHint")}
+            </p>
+          </div>
+          <div className="space-y-2">
+            <label
+              className="text-sm font-medium"
+              htmlFor="annual-revenue-slider"
+            >
+              {t("commission.sliderLabel")}
+            </label>
+            <input
+              aria-controls="annual-revenue"
+              aria-describedby="annual-revenue-hint"
+              aria-valuetext={`${annualRevenue || "0"} ${t("commission.currency")}`}
+              className="h-6 w-full cursor-pointer accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none"
+              disabled={isLoading}
+              id="annual-revenue-slider"
+              max={sliderMaximum}
+              min="0"
+              onChange={(event) => {
+                setAnnualRevenue(event.target.value);
+                setRequestError(undefined);
+                setResult(undefined);
+              }}
+              step={sliderStep}
+              type="range"
+              value={sliderValue}
+            />
           </div>
           <Button className="w-full" disabled={isLoading} type="submit">
             {isLoading ? t("commission.loading") : t("commission.calculate")}
@@ -126,7 +182,7 @@ export function CommissionCalculator() {
         </form>
 
         {requestError ? (
-          <p className="mt-4 text-sm text-red-600" role="alert">
+          <p className="mt-4 text-sm font-medium text-foreground" role="alert">
             {errors(requestError)}
           </p>
         ) : null}

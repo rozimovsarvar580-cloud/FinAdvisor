@@ -5,6 +5,7 @@
     "apps/web"
   ],
   "scripts": {
+    "verify": "node scripts/verify.mjs",
     "lint": "npm --workspace apps/web run lint",
     "test": "npm --workspace apps/web run test",
     "build": "npm --workspace apps/web run build"

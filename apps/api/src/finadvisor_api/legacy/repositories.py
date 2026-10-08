@@ -1,10 +1,10 @@
 from decimal import Decimal
+from uuid import uuid4
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .models import Plan, PlanVersion
-from uuid import uuid4
 
 
 def list_plans(db: Session) -> list[Plan]:
@@ -21,8 +21,8 @@ def create_plan(db: Session, plan_id: str, name: str) -> Plan:
         name=name,
         status="draft",
         currency="UZS",
-        monthly_revenue=Decimal("0"),
-        monthly_profit=Decimal("0"),
+        monthly_revenue=Decimal(0),
+        monthly_profit=Decimal(0),
     )
     db.add(plan)
     db.commit()
@@ -67,15 +67,15 @@ def seed_demo_plans(db: Session) -> None:
                 id="plan-001",
                 name="Samarqand Bistro",
                 status="draft",
-                monthly_revenue=Decimal("248000000"),
-                monthly_profit=Decimal("42700000"),
+                monthly_revenue=Decimal(248000000),
+                monthly_profit=Decimal(42700000),
             ),
             Plan(
                 id="plan-002",
                 name="Shahar Qosh",
                 status="review",
-                monthly_revenue=Decimal("180000000"),
-                monthly_profit=Decimal("28000000"),
+                monthly_revenue=Decimal(180000000),
+                monthly_profit=Decimal(28000000),
             ),
         ]
     )

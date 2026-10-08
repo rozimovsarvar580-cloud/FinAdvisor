@@ -36,10 +36,13 @@ dev = [
 where = ["src"]
 
 [tool.setuptools.package-data]
-finadvisor_api = ["document_messages.json", "knowledge_seed.json"]
+finadvisor_api = ["document_messages.json", "knowledge_seed.json", "pricing_catalog.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.File"]

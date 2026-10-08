@@ -8,10 +8,10 @@ from pydantic import Field
 from sqlalchemy.orm import Session
 
 from finadvisor_api.ai_client import AIClientError, stream
+from finadvisor_api.calc_schemas import StrictInput
 from finadvisor_api.database import get_db
 from finadvisor_api.knowledge import KnowledgeResult, search_knowledge
 from finadvisor_api.plan_schemas import PlanCalculations
-from finadvisor_api.calc_schemas import StrictInput
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 

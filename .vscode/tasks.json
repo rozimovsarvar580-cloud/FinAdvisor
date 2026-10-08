@@ -4,7 +4,14 @@
 		{
 			"label": "Prepare route directories",
 			"type": "shell",
-			"command": "cmd /c \"if not exist \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\components\\investors\" mkdir \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\components\\investors\" && if not exist \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\components\\desktop-agent\" mkdir \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\components\\desktop-agent\" && if not exist \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\app\\[locale]\\investors\" mkdir \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\app\\[locale]\\investors\" && if not exist \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\app\\[locale]\\desktop-agent\" mkdir \"C:\\Users\\PC\\Desktop\\FinAdvisor\\apps\\web\\src\\app\\[locale]\\desktop-agent\"\"",
+			"command": "node",
+			"args": [
+				"-e",
+				"const { mkdirSync } = require('node:fs'); for (const path of ['apps/web/src/components/investors', 'apps/web/src/components/desktop-agent', 'apps/web/src/app/[locale]/investors', 'apps/web/src/app/[locale]/desktop-agent']) mkdirSync(path, { recursive: true });"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
 			"isBackground": false,
 			"problemMatcher": []
 		}

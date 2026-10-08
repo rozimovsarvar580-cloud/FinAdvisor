@@ -1,6 +1,6 @@
 """Credit schedule calculations using Decimal arithmetic only."""
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 
 from pydantic import BaseModel, Field
 
@@ -38,12 +38,12 @@ def _money(value: Decimal) -> Decimal:
 
 def annuity_schedule(data: CreditInput) -> list[CreditScheduleRow]:
     """Return an auditable monthly annuity schedule."""
-    monthly_rate = data.annual_rate / Decimal("1200")
+    monthly_rate = data.annual_rate / Decimal(1200)
     if monthly_rate == 0:
         payment = data.principal / data.months
     else:
-        factor = (Decimal("1") + monthly_rate) ** data.months
-        payment = data.principal * monthly_rate * factor / (factor - Decimal("1"))
+        factor = (Decimal(1) + monthly_rate) ** data.months
+        payment = data.principal * monthly_rate * factor / (factor - Decimal(1))
 
     balance = data.principal
     rows: list[CreditScheduleRow] = []
@@ -53,7 +53,7 @@ def annuity_schedule(data: CreditInput) -> list[CreditScheduleRow]:
         if month == data.months:
             principal = balance
             payment = principal + interest
-        balance = max(Decimal("0"), balance - principal)
+        balance = max(Decimal(0), balance - principal)
         rows.append(
             CreditScheduleRow(
                 month=month,
@@ -68,12 +68,12 @@ def annuity_schedule(data: CreditInput) -> list[CreditScheduleRow]:
 
 def reverse_annuity(data: ReverseCreditInput) -> ReverseCreditResult:
     """Calculate the principal supported by a fixed monthly payment."""
-    monthly_rate = data.annual_rate / Decimal("1200")
+    monthly_rate = data.annual_rate / Decimal(1200)
     if monthly_rate == 0:
         principal = data.monthly_payment * data.months
     else:
-        factor = (Decimal("1") + monthly_rate) ** data.months
-        principal = data.monthly_payment * (factor - Decimal("1")) / (monthly_rate * factor)
+        factor = (Decimal(1) + monthly_rate) ** data.months
+        principal = data.monthly_payment * (factor - Decimal(1)) / (monthly_rate * factor)
     return ReverseCreditResult(
         principal=_money(principal),
         formula="principal = payment × ((1 + r)^n - 1) / (r × (1 + r)^n)",

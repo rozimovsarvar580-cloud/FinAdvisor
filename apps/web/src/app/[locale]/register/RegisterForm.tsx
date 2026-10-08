@@ -1,8 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function RegisterForm() {
+  const t = useTranslations("routeCopy");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,10 +29,10 @@ export default function RegisterForm() {
     const body = await response.json();
     setLoading(false);
     if (!response.ok) {
-      setError(body.message ?? "Registration failed.");
+      setError(body.message ?? t("register.errors.registrationFailed"));
       return;
     }
-    setMessage(`${body.message} Verification code: 123456`);
+    setMessage(t("register.verificationSent", { code: "123456" }));
     setVerificationEmail(String(form.get("email")));
   }
 
@@ -47,33 +49,33 @@ export default function RegisterForm() {
     const body = await response.json();
     setLoading(false);
     if (!response.ok) {
-      setError(body.message ?? "Verification failed.");
+      setError(body.message ?? t("register.errors.verificationFailed"));
       return;
     }
     setVerified(true);
-    setMessage(body.message);
+    setMessage(t("register.verificationSuccess"));
   }
 
   if (verificationEmail && !verified) {
     return (
       <form onSubmit={verify} style={{ display: "grid", gap: 12 }}>
         <p role="status">{message}</p>
-        <label>Verification code<input name="code" inputMode="numeric" pattern="\d{6}" maxLength={6} required /></label>
+        <label>{t("register.verificationCode")}<input name="code" inputMode="numeric" pattern="\d{6}" maxLength={6} required /></label>
         {error && <p role="alert">{error}</p>}
-        <button type="submit" disabled={loading}>{loading ? "Verifying..." : "Verify email"}</button>
+        <button type="submit" disabled={loading}>{loading ? t("common.verifying") : t("common.verifyEmail")}</button>
       </form>
     );
   }
 
   return (
     <form onSubmit={submit} style={{ display: "grid", gap: 12 }}>
-      <label>Full name<input name="full_name" type="text" required minLength={2} autoComplete="name" /></label>
-      <label>Email<input name="email" type="email" required autoComplete="email" /></label>
-      <label>Password<input name="password" type="password" required minLength={8} autoComplete="new-password" /></label>
-      <small>Password must contain at least 8 characters.</small>
+      <label>{t("common.fullName")}<input name="full_name" type="text" required minLength={2} autoComplete="name" /></label>
+      <label>{t("common.email")}<input name="email" type="email" required autoComplete="email" /></label>
+      <label>{t("common.password")}<input name="password" type="password" required minLength={8} autoComplete="new-password" /></label>
+      <small>{t("register.passwordHint")}</small>
       {error && <p role="alert">{error}</p>}
       {message && <p role="status">{message}</p>}
-      <button type="submit" disabled={loading}>{loading ? "Creating..." : "Register"}</button>
+      <button type="submit" disabled={loading}>{loading ? t("common.creating") : t("common.register")}</button>
     </form>
   );
 }

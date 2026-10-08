@@ -1,8 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ResetPasswordForm() {
+  const t = useTranslations("routeCopy");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -18,18 +20,18 @@ export default function ResetPasswordForm() {
     });
     const body = await response.json();
     if (!response.ok) {
-      setError(body.message ?? "Unable to send reset link.");
+      setError(body.message ?? t("resetPassword.error"));
       return;
     }
-    setMessage(body.message);
+    setMessage(t("resetPassword.sent"));
   }
 
   return (
     <form onSubmit={submit} style={{ display: "grid", gap: 12 }}>
-      <label>Email<input name="email" type="email" required autoComplete="email" /></label>
+      <label>{t("common.email")}<input name="email" type="email" required autoComplete="email" /></label>
       {error && <p role="alert">{error}</p>}
       {message && <p role="status">{message}</p>}
-      <button type="submit">Send reset link</button>
+      <button type="submit">{t("resetPassword.sendLink")}</button>
     </form>
   );
 }

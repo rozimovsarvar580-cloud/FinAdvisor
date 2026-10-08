@@ -42,14 +42,14 @@ def upgrade() -> None:
         "marketplace_listings",
         sa.Column("saved_plan_id", sa.String(length=64), nullable=True),
     )
-    op.create_foreign_key(
-        "fk_marketplace_listings_saved_plan_id",
-        "marketplace_listings",
-        "saved_business_plans",
-        ["saved_plan_id"],
-        ["id"],
-        ondelete="SET NULL",
-    )
+    with op.batch_alter_table("marketplace_listings") as batch_op:
+        batch_op.create_foreign_key(
+            "fk_marketplace_listings_saved_plan_id",
+            "saved_business_plans",
+            ["saved_plan_id"],
+            ["id"],
+            ondelete="SET NULL",
+        )
     op.create_index(
         "ix_marketplace_listings_saved_plan_id",
         "marketplace_listings",
@@ -62,11 +62,11 @@ def downgrade() -> None:
         "ix_marketplace_listings_saved_plan_id",
         table_name="marketplace_listings",
     )
-    op.drop_constraint(
-        "fk_marketplace_listings_saved_plan_id",
-        "marketplace_listings",
-        type_="foreignkey",
-    )
+    with op.batch_alter_table("marketplace_listings") as batch_op:
+        batch_op.drop_constraint(
+            "fk_marketplace_listings_saved_plan_id",
+            type_="foreignkey",
+        )
     op.drop_column("marketplace_listings", "saved_plan_id")
     op.drop_index(
         "ix_saved_business_plans_owner_id",

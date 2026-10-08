@@ -1,0 +1,56 @@
+{
+  "billingPeriods": ["weekly", "monthly", "yearly"],
+  "placeholderMarker": "TODO(DECISION D1)",
+  "placeholderPeriods": ["monthly", "yearly"],
+  "plans": [
+    {
+      "id": "free",
+      "priceByPeriod": {
+        "weekly": "$0",
+        "monthly": "$0",
+        "yearly": "$0"
+      },
+      "featureKeys": ["onePlan", "basicCalculations", "webPreview"],
+      "highlighted": false
+    },
+    {
+      "id": "pro",
+      "priceByPeriod": {
+        "weekly": "$10",
+        "monthly": "$40",
+        "yearly": "$384"
+      },
+      "featureKeys": [
+        "aiAnalysis",
+        "credit",
+        "tax",
+        "revenue",
+        "profit",
+        "calculators",
+        "businessPlan"
+      ],
+      "highlighted": true
+    },
+    {
+      "id": "business",
+      "priceByPeriod": {
+        "weekly": "$20",
+        "monthly": "$80",
+        "yearly": "$768"
+      },
+      "featureKeys": [
+        "aiAnalysis",
+        "credit",
+        "tax",
+        "revenue",
+        "profit",
+        "calculators",
+        "businessPlan",
+        "agentSynergy",
+        "desktopAgent",
+        "accountantOwnerAccounts"
+      ],
+      "highlighted": false
+    }
+  ]
+}
