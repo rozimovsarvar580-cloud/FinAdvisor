@@ -12,7 +12,10 @@ export const siteConfig = {
   locales: routing.locales
 };
 
-export function getCanonicalUrl(pathname = "/", locale = routing.defaultLocale) {
+export function getCanonicalUrl(
+  pathname = "/",
+  locale: string = routing.defaultLocale
+) {
   const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/+/g, "/");
   const localizedPath = normalizedPath === "/" ? `/${locale}` : `/${locale}${normalizedPath}`;
   return new URL(localizedPath, siteConfig.baseUrl).toString();

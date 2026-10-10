@@ -16,7 +16,7 @@ import { getPasswordStrength } from "@/lib/password-strength";
 import { SocialSignInButtons } from "./social-sign-in-buttons";
 
 const signupSchema = z.object({
-  name: z.string().trim().min(1, "nameRequired").max(200),
+  name: z.string().trim().min(1, "nameRequired").max(200, "nameTooLong"),
   email: z.string().email("emailRequired"),
   password: z
     .string()
@@ -33,6 +33,7 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
   const t = useTranslations("auth");
   const errors = useTranslations("errors");
   const [serverError, setServerError] = useState<string>();
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -115,9 +116,15 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
           <label className="text-sm font-medium" htmlFor="signup-name">
             {t("name")}
           </label>
-          <Input autoComplete="name" id="signup-name" {...register("name")} />
+          <Input
+            aria-describedby={formErrors.name ? "signup-name-error" : undefined}
+            aria-invalid={Boolean(formErrors.name)}
+            autoComplete="name"
+            id="signup-name"
+            {...register("name")}
+          />
           {formErrors.name?.message ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-sm text-red-600" id="signup-name-error" role="alert">
               {errors(formErrors.name.message)}
             </p>
           ) : null}
@@ -128,13 +135,17 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
             {t("email")}
           </label>
           <Input
+            aria-describedby={
+              formErrors.email ? "signup-email-error" : undefined
+            }
+            aria-invalid={Boolean(formErrors.email)}
             autoComplete="email"
             id="signup-email"
             type="email"
             {...register("email")}
           />
           {formErrors.email?.message ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-sm text-red-600" id="signup-email-error" role="alert">
               {errors(formErrors.email.message)}
             </p>
           ) : null}
@@ -149,15 +160,37 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
               {t("strength")}: {strengthLabel}
             </span>
           </div>
-          <Input
-            autoComplete="new-password"
-            id="signup-password"
-            type="password"
-            {...register("password")}
-          />
+          <div className="relative">
+            <Input
+              aria-describedby={
+                formErrors.password ? "signup-password-error" : undefined
+              }
+              aria-invalid={Boolean(formErrors.password)}
+              autoComplete="new-password"
+              className="pr-24"
+              id="signup-password"
+              type={showPassword ? "text" : "password"}
+              {...register("password")}
+            />
+            <Button
+              aria-label={t(showPassword ? "hidePassword" : "showPassword")}
+              className="absolute right-1 top-1/2 -translate-y-1/2 px-2"
+              disabled={isSubmitting}
+              onClick={() => setShowPassword((visible) => !visible)}
+              size="sm"
+              type="button"
+              variant="ghost"
+            >
+              {t(showPassword ? "hidePassword" : "showPassword")}
+            </Button>
+          </div>
           <div
             aria-label={`${t("strength")}: ${strengthLabel}`}
+            aria-valuemax={4}
+            aria-valuemin={0}
+            aria-valuenow={passwordStrength}
             className="grid grid-cols-4 gap-1"
+            role="meter"
           >
             {[1, 2, 3, 4].map((level) => (
               <span
@@ -170,7 +203,7 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
             ))}
           </div>
           {formErrors.password?.message ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-sm text-red-600" id="signup-password-error" role="alert">
               {errors(formErrors.password.message)}
             </p>
           ) : null}
@@ -189,6 +222,8 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
 
         <div className="flex items-start gap-2 text-sm text-muted-foreground">
           <input
+            aria-describedby={formErrors.terms ? "signup-terms-error" : undefined}
+            aria-invalid={Boolean(formErrors.terms)}
             aria-labelledby="signup-terms-consent"
             className="mt-0.5 h-4 w-4 rounded border-input accent-primary"
             type="checkbox"
@@ -210,7 +245,7 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
           </span>
         </div>
         {formErrors.terms?.message ? (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="text-sm text-red-600" id="signup-terms-error" role="alert">
             {errors(formErrors.terms.message)}
           </p>
         ) : null}
@@ -221,7 +256,12 @@ export function SignupForm({ callbackUrl }: { callbackUrl: string }) {
           </p>
         ) : null}
 
-        <Button className="w-full" disabled={isSubmitting} type="submit">
+        <Button
+          className="w-full"
+          disabled={isSubmitting}
+          loading={isSubmitting}
+          type="submit"
+        >
           {isSubmitting ? t("loading") : t("signupSubmit")}
         </Button>
       </form>

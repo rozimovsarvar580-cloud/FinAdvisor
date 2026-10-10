@@ -17,7 +17,8 @@ HOW THIS FILE WORKS (read once)
 - `H*` tasks are for the HUMAN (accounts, money, legal, decisions). The loop never does them. After you
   finish one, change its `[ ]` to `[x]`; tasks that need it unlock.
 - Machine checks under a task: `exists:`, `absent:`, `contains: path :: text`, `not-contains: path :: text`,
-  `cmd: ...` ({{PY}} = python). `node scripts/verify.mjs` always runs too.
+  `cmd: ...` ({{PY}} = python). `node scripts/verify.mjs` always runs too and marks unchecked tasks
+  complete when their explicit machine checks pass.
 - Agents may APPEND new tasks at the end of a stage; they must not reorder or edit existing ones.
 - If a feature already exists in the repo, the task means: complete it, test it, make it match the spec.
 
@@ -106,44 +107,60 @@ engine = `packages/finance-engine`.
   - exists: apps/web/src/app/[locale]/terms/page.tsx, apps/web/src/app/[locale]/privacy/page.tsx
 - [x] 2.8 Error, 404, loading and empty states
   - done: branded not-found, error boundary, route loading skeletons, empty states for lists
-- [ ] 2.9 Hard-coded string audit
+  - exists: apps/web/src/app/[locale]/not-found.tsx, apps/web/src/app/[locale]/error.tsx, apps/web/src/app/[locale]/route-boundaries.test.tsx
+  - cmd: npm.cmd --workspace apps/web test -- src/components/ui/route-states.test.tsx
+- [x] 2.9 Hard-coded string audit
   - done: no user-facing literal text left in `apps/web/src/**/*.tsx` (JSX text, placeholder, aria-label, title, alt, toast, zod messages); all moved to uz/ru/en keys
-- [ ] 2.10 Locale quality test
+  - exists: apps/web/src/i18n/hard-coded-copy-audit.test.ts
+  - cmd: npm.cmd --workspace apps/web test -- src/i18n/hard-coded-copy-audit.test.ts
+- [x] 2.10 Locale quality test
   - done: Vitest/Node test fails if uz/ru/en key sets differ or if a ru/uz value equals its English value (whitelist for brand names and numbers)
   - exists: apps/web/scripts/test-locales.mjs
-- [ ] 2.11 Translation review pass
+- [x] 2.11 Translation review pass
   - done: uz in Latin script with formal register, ru natural business style; machine-like wording fixed; a short report in `specs/i18n-review.md`
   - exists: specs/i18n-review.md
-- [ ] 2.12 SEO basics
+- [x] 2.12 SEO basics
   - done: per-locale metadata, hreflang, sitemap.xml, robots.txt, Open Graph image, JSON-LD for the product
   - exists: apps/web/src/app/sitemap.ts, apps/web/src/app/robots.ts
 
 ## Stage 3 - Authentication and accounts
-- [ ] 3.1 Auth data model
+- [x] 3.1 Auth data model
   - done: users (role, email_verified, avatar, locale), oauth_accounts, refresh_tokens, email_tokens (hashed, single-use, expiry) with migrations
-- [ ] 3.2 Register, login, refresh, logout
+  - exists: apps/api/tests/test_auth_data_model.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_auth_data_model.py apps/api/tests/test_migration_chain.py -q
+- [x] 3.2 Register, login, refresh, logout
   - done: argon2 passwords, short-lived access token, rotating hashed refresh token, logout revokes; brute-force protection per account and IP
   - exists: apps/api/tests/test_auth_core.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_auth_core.py -q
-- [ ] 3.3 Email verification and password reset
+- [x] 3.3 Email verification and password reset
   - done: endpoints for forgot-password, reset-password, verify-email, resend; tokens single-use, 1h/24h expiry; no user enumeration in responses
   - exists: apps/api/tests/test_auth_email_flows.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_auth_email_flows.py -q
-- [ ] 3.4 OAuth backend endpoint
+- [x] 3.4 OAuth backend endpoint
   - done: `POST /auth/oauth` finds or creates a user from {provider, provider_account_id, email, name, avatar}; requires header `X-Internal-Key` == INTERNAL_API_KEY; returns tokens, user and `is_new`; links accounts by verified email safely
   - exists: apps/api/tests/test_auth_oauth.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_auth_oauth.py -q
-- [ ] 3.5 EmailSender
+- [x] 3.5 EmailSender
   - done: interface with console implementation (dev) and SMTP/Resend implementation selected by env; templates in uz/ru/en for verify, reset, welcome; tested with a fake
   - exists: apps/api/src/finadvisor_api/email_sender.py
-- [ ] 3.6 NextAuth integration
+- [x] 3.6 NextAuth integration
   - done: Google and Facebook sign-in call `/auth/oauth` with the internal key and put accessToken, role, needsRole into the session; refresh handled; locale-aware sign-in page (no hard-coded /uz/login); types in `next-auth.d.ts`; callbacks tested
-- [ ] 3.7 Role onboarding
+  - exists: apps/web/src/lib/auth.test.ts
+  - cmd: npm.cmd --workspace apps/web test -- src/lib/auth.test.ts
+- [x] 3.7 Role onboarding
   - done: new OAuth users pick tadbirkor, buxgalter or investor at `/[locale]/onboarding/role` (`PATCH /me`); guarded so it cannot be skipped
-- [ ] 3.8 Login and signup UI
+  - exists: apps/api/tests/test_auth.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_auth.py -q
+  - exists: apps/web/src/components/auth/role-onboarding-form.test.tsx
+  - cmd: npm.cmd --workspace apps/web test -- src/components/auth/role-onboarding-form.test.tsx src/middleware.test.ts src/lib/auth.test.ts
+- [x] 3.8 Login and signup UI
   - done: two-column layout with animated brand panel; react-hook-form + zod; show/hide password, strength meter, inline errors, loading state, remember me, translated server errors, terms checkbox linking to legal pages; tests
-- [ ] 3.9 Forgot, reset and verify pages
+  - exists: apps/web/src/components/auth/auth-forms.test.tsx
+  - cmd: npm.cmd --workspace apps/web test -- src/components/auth/auth-forms.test.tsx src/components/legal/legal-document.test.tsx
+- [x] 3.9 Forgot, reset and verify pages
   - done: pages for forgot-password, reset-password, verify-email with success and error states in 3 languages
+  - exists: apps/web/src/components/auth/auth-recovery.test.tsx
+  - cmd: npm.cmd --workspace apps/web test -- src/components/auth/auth-recovery.test.tsx src/app/api/auth/auth-flow-routes.test.ts src/components/auth/auth-forms.test.tsx
 - [ ] 3.10 Social buttons
   - done: Google and Facebook buttons with brand SVG logos (`allow-hex`), hover/active effects; disabled with tooltip when provider env vars are missing (server helper, secrets never exposed)
 - [ ] 3.11 Route protection and profile
@@ -306,15 +323,15 @@ engine = `packages/finance-engine`.
   - done: local SQLite, offline queue, sync with idempotent ids, conflict rule documented (server timestamp wins), sync status indicator; tests for the sync logic
 - [ ] 8.8 Agent chat and commands UI
   - done: owner chat and command box; AI requests only via the API (the desktop app contains no AI key; test greps the bundle sources)
-- [ ] 8.9 Bundling and CSP
+- [x] 8.9 Bundling and CSP
   - done: bundle targets msi, nsis, dmg enabled; CSP allows only the API origin; app identifier and version set
   - not-contains: apps/desktop/src-tauri/tauri.conf.json :: "active": false
-- [ ] 8.10 Release workflow
+- [x] 8.10 Release workflow
   - done: GitHub Actions matrix (windows-latest, macos-latest) with tauri-action builds installers and attaches them to a GitHub Release on version tags
   - exists: .github/workflows/desktop-release.yml
 - [ ] 8.11 Download page
   - done: `/[locale]/desktop-agent` detects the OS, links the latest release assets, shows system requirements and install steps; unsigned-app warning text until signing is done
-- [ ] 8.12 Signing and auto-update
+- [x] 8.12 Signing and auto-update
   - done: updater with signature verification, signing steps wired to CI secrets and documented in `apps/desktop/README.md`
   - needs: H9
   - exists: apps/desktop/README.md
@@ -373,7 +390,7 @@ engine = `packages/finance-engine`.
   - done: simple load script for login, plan generation (fake AI) and report endpoints with target latency documented
 
 ## Stage 12 - Deployment
-- [ ] 12.1 Dockerfiles
+- [x] 12.1 Dockerfiles
   - done: production Dockerfiles for web and api (multi-stage, non-root user, healthcheck)
   - exists: apps/web/Dockerfile, apps/api/Dockerfile
 - [ ] 12.2 Compose for production

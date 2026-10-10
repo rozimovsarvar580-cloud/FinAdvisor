@@ -15,7 +15,7 @@ import { SocialSignInButtons } from "./social-sign-in-buttons";
 
 const loginSchema = z.object({
   email: z.string().email("emailRequired"),
-  password: z.string().min(1, "invalidCredentials"),
+  password: z.string().min(1, "passwordRequired"),
   rememberMe: z.boolean()
 });
 
@@ -26,6 +26,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   const t = useTranslations("auth");
   const errors = useTranslations("errors");
   const [serverError, setServerError] = useState<string>();
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -73,13 +74,15 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
             {t("email")}
           </label>
           <Input
+            aria-describedby={formErrors.email ? "login-email-error" : undefined}
+            aria-invalid={Boolean(formErrors.email)}
             autoComplete="email"
             id="login-email"
             type="email"
             {...register("email")}
           />
           {formErrors.email?.message ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p className="text-sm text-red-600" id="login-email-error" role="alert">
               {errors(formErrors.email.message)}
             </p>
           ) : null}
@@ -92,19 +95,41 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
             </label>
             <Link
               className="text-sm font-medium text-primary hover:underline"
-              href="/login#forgot-password"
+              href="/forgot-password"
             >
               {t("forgotPassword")}
             </Link>
           </div>
-          <Input
-            autoComplete="current-password"
-            id="login-password"
-            type="password"
-            {...register("password")}
-          />
+          <div className="relative">
+            <Input
+              aria-describedby={
+                formErrors.password ? "login-password-error" : undefined
+              }
+              aria-invalid={Boolean(formErrors.password)}
+              autoComplete="current-password"
+              className="pr-24"
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              {...register("password")}
+            />
+            <Button
+              aria-label={t(showPassword ? "hidePassword" : "showPassword")}
+              className="absolute right-1 top-1/2 -translate-y-1/2 px-2"
+              disabled={isSubmitting}
+              onClick={() => setShowPassword((visible) => !visible)}
+              size="sm"
+              type="button"
+              variant="ghost"
+            >
+              {t(showPassword ? "hidePassword" : "showPassword")}
+            </Button>
+          </div>
           {formErrors.password?.message ? (
-            <p className="text-sm text-red-600" role="alert">
+            <p
+              className="text-sm text-red-600"
+              id="login-password-error"
+              role="alert"
+            >
               {errors(formErrors.password.message)}
             </p>
           ) : null}
@@ -125,7 +150,12 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
           </p>
         ) : null}
 
-        <Button className="w-full" disabled={isSubmitting} type="submit">
+        <Button
+          className="w-full"
+          disabled={isSubmitting}
+          loading={isSubmitting}
+          type="submit"
+        >
           {isSubmitting ? t("loading") : t("loginSubmit")}
         </Button>
       </form>

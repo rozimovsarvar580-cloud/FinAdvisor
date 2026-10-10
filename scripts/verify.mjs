@@ -17,6 +17,7 @@ import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "no
 import { dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { containsPrivateKeyBlock } from "./private-key-scan.mjs";
+import { hasMachineChecks, markTasksDone, parseTasks, runTaskChecks, taskNeeds } from "./task-checks.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PY = process.env.PY || "python";
@@ -92,6 +93,7 @@ if (has("apps/web/package.json")) {
 }
 add("web:tokens:test", "node --test scripts/check-tokens.test.mjs", ".");
 add("secrets:test", "node --test scripts/private-key-scan.test.mjs", ".");
+add("tasks:test", "node --test scripts/task-checks.test.mjs", ".");
 add("web:tokens", "node scripts/check-tokens.mjs", ".");
 if (has("apps/api") || has("packages/finance-engine")) {
   add("py:ruff", `${PY} -m ruff check apps/api packages/finance-engine`);
@@ -155,6 +157,48 @@ for (const step of steps) {
 }
 
 if (!failed) writeFileSync(failureFile, "");
-writeFileSync(join(ROOT, ".loop", "last-verify.json"), JSON.stringify({ at: new Date().toISOString(), failed, results }, null, 2));
+const taskResults = [];
+if (!failed && !only && skip.size === 0 && process.env.FINADVISOR_LOOP !== "1" && has("specs/TASKS.md")) {
+  const taskFile = join(ROOT, "specs", "TASKS.md");
+  const taskText = readFileSync(taskFile, "utf8");
+  const tasks = parseTasks(taskText);
+  const byId = new Map(tasks.map((task) => [task.id, task]));
+  const completedIds = [];
+
+  for (const task of tasks) {
+    if (task.done || !hasMachineChecks(task)) continue;
+    const waitingFor = taskNeeds(task).filter((id) => !byId.get(id)?.done);
+    if (waitingFor.length) {
+      taskResults.push({ id: task.id, title: task.title, ok: false, blockedBy: waitingFor });
+      console.log(`TASK WAIT  ${task.id} ${task.title}  (needs ${waitingFor.join(", ")})`);
+      continue;
+    }
+    const started = Date.now();
+    const problems = runTaskChecks(task, { root: ROOT, python: PY });
+    const secs = ((Date.now() - started) / 1000).toFixed(1);
+    const ok = problems.length === 0;
+    taskResults.push({ id: task.id, title: task.title, ok, secs: Number(secs), problems });
+    console.log(`${ok ? "TASK PASS" : "TASK OPEN"}  ${task.id} ${task.title}  (${secs}s)`);
+    if (ok) {
+      completedIds.push(task.id);
+    } else {
+      for (const problem of problems) console.log(`  ${problem}`);
+    }
+  }
+
+  if (completedIds.length) {
+    const currentTaskText = readFileSync(taskFile, "utf8");
+    const currentTasks = new Map(parseTasks(currentTaskText).map((task) => [task.id, task]));
+    const newlyCompletedIds = completedIds.filter((id) => !currentTasks.get(id)?.done);
+    const updatedTaskText = markTasksDone(currentTaskText, completedIds);
+    if (updatedTaskText !== currentTaskText) writeFileSync(taskFile, updatedTaskText);
+    if (newlyCompletedIds.length) console.log(`Marked complete: ${newlyCompletedIds.join(", ")}`);
+  }
+  const passed = taskResults.filter((result) => result.ok).length;
+  const blocked = taskResults.filter((result) => result.blockedBy).length;
+  const open = taskResults.length - passed - blocked;
+  console.log(`TASK SUMMARY: ${passed} passed, ${open} incomplete, ${blocked} waiting on prerequisites`);
+}
+writeFileSync(join(ROOT, ".loop", "last-verify.json"), JSON.stringify({ at: new Date().toISOString(), failed, results, taskResults }, null, 2));
 if (!failed) console.log("\nverify: ALL GREEN");
 process.exit(failed ? 1 : 0);

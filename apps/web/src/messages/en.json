@@ -12,7 +12,11 @@
     "mobileNavigation": "Mobile navigation"
   },
   "home": {
-    "tagline": "Clear financial decisions for your business"
+    "tagline": "Clear financial decisions for your business",
+    "socialImage": {
+      "title": "Financial plans for growth",
+      "audience": "Restaurants • banks • investors"
+    }
   },
   "businessPage": {
     "hero": {
@@ -556,7 +560,14 @@
     "name": "Name",
     "email": "Email",
     "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "role": "Account type",
+    "onboardingRoleTitle": "Choose your account type",
+    "onboardingRoleDescription": "Tell us how you plan to use FinAdvisor so we can set up your account.",
+    "onboardingRoleSubmit": "Save and continue",
+    "onboardingRoleSaving": "Saving...",
+    "onboardingRoleError": "We could not save your account type. Please try again.",
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot password?",
     "termsConsent": "I agree to the <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>.",
@@ -585,6 +596,29 @@
     "artDescription": "See your business's key metrics in one place",
     "revenue": "Monthly revenue",
     "profit": "Net profit"
+  },
+  "authFlows": {
+    "forgotTitle": "Forgot your password?",
+    "forgotDescription": "Enter the email address linked to your account. If it is registered, we will send a reset link.",
+    "forgotSubmit": "Send reset link",
+    "sending": "Sending...",
+    "forgotSuccess": "If the address is registered, a password reset link will be sent.",
+    "forgotError": "We could not send the reset link. Please try again.",
+    "resetTitle": "Create a new password",
+    "resetDescription": "Choose a new password for your account.",
+    "newPassword": "New password",
+    "resetSubmit": "Save password",
+    "saving": "Saving...",
+    "resetSuccess": "Your password has been changed. You can now sign in.",
+    "resetError": "This reset link is invalid or expired. Request a new one.",
+    "missingToken": "This link is incomplete. Request a new email and use its link.",
+    "verifyTitle": "Verify your email",
+    "verifyDescription": "Confirm that this email address belongs to you.",
+    "verifySubmit": "Verify email",
+    "verifying": "Verifying...",
+    "verifySuccess": "Your email has been verified. You can now sign in.",
+    "verifyError": "This verification link is invalid or expired. Request a new one.",
+    "backToLogin": "Back to sign in"
   },
   "common": {
     "language": "Language",
@@ -729,7 +763,9 @@
   },
   "errors": {
     "nameRequired": "Enter your name",
+    "nameTooLong": "Name must be no longer than 200 characters",
     "emailRequired": "Enter a valid email address",
+    "passwordRequired": "Enter your password",
     "passwordTooShort": "Password must be at least 8 characters",
     "passwordTooLong": "Password must be no longer than 128 characters",
     "termsRequired": "Agree to the terms to continue",

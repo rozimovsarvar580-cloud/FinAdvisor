@@ -9,7 +9,7 @@ def test_development_settings_have_local_defaults() -> None:
     assert settings.environment == "development"
     assert settings.database_url == "sqlite:///./finadvisor.db"
     assert settings.redis_url == "redis://localhost:6379/0"
-    assert settings.email_provider == "disabled"
+    assert settings.email_provider == "console"
     assert settings.payment_provider == "disabled"
     assert settings.email_port == 587
     assert settings.openai_timeout_seconds == 30
@@ -28,6 +28,7 @@ def test_settings_load_optional_integrations_and_api_urls() -> None:
             "EMAIL_USERNAME": "mailer",
             "EMAIL_PASSWORD": "email-password-placeholder",
             "EMAIL_FROM": "team@example.test",
+            "EMAIL_API_KEY": "resend-api-key-placeholder",
             "PAYMENT_PROVIDER": "test-provider",
             "PAYMENT_PUBLIC_KEY": "payment-public-placeholder",
             "PAYMENT_SECRET_KEY": "payment-secret-placeholder",
@@ -45,6 +46,7 @@ def test_settings_load_optional_integrations_and_api_urls() -> None:
     assert settings.email_host == "mail.example"
     assert settings.email_username == "mailer"
     assert settings.email_from == "team@example.test"
+    assert settings.email_api_key == "resend-api-key-placeholder"
     assert settings.payment_provider == "test-provider"
     assert settings.payment_public_key == "payment-public-placeholder"
     assert settings.payment_secret_key == "payment-secret-placeholder"
@@ -83,6 +85,7 @@ def test_production_loads_configured_settings() -> None:
     assert settings.finadvisor_api_url == "https://api.example"
     assert settings.next_public_api_url == "https://api.example"
     assert settings.openai_timeout_seconds == 12.5
+    assert settings.email_provider == "disabled"
 
 
 @pytest.mark.parametrize(

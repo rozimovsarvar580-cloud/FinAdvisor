@@ -17,6 +17,6 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(monkeypatch) -> None
 
     assert sum(revision.down_revision is None for revision in revisions) == 1
     assert all(not isinstance(revision.down_revision, tuple) for revision in revisions)
-    assert script.get_heads() == ["20261004_03"]
+    assert script.get_heads() == ["20261004_04"]
 
     command.upgrade(config, "head")

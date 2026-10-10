@@ -5,48 +5,48 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PanelLoadingSkeleton } from "@/components/ui/route-states";
 import { type PlanResult } from "@/components/finadvisor/plan-wizard";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const PlanWizard = dynamic(
   () => import("./plan-wizard").then((module) => module.PlanWizard),
-  { loading: () => <PanelSkeleton /> }
+  { loading: () => <PanelLoadingSkeleton /> }
 );
 const CalculatorsPanel = dynamic(
   () => import("./calculators-panel").then((module) => module.CalculatorsPanel),
-  { loading: () => <PanelSkeleton /> }
+  { loading: () => <PanelLoadingSkeleton /> }
 );
 const WhatIfPanel = dynamic(
   () => import("./what-if-panel").then((module) => module.WhatIfPanel),
-  { loading: () => <PanelSkeleton /> }
+  { loading: () => <PanelLoadingSkeleton /> }
 );
 const PlanAnalyzer = dynamic(
   () => import("./plan-analyzer").then((module) => module.PlanAnalyzer),
-  { loading: () => <PanelSkeleton /> }
+  { loading: () => <PanelLoadingSkeleton /> }
 );
 const AIChatPanel = dynamic(
   () => import("./ai-chat-panel").then((module) => module.AIChatPanel),
-  { loading: () => <PanelSkeleton /> }
+  { loading: () => <PanelLoadingSkeleton /> }
 );
 const ReportsPanel = dynamic(
   () => import("./reports-panel").then((module) => module.ReportsPanel),
-  { loading: () => <PanelSkeleton /> }
+  { loading: () => <PanelLoadingSkeleton /> }
 );
 const InvestorMarketplaceSection = dynamic(
   () =>
     import("@/components/investor-marketplace-section").then(
       (module) => module.InvestorMarketplaceSection
     ),
-  { loading: () => <PanelSkeleton /> }
+  { loading: () => <PanelLoadingSkeleton /> }
 );
 const DesktopAgentPanel = dynamic(
   () =>
     import("@/components/desktop-agent-panel").then(
       (module) => module.DesktopAgentPanel
     ),
-  { loading: () => <PanelSkeleton /> }
+  { loading: () => <PanelLoadingSkeleton /> }
 );
 
 const tabKeys = [
@@ -61,17 +61,6 @@ const tabKeys = [
 ] as const;
 
 type TabKey = (typeof tabKeys)[number];
-
-function PanelSkeleton() {
-  const t = useTranslations("finadvisor");
-  return (
-    <div aria-label={t("loading")} className="space-y-5 p-6">
-      <Skeleton className="h-9 w-2/5" />
-      <Skeleton className="h-32 w-full" />
-      <Skeleton className="h-32 w-full" />
-    </div>
-  );
-}
 
 export function FinAdvisorWorkspace() {
   const t = useTranslations("finadvisor");

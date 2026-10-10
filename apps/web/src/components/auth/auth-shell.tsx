@@ -1,19 +1,26 @@
 import type { ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 import { Card } from "@/components/ui/card";
 
 export function AuthShell({ children }: { children: ReactNode }) {
   const t = useTranslations("auth");
+  const reduceMotion = useReducedMotion();
 
   return (
     <main className="mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl items-center gap-10 px-page py-10 lg:grid-cols-2 lg:py-16">
       <section className="mx-auto w-full max-w-md">
         {children}
       </section>
-      <aside
+      <motion.aside
         aria-label={t("artTitle")}
         className="relative hidden min-h-[36rem] overflow-hidden rounded-[2rem] bg-primary p-10 text-primary-foreground lg:flex lg:flex-col lg:justify-between"
+        initial={reduceMotion ? false : { opacity: 0, x: 24 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={
+          reduceMotion ? { duration: 0 } : { duration: 0.5, ease: "easeOut" }
+        }
       >
         <div className="absolute -right-20 -top-24 h-80 w-80 rounded-full bg-white/10" />
         <div className="absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-black/10" />
@@ -65,7 +72,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
             <span className="text-sm font-semibold text-primary">—</span>
           </div>
         </Card>
-      </aside>
+      </motion.aside>
     </main>
   );
 }

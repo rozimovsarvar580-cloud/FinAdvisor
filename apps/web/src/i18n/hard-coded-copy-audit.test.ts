@@ -24,6 +24,7 @@ function isTranslatableCopy(value: string, kind: string) {
   if (!text || allowedBrandCopy.has(text)) return false;
   if (kind === "message argument" && /^\d+(?:[.,]\d+)*$/.test(text)) return false;
   if (kind === "JSX text" && (text.length === 1 || dataOnlyText.test(text))) return false;
+  if (kind.startsWith("JSX ") && /^[\s.,/%:+()—–-]+$/.test(text)) return false;
   if (kind === "message argument" && /^[A-Za-z][A-Za-z0-9_.-]*$/.test(text)) return false;
   return true;
 }
@@ -52,6 +53,15 @@ function scanSource(source: string, file: string): Candidate[] {
     });
   }
 
+  function addTemplateText(node: ts.TemplateLiteral, kind: string) {
+    if (ts.isNoSubstitutionTemplateLiteral(node)) {
+      add(node, kind, node.text);
+      return;
+    }
+    add(node, kind, node.head.text);
+    for (const span of node.templateSpans) add(span, kind, span.literal.text);
+  }
+
   function visit(node: ts.Node, messageContext = false) {
     let nestedMessageContext = messageContext;
     if (ts.isCallExpression(node)) {
@@ -69,8 +79,10 @@ function scanSource(source: string, file: string): Candidate[] {
       const initializer = ts.isJsxExpression(node.initializer)
         ? node.initializer.expression
         : node.initializer;
-      if (initializer && ts.isStringLiteral(initializer)) {
+      if (initializer && ts.isStringLiteralLike(initializer)) {
         add(initializer, `JSX ${node.name.getText(sourceFile)}`, initializer.text);
+      } else if (initializer && ts.isTemplateLiteral(initializer)) {
+        addTemplateText(initializer, `JSX ${node.name.getText(sourceFile)}`);
       }
     }
 
@@ -82,9 +94,8 @@ function scanSource(source: string, file: string): Candidate[] {
       else if (nestedMessageContext) add(node, "message argument", node.text);
     }
 
-    if (ts.isTemplateExpression(node) && nestedMessageContext) {
-      add(node, "message argument", node.head.text);
-      for (const span of node.templateSpans) add(span, "message argument", span.literal.text);
+    if (ts.isTemplateLiteral(node) && nestedMessageContext) {
+      addTemplateText(node, "message argument");
     }
 
     ts.forEachChild(node, (child) => visit(child, nestedMessageContext));
@@ -117,8 +128,10 @@ describe("hard-coded user-facing copy audit", () => {
       const form = z.string().min(8, "Use at least eight characters");
       return <button title="Save changes">Save changes</button>;
       return <input placeholder="250000000" />;
+      return <img alt={\`Company logo\`} aria-label={\`Help button\`} />;
       setError("Unable to save this plan");
       toast({ title: "Plan saved" });
+      toast(\`Changes saved\`);
     `;
 
     expect(scanSource(fixture, "fixture.tsx").map(({ kind, value }) => [kind, value])).toEqual([
@@ -126,8 +139,11 @@ describe("hard-coded user-facing copy audit", () => {
       ["JSX title", "Save changes"],
       ["JSX text", "Save changes"],
       ["JSX placeholder", "250000000"],
+      ["JSX alt", "Company logo"],
+      ["JSX aria-label", "Help button"],
       ["message argument", "Unable to save this plan"],
-      ["message argument", "Plan saved"]
+      ["message argument", "Plan saved"],
+      ["message argument", "Changes saved"]
     ]);
   });
 
@@ -141,7 +157,7 @@ describe("hard-coded user-facing copy audit", () => {
 
   it("keeps the audited route copy keys aligned across all locales", () => {
     const localeKeys = [enMessages, ruMessages, uzMessages].map((messages) =>
-      leafPaths(messages.routeCopy).sort()
+      [...leafPaths(messages.routeCopy), ...leafPaths(messages.home.socialImage)].sort()
     );
 
     expect(localeKeys[1]).toEqual(localeKeys[0]);

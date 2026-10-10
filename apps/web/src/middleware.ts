@@ -51,12 +51,13 @@ export default async function middleware(request: NextRequest) {
   }
 
   const [, locale, ...segments] = request.nextUrl.pathname.split("/");
+  const roleOnboarding = segments[0] === "onboarding" && segments[1] === "role";
   const protectedSection = segments[0] === "app" || segments[0] === "dashboard";
-  if (locale && isSupportedLocale(locale) && protectedSection) {
+  if (locale && isSupportedLocale(locale)) {
     const secret = process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET;
     const token = secret ? await getToken({ req: request, secret }) : null;
     const legacyToken = request.cookies.get("finadvisor_token")?.value;
-    if (!token && !legacyToken) {
+    if ((protectedSection || roleOnboarding) && !token && !legacyToken) {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = `/${locale}/login`;
       loginUrl.search = "";
@@ -65,6 +66,18 @@ export default async function middleware(request: NextRequest) {
         `${request.nextUrl.pathname}${request.nextUrl.search}`
       );
       return NextResponse.redirect(loginUrl);
+    }
+    if (token?.needsRole === true && !roleOnboarding) {
+      const onboardingUrl = request.nextUrl.clone();
+      onboardingUrl.pathname = `/${locale}/onboarding/role`;
+      onboardingUrl.search = "";
+      return NextResponse.redirect(onboardingUrl);
+    }
+    if (token && token.needsRole !== true && roleOnboarding) {
+      const appUrl = request.nextUrl.clone();
+      appUrl.pathname = `/${locale}/app`;
+      appUrl.search = "";
+      return NextResponse.redirect(appUrl);
     }
   }
 

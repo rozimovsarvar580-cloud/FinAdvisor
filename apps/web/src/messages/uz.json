@@ -12,13 +12,17 @@
     "mobileNavigation": "Mobil navigatsiya"
   },
   "home": {
-    "tagline": "Biznesingiz uchun aniq moliyaviy qarorlar"
+    "tagline": "Biznesingiz uchun aniq moliyaviy qarorlar",
+    "socialImage": {
+      "title": "O‘sish uchun moliyaviy rejalar",
+      "audience": "Restoranlar • banklar • investorlar"
+    }
   },
   "businessPage": {
     "hero": {
       "eyebrow": "Biznes uchun",
-      "title": "Desktop agent komissiyasi qanday baholanishini ko‘ring",
-      "description": "Desktop agent qayd etgan yillik tushum asosidagi progressiv komissiya bahosini ko‘ring."
+      "title": "Kompyuter agenti komissiyasi qanday hisoblanishini ko‘ring",
+      "description": "Kompyuter agenti qayd etgan yillik tushumdan olinadigan progressiv komissiya miqdorini ko‘ring."
     },
     "commissionTitle": "Yillik komissiyani baholang",
     "commissionDescription": "Progressiv hisob-kitobni ko‘rish uchun slayderdan foydalaning yoki summani kiriting."
@@ -98,7 +102,7 @@
         },
         "approach": {
           "eyebrow": "Yondashuvimiz",
-          "title": "Ma’lumotdan boshqariladigan qarorgacha",
+          "title": "Ma’lumotlardan asosli qaror sari",
           "description": "Har bir bosqich siz kiritgan ma’lumot va tekshiriladigan hisob-kitoblarga tayanadi.",
           "steps": [
             {
@@ -136,7 +140,7 @@
             },
             "investor": {
               "label": "Investor",
-              "title": "Loyiha taxminlarini tushunarli ko‘ring",
+              "title": "Loyiha taxminlarini aniq ko‘rib chiqing",
               "description": "Loyiha egasi tuzgan reja va asosiy taxminlarni ko‘rib chiqing. Bu vosita tekshiruv yoki mustaqil tahlilning o‘rnini bosmaydi."
             }
           }
@@ -462,7 +466,7 @@
           "calculators": "Moliyaviy kalkulyatorlar",
           "businessPlan": "Biznes-reja",
           "agentSynergy": "Agent-Synergy strategiyasi",
-          "desktopAgent": "Windows/macOS ish stoli agenti",
+          "desktopAgent": "Windows/macOS uchun kompyuter agenti",
           "accountantOwnerAccounts": "Buxgalter va egasi hisoblari"
         }
       }
@@ -521,7 +525,7 @@
       "eyebrow": "Shaffof hisob",
       "title": "Yillik tushum bo‘yicha hisob-kitob",
       "description": "Yillik tushumni kiriting. Har bir stavka faqat o‘z pog‘onasidagi tushum qismiga qo‘llanadi.",
-      "agentRevenueNote": "Ushbu baho desktop agent qayd etgan yillik tushumga asoslanadi.",
+      "agentRevenueNote": "Ushbu baho kompyuter agenti qayd etgan yillik tushumga asoslanadi.",
       "tiers": {
         "first": "Dastlabki 100 mln so‘m — 4%",
         "second": "Keyingi 900 mln so‘m — 2%",
@@ -556,7 +560,14 @@
     "name": "Ism",
     "email": "Elektron pochta",
     "password": "Parol",
+    "showPassword": "Parolni ko‘rsatish",
+    "hidePassword": "Parolni yashirish",
     "role": "Hisob turi",
+    "onboardingRoleTitle": "Hisob turini tanlang",
+    "onboardingRoleDescription": "Hisobingizni sozlashimiz uchun FinAdvisor’dan qanday foydalanishingizni tanlang.",
+    "onboardingRoleSubmit": "Saqlash va davom etish",
+    "onboardingRoleSaving": "Saqlanmoqda...",
+    "onboardingRoleError": "Hisob turini saqlab bo‘lmadi. Qayta urinib ko‘ring.",
     "rememberMe": "Meni eslab qol",
     "forgotPassword": "Parolni unutdingizmi?",
     "termsConsent": "<terms>Foydalanish shartlariga</terms> va <privacy>maxfiylik siyosatiga</privacy> roziman.",
@@ -585,6 +596,29 @@
     "artDescription": "Biznesingizning muhim ko‘rsatkichlarini bir joyda ko‘ring",
     "revenue": "Oylik tushum",
     "profit": "Sof foyda"
+  },
+  "authFlows": {
+    "forgotTitle": "Parolni unutdingizmi?",
+    "forgotDescription": "Hisobingizga bog‘langan elektron pochta manzilini kiriting. Agar u ro‘yxatdan o‘tgan bo‘lsa, tiklash havolasini yuboramiz.",
+    "forgotSubmit": "Tiklash havolasini yuborish",
+    "sending": "Yuborilmoqda...",
+    "forgotSuccess": "Agar manzil ro‘yxatdan o‘tgan bo‘lsa, unga parolni tiklash havolasi yuboriladi.",
+    "forgotError": "Tiklash havolasini yuborib bo‘lmadi. Qayta urinib ko‘ring.",
+    "resetTitle": "Yangi parol yarating",
+    "resetDescription": "Hisobingiz uchun yangi parolni tanlang.",
+    "newPassword": "Yangi parol",
+    "resetSubmit": "Parolni saqlash",
+    "saving": "Saqlanmoqda...",
+    "resetSuccess": "Parolingiz o‘zgartirildi. Endi hisobga kirishingiz mumkin.",
+    "resetError": "Tiklash havolasi yaroqsiz yoki muddati o‘tgan. Yangisini so‘rang.",
+    "missingToken": "Havolada kerakli ma’lumot yo‘q. Yangi xat so‘rab, undagi havoladan foydalaning.",
+    "verifyTitle": "Elektron pochtani tasdiqlang",
+    "verifyDescription": "Ushbu elektron pochta manzili sizga tegishli ekanini tasdiqlang.",
+    "verifySubmit": "Elektron pochtani tasdiqlash",
+    "verifying": "Tasdiqlanmoqda...",
+    "verifySuccess": "Elektron pochtangiz tasdiqlandi. Endi hisobga kirishingiz mumkin.",
+    "verifyError": "Tasdiqlash havolasi yaroqsiz yoki muddati o‘tgan. Yangisini so‘rang.",
+    "backToLogin": "Kirish sahifasiga qaytish"
   },
   "common": {
     "language": "Til",
@@ -729,7 +763,9 @@
   },
   "errors": {
     "nameRequired": "Ismingizni kiriting",
+    "nameTooLong": "Ism 200 belgidan oshmasligi kerak",
     "emailRequired": "To‘g‘ri elektron pochta manzilini kiriting",
+    "passwordRequired": "Parolni kiriting",
     "passwordTooShort": "Parol kamida 8 belgidan iborat bo‘lishi kerak",
     "passwordTooLong": "Parol 128 belgidan oshmasligi kerak",
     "termsRequired": "Davom etish uchun shartlarga rozilik bering",
@@ -770,7 +806,7 @@
       "chat": "AI chat",
       "reports": "Hisobotlar",
       "investorMarketplace": "Investorlar bozori",
-      "desktopAgent": "Desktop agent"
+      "desktopAgent": "Kompyuter agenti"
     },
     "wizard": {
       "eyebrow": "Restoran shabloni",
@@ -992,8 +1028,8 @@
     "amountPlaceholder": "250000000"
   },
   "desktopAgent": {
-    "eyebrow": "Desktop agent",
-    "title": "Lokal ish jarayonlarini sinxronlash",
+    "eyebrow": "Kompyuter agenti",
+    "title": "Mahalliy vazifalarni sinxronlash",
     "description": "Agent mahalliy sinxronlash vazifalarini ustuvorlik bo‘yicha tartibga soladi, moliyaviy hisob-kitoblar esa moliyaviy dvigatelda qoladi.",
     "downloadFor": "Uchun yuklab oling",
     "recommended": "Tavsiya etilgan paket: {platform}",

@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse, Response
 
 from finadvisor_api.agent import router as agent_router
 from finadvisor_api.analysis import router as analysis_router
+from finadvisor_api.auth import profile_router
 from finadvisor_api.auth import router as auth_router
 from finadvisor_api.calculations import router as calculations_router
 from finadvisor_api.chat import router as chat_router
@@ -56,6 +57,7 @@ app.add_exception_handler(RequestValidationError, handle_validation_exception)
 app.middleware("http")(rate_limit_middleware)
 app.middleware("http")(audit_middleware)
 app.include_router(auth_router)
+app.include_router(profile_router)
 app.include_router(agent_router)
 app.include_router(analysis_router)
 app.include_router(chat_router)

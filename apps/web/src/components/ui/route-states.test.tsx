@@ -5,7 +5,11 @@ import { describe, expect, it, vi } from "vitest";
 
 import enMessages from "@/messages/en.json";
 
-import { RouteLoadingSkeleton, RouteStatus } from "./route-states";
+import {
+  PanelLoadingSkeleton,
+  RouteLoadingSkeleton,
+  RouteStatus
+} from "./route-states";
 
 function renderWithMessages(children: React.ReactNode) {
   return render(
@@ -24,6 +28,14 @@ describe("route states", () => {
 
     expect(screen.getByRole("status", { name: "Loading page" })).toBeTruthy();
     expect(screen.getByRole("status").getAttribute("aria-busy")).toBe("true");
+  });
+
+  it("renders an accessible workspace-panel skeleton and disables motion when requested", () => {
+    renderWithMessages(<PanelLoadingSkeleton />);
+
+    const status = screen.getByRole("status", { name: "Loading" });
+    expect(status.getAttribute("aria-busy")).toBe("true");
+    expect(status.querySelectorAll(".motion-reduce\\:animate-none")).toHaveLength(3);
   });
 
   it("renders branded not-found copy and a route home action", () => {

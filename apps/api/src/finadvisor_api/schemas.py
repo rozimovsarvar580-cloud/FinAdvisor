@@ -23,12 +23,43 @@ class LoginRequest(BaseModel):
     password: str = Field(min_length=1, max_length=128)
 
 
-class OAuthExchangeRequest(BaseModel):
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str = Field(min_length=32, max_length=128)
+
+
+class EmailRequest(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
 
+    email: EmailStr
+
+
+class EmailTokenRequest(BaseModel):
+    token: str = Field(min_length=32, max_length=128)
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(min_length=32, max_length=128)
+    password: str = Field(min_length=8, max_length=128)
+
+
+class AuthActionResponse(BaseModel):
+    message: str
+
+
+class OAuthExchangeRequest(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+
     provider: Literal["google", "facebook"]
-    access_token: str = Field(min_length=1, max_length=4096)
+    provider_account_id: str = Field(min_length=1, max_length=255)
+    email: EmailStr
+    name: str = Field(min_length=1, max_length=200)
+    avatar_url: str | None = Field(default=None, max_length=2048)
+    email_verified: bool
     role: UserRole = "tadbirkor"
+
+
+class RoleUpdateRequest(BaseModel):
+    role: UserRole
 
 
 class UserResponse(BaseModel):
@@ -46,8 +77,13 @@ class UserResponse(BaseModel):
 
 class TokenResponse(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: Literal["bearer"] = "bearer"
     user: UserResponse
+
+
+class OAuthTokenResponse(TokenResponse):
+    is_new: bool
 
 
 class AgentDeviceRegisterRequest(BaseModel):

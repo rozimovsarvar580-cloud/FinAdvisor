@@ -24,6 +24,7 @@ class Settings:
     email_username: str | None
     email_password: str | None
     email_from: str | None
+    email_api_key: str | None
     payment_provider: str
     payment_public_key: str | None
     payment_secret_key: str | None
@@ -119,12 +120,18 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         google_client_secret=_optional(values, "GOOGLE_CLIENT_SECRET"),
         facebook_client_id=_optional(values, "FACEBOOK_CLIENT_ID"),
         facebook_client_secret=_optional(values, "FACEBOOK_CLIENT_SECRET"),
-        email_provider=values.get("EMAIL_PROVIDER", "disabled").strip().lower(),
+        email_provider=values.get(
+            "EMAIL_PROVIDER",
+            "console" if environment in {"dev", "development"} else "disabled",
+        )
+        .strip()
+        .lower(),
         email_host=_optional(values, "EMAIL_HOST"),
         email_port=email_port,
         email_username=_optional(values, "EMAIL_USERNAME"),
         email_password=_optional(values, "EMAIL_PASSWORD"),
         email_from=_optional(values, "EMAIL_FROM"),
+        email_api_key=_optional(values, "EMAIL_API_KEY"),
         payment_provider=values.get("PAYMENT_PROVIDER", "disabled").strip().lower(),
         payment_public_key=_optional(values, "PAYMENT_PUBLIC_KEY"),
         payment_secret_key=_optional(values, "PAYMENT_SECRET_KEY"),

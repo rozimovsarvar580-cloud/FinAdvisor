@@ -34,6 +34,23 @@ export function RouteLoadingSkeleton() {
   );
 }
 
+export function PanelLoadingSkeleton() {
+  const t = useTranslations("finadvisor");
+
+  return (
+    <div
+      aria-busy="true"
+      aria-label={t("loading")}
+      className="space-y-5 p-6"
+      role="status"
+    >
+      <Skeleton className="h-9 w-2/5 motion-reduce:animate-none" />
+      <Skeleton className="h-32 w-full motion-reduce:animate-none" />
+      <Skeleton className="h-32 w-full motion-reduce:animate-none" />
+    </div>
+  );
+}
+
 export function RouteStatus({
   variant,
   onRetry

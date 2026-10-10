@@ -25,6 +25,7 @@ import { createHash as hash } from "node:crypto";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseTasks, runTaskChecks, taskNeeds } from "./task-checks.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 process.chdir(ROOT);
@@ -46,36 +47,12 @@ const sh = (command, opts = {}) => spawnSync(command, { shell: true, encoding: "
 const read = (p) => readFileSync(p, "utf8");
 
 // ---------------- task file parsing ----------------
-function parseTasks(text) {
-  const tasks = [];
-  let cur = null;
-  text.split(/\r?\n/).forEach((line, idx) => {
-    const m = line.match(/^- \[( |x|X)\]\s+(\S+)\s+(.*)$/);
-    if (m) {
-      cur = { idx, done: m[1].toLowerCase() === "x", id: m[2], title: m[3], body: [], stage: "" };
-      tasks.push(cur);
-    } else if (/^#{1,6}\s/.test(line)) {
-      cur = null;
-    } else if (cur) {
-      cur.body.push(line);
-    }
-  });
-  // attach stage names
-  let stage = "";
-  text.split(/\r?\n/).forEach((line, idx) => {
-    const h = line.match(/^##\s+(.*)$/);
-    if (h) stage = h[1];
-    const t = tasks.find((x) => x.idx === idx);
-    if (t) t.stage = stage;
-  });
-  return tasks;
-}
 const isHuman = (t) => /^H\d+$/i.test(t.id);
 const field = (t, key) => {
   const re = new RegExp(`^\\s*-?\\s*${key}:\\s*(.+)$`, "i");
   return t.body.map((l) => l.match(re)).filter(Boolean).map((m) => m[1].trim());
 };
-const needsOf = (t) => field(t, "needs").flatMap((s) => s.split(",").map((x) => x.trim()).filter(Boolean));
+const needsOf = taskNeeds;
 const fullText = (t) => `- [ ] ${t.id} ${t.title}\n${t.body.join("\n")}`.trimEnd();
 
 function pickNext(tasks) {
@@ -131,34 +108,6 @@ if (args.has("--status")) {
 }
 
 // ---------------- checks ----------------
-function runChecks(task) {
-  const problems = [];
-  for (const line of task.body) {
-    const m = line.match(/^\s*-\s*(exists|absent|contains|not-contains|cmd):\s*(.+)$/i);
-    if (!m) continue;
-    const kind = m[1].toLowerCase();
-    const val = m[2].trim();
-    if (kind === "exists") {
-      for (const p of val.split(",").map((s) => s.trim())) if (!existsSync(p)) problems.push(`missing: ${p}`);
-    } else if (kind === "absent") {
-      for (const p of val.split(",").map((s) => s.trim())) if (existsSync(p)) problems.push(`should not exist: ${p}`);
-    } else if (kind === "contains" || kind === "not-contains") {
-      const [p, needle] = val.split("::").map((s) => s.trim());
-      if (!existsSync(p)) {
-        problems.push(`missing file for ${kind}: ${p}`);
-        continue;
-      }
-      const has = read(p).includes(needle);
-      if (kind === "contains" && !has) problems.push(`${p} must contain: ${needle}`);
-      if (kind === "not-contains" && has) problems.push(`${p} must NOT contain: ${needle}`);
-    } else if (kind === "cmd") {
-      const r = sh(val.replaceAll("{{PY}}", PY));
-      if (r.status !== 0) problems.push(`command failed: ${val}\n${`${r.stdout}${r.stderr}`.split("\n").slice(-25).join("\n")}`);
-    }
-  }
-  return problems;
-}
-
 // ---------------- guards ----------------
 const PROTECTED = [".env", "apps/api/ai.config.json", "apps/web/.env.local"];
 const fingerprint = () =>
@@ -285,7 +234,7 @@ for (let i = 1; i <= MAX_ITER; i++) {
   }
 
   const problems = [];
-  const v = sh("node scripts/verify.mjs");
+  const v = sh("node scripts/verify.mjs", { env: { ...process.env, FINADVISOR_LOOP: "1" } });
   process.stdout.write(v.stdout || "");
   if (v.status !== 0) problems.push("verify failed (see .loop/last-failure.txt)");
 
@@ -293,7 +242,7 @@ for (let i = 1; i <= MAX_ITER; i++) {
   if (deleted.length && !fullText(next).includes("allow-test-delete")) {
     problems.push(`test files were deleted: ${deleted.join(", ")}`);
   }
-  if (v.status === 0) problems.push(...runChecks(next));
+  if (v.status === 0) problems.push(...runTaskChecks(next, { root: ROOT, python: PY }));
 
   if (problems.length) {
     fails++;
