@@ -17,6 +17,7 @@ dependencies = [
   "psycopg[binary]>=3.2,<4",
   "pypdf>=5,<7",
   "openpyxl>=3.1,<4",
+  "PyYAML>=6,<7",
   "reportlab>=4.2,<5",
   "redis>=5,<6",
   "sqlalchemy>=2.0,<3",
@@ -36,7 +37,15 @@ dev = [
 where = ["src"]
 
 [tool.setuptools.package-data]
-finadvisor_api = ["document_messages.json", "knowledge_seed.json", "pricing_catalog.json"]
+finadvisor_api = [
+  "auth_email_messages.json",
+  "document_messages.json",
+  "fonts/*.ttf",
+  "fonts/OFL.txt",
+  "data/*.yaml",
+  "knowledge_seed.json",
+  "pricing_catalog.json"
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

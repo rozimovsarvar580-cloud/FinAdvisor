@@ -1,14 +1,19 @@
 from io import BytesIO
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import Response
 from openpyxl import Workbook
+
+from ..auth_dependencies import require_role
 
 router = APIRouter(prefix="/plans", tags=["exports"])
 
 
 @router.get("/{plan_id}/export.csv")
-async def export_plan_csv(plan_id: str) -> Response:
+async def export_plan_csv(
+    plan_id: str,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> Response:
     csv = (
         "metric,value,currency\n"
         f"plan_id,{plan_id},\n"
@@ -24,7 +29,10 @@ async def export_plan_csv(plan_id: str) -> Response:
 
 
 @router.get("/{plan_id}/export.xlsx")
-async def export_plan_xlsx(plan_id: str) -> Response:
+async def export_plan_xlsx(
+    plan_id: str,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> Response:
     workbook = Workbook()
     sheet = workbook.active
     sheet.title = "Summary"
@@ -46,7 +54,10 @@ async def export_plan_xlsx(plan_id: str) -> Response:
         headers={"Content-Disposition": f'attachment; filename="{plan_id}.xlsx"'},
     )
 @router.get("/{plan_id}/report")
-async def plan_report(plan_id: str) -> dict[str, object]:
+async def plan_report(
+    plan_id: str,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> dict[str, object]:
     return {
         "plan_id": plan_id,
         "format": "report-data",

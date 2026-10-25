@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from finadvisor_api.auth import get_current_user
 from finadvisor_api.database import get_db
 from finadvisor_api.models import MarketplaceListing, SavedBusinessPlan, User
+from finadvisor_api.plan_limits import reserve_lifetime_quota
 from finadvisor_api.plan_schemas import PlanGenerateResponse
 from finadvisor_api.schemas import (
     MarketplaceListingCreateRequest,
@@ -123,6 +124,7 @@ def publish_listing(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="marketplace.plan_not_found",
         )
+    reserve_lifetime_quota(db, user, "marketplace_listings")
     listing = MarketplaceListing(
         id=f"listing-{uuid4().hex}",
         owner_id=user.id,

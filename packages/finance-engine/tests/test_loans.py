@@ -2,7 +2,11 @@ from decimal import Decimal
 
 import pytest
 
-from finance_engine.loans import annuity_schedule, differential_schedule
+from finance_engine.loans import (
+    annuity_schedule,
+    check_loan_affordability,
+    differential_schedule,
+)
 
 
 def test_annuity_schedule_has_fixed_regular_payments_and_closes_balance() -> None:
@@ -55,3 +59,34 @@ def test_loan_schedules_reject_invalid_inputs(
 ) -> None:
     with pytest.raises(ValueError):
         annuity_schedule(principal, rate, months)
+
+
+def test_affordability_checks_every_differential_payment() -> None:
+    schedule = differential_schedule(Decimal(1200), Decimal(12), 12)
+
+    affordable = check_loan_affordability(Decimal("112.00"), schedule)
+    unaffordable = check_loan_affordability(Decimal("111.99"), schedule)
+
+    assert affordable.affordable is True
+    assert affordable.maximum_monthly_payment == Decimal("112.00")
+    assert affordable.minimum_monthly_surplus == Decimal("0.00")
+    assert unaffordable.affordable is False
+    assert unaffordable.minimum_monthly_surplus == Decimal("-0.01")
+
+
+def test_affordability_uses_last_adjusted_annuity_payment() -> None:
+    schedule = annuity_schedule(Decimal(1000), Decimal(12), 12)
+    cash_available = max(payment.payment for payment in schedule.payments)
+
+    result = check_loan_affordability(cash_available, schedule)
+
+    assert result.affordable is True
+    assert result.maximum_monthly_payment == cash_available
+    assert result.formula
+
+
+def test_affordability_rejects_non_finite_available_cash() -> None:
+    schedule = annuity_schedule(Decimal(1000), Decimal(0), 12)
+
+    with pytest.raises(ValueError):
+        check_loan_affordability(Decimal("NaN"), schedule)

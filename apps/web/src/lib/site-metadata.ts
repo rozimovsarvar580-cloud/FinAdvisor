@@ -1,20 +1,29 @@
 import type { Metadata } from "next";
 
 import { routing } from "@/i18n/routing";
+import en from "@/messages/en.json";
+import ru from "@/messages/ru.json";
+import uz from "@/messages/uz.json";
+import { isSupportedLocale, type Locale } from "@/lib/locales";
 
+const messages = { en, ru, uz } as const;
 export const siteConfig = {
   name: "FinAdvisor",
-  title: "FinAdvisor | Business plan software for Uzbek restaurants",
-  description:
-    "FinAdvisor helps restaurant founders build financial plans, forecast cash flow, and prepare for bank readiness in Uzbekistan.",
   baseUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://finadvisor.uz",
   defaultLocale: routing.defaultLocale,
   locales: routing.locales
 };
 
+function getLocale(locale: string): Locale {
+  return isSupportedLocale(locale) ? locale : siteConfig.defaultLocale;
+}
+
 export function getCanonicalUrl(pathname = "/", locale = routing.defaultLocale) {
   const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/+/g, "/");
-  const localizedPath = normalizedPath === "/" ? `/${locale}` : `/${locale}${normalizedPath}`;
+  const localizedPath =
+    normalizedPath === "/"
+      ? `/${getLocale(locale)}`
+      : `/${getLocale(locale)}${normalizedPath}`;
   return new URL(localizedPath, siteConfig.baseUrl).toString();
 }
 
@@ -25,9 +34,11 @@ export function buildMetadata({
   locale?: string;
   pathname?: string;
 } = {}): Metadata {
-  const canonicalUrl = getCanonicalUrl(pathname, locale);
-  const title = siteConfig.title;
-  const description = siteConfig.description;
+  const localizedLocale = getLocale(locale);
+  const copy = messages[localizedLocale];
+  const canonicalUrl = getCanonicalUrl(pathname, localizedLocale);
+  const title = `${siteConfig.name} | ${copy.landing.hero.title}`;
+  const description = copy.landing.hero.description;
   const languages = Object.fromEntries(
     routing.locales.map((item) => {
       const localizedPath = pathname === "/" ? `/${item}` : `/${item}${pathname}`;
@@ -48,7 +59,7 @@ export function buildMetadata({
       description,
       url: canonicalUrl,
       siteName: siteConfig.name,
-      locale,
+      locale: localizedLocale,
       type: "website"
     },
     twitter: {
@@ -56,6 +67,21 @@ export function buildMetadata({
       title,
       description
     }
+  };
+}
+
+export function buildProductStructuredData(locale = routing.defaultLocale) {
+  const localizedLocale = getLocale(locale);
+  const copy = messages[localizedLocale];
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: siteConfig.name,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    inLanguage: localizedLocale,
+    url: getCanonicalUrl("/", localizedLocale),
+    description: copy.landing.hero.description
   };
 }
 

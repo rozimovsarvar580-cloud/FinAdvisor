@@ -12,8 +12,14 @@ export async function POST(request: Request) {
   const apiUrl = process.env.FINADVISOR_API_URL ?? "http://127.0.0.1:8000";
   let response: Response;
   try {
+    const headers = new Headers();
+    const authorization = request.headers.get("authorization");
+    if (authorization) {
+      headers.set("Authorization", authorization);
+    }
     response = await fetch(`${apiUrl}/plans/analyze`, {
       method: "POST",
+      headers,
       body: formData,
       cache: "no-store"
     });

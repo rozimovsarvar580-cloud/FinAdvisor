@@ -139,7 +139,7 @@ export function PricingPage() {
                     </li>
                   ))}
                 </ul>
-                <PlanSelectButton plan={plan.id} />
+                <PlanSelectButton plan={plan.id} period={period} />
               </Card>
             ))}
           </div>

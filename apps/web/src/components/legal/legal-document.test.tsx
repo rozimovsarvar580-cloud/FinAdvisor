@@ -101,7 +101,10 @@ describe("legal documents", () => {
     const { container } = renderWithMessages(
       locale,
       messages,
-      <SignupForm callbackUrl={`/${locale}/app`} />
+      <SignupForm
+        callbackUrl={`/${locale}/app`}
+        providersAvailable={{ google: false, facebook: false }}
+      />
     );
 
     expect(screen.getByRole("checkbox")).toBeTruthy();

@@ -28,6 +28,7 @@ def test_settings_load_optional_integrations_and_api_urls() -> None:
             "EMAIL_USERNAME": "mailer",
             "EMAIL_PASSWORD": "email-password-placeholder",
             "EMAIL_FROM": "team@example.test",
+            "RESEND_API_KEY": "resend-key-placeholder",
             "PAYMENT_PROVIDER": "test-provider",
             "PAYMENT_PUBLIC_KEY": "payment-public-placeholder",
             "PAYMENT_SECRET_KEY": "payment-secret-placeholder",
@@ -45,6 +46,7 @@ def test_settings_load_optional_integrations_and_api_urls() -> None:
     assert settings.email_host == "mail.example"
     assert settings.email_username == "mailer"
     assert settings.email_from == "team@example.test"
+    assert settings.resend_api_key == "resend-key-placeholder"
     assert settings.payment_provider == "test-provider"
     assert settings.payment_public_key == "payment-public-placeholder"
     assert settings.payment_secret_key == "payment-secret-placeholder"

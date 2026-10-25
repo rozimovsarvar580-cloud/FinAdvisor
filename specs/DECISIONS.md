@@ -92,3 +92,7 @@ do not hard-code a region. Marker: `TODO(DECISION D12)`.
 Brand gradient: linear-gradient(135deg, #4F46E5, #7C3AED 55%, #EC4899), used only on hero and gradient buttons.
 Fonts: Plus Jakarta Sans (headings), Inter (body). Store tokens as HSL CSS variables and refer to them
 through Tailwind; no hex literals in components.
+
+## D15 Paid plan changes
+Changes to an active paid plan take effect at the next renewal. Keep the current plan and access in place
+until the provider confirms the scheduled change; do not calculate or charge proration in the application.

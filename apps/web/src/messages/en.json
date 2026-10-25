@@ -31,6 +31,49 @@
       "primaryCta": "Start your plan",
       "secondaryCta": "View sample plan",
       "footnote": "Calculations are exact. AI explains them in plain language.",
+      "profileSettings": {
+        "title": "Profile settings",
+        "profileTitle": "Profile",
+        "role": "Account role",
+        "name": "Name",
+        "language": "Language",
+        "localeNames": {
+          "uz": "Uzbek",
+          "ru": "Russian",
+          "en": "English"
+        },
+        "loading": "Loading profile...",
+        "loadFailed": "Could not load your profile settings. Please try again.",
+        "profileSaveFailed": "Could not save your profile. Please try again.",
+        "profileSaved": "Profile settings saved.",
+        "saveProfile": "Save profile",
+        "saving": "Saving...",
+        "connectedAccounts": "Connected accounts",
+        "connected": "Connected",
+        "noConnectedAccounts": "No social accounts are connected.",
+        "providers": {
+          "google": "Google",
+          "facebook": "Facebook"
+        },
+        "passwordTitle": "Change password",
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm new password",
+        "passwordMismatch": "Passwords do not match.",
+        "currentPasswordIncorrect": "Your current password is incorrect.",
+        "passwordChangeFailed": "Could not change your password. Please try again.",
+        "passwordChanged": "Password changed.",
+        "changePassword": "Change password",
+        "changingPassword": "Changing...",
+        "deleteAccountTitle": "Request account deletion",
+        "deleteAccountDescription": "This sends a request for account deletion; it does not immediately delete your account.",
+        "confirmDeletionRequest": "I understand and want to request account deletion.",
+        "deletionRequestFailed": "Could not submit your deletion request. Please try again.",
+        "deletionRequestSaved": "Your deletion request has been submitted.",
+        "deletionRequestExists": "You have already requested account deletion.",
+        "requestDeletion": "Request deletion",
+        "requestingDeletion": "Submitting..."
+      },
       "dashboard": {
         "ariaLabel": "Illustrative business-planning dashboard",
         "title": "Plan overview",
@@ -402,11 +445,11 @@
     },
     "popular": "Popular",
     "selectPlan": "Choose plan",
-    "viewBilling": "View billing",
+    "viewBilling": "Continue to checkout",
     "checkingSession": "Checking...",
     "derivedPricePlaceholder": "Monthly and yearly prices are placeholders, not finalized ({marker}).",
     "periodSelectorLabel": "Billing period",
-    "paymentNotice": "Online checkout is not connected yet. Choose a plan to continue to signup, or view your current billing overview if you are signed in; this does not start a payment.",
+    "paymentNotice": "Weekly plans can be sent to checkout after sign-in when a payment provider is configured. Monthly and yearly prices are placeholders and cannot be checked out yet.",
     "refundDraftNotice": "Refund wording is a draft only and is not a promise or final policy. It requires legal review before use (TODO(H8)).",
     "faq": {
       "eyebrow": "Plan questions",
@@ -423,7 +466,7 @@
         },
         "q3": {
           "question": "Can I pay for a plan online now?",
-          "answer": "Online checkout is not connected yet. Selecting a plan takes you to signup or, if you are signed in, to the billing overview; it does not charge you or change your subscription."
+          "answer": "Choose a weekly paid plan to prepare checkout after sign-in. The plan stays inactive until a verified payment confirmation is received; monthly and yearly placeholder prices cannot be checked out."
         }
       }
     },
@@ -556,6 +599,8 @@
     "name": "Name",
     "email": "Email",
     "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "role": "Account type",
     "rememberMe": "Remember me",
     "forgotPassword": "Forgot password?",
@@ -569,6 +614,7 @@
     "continueWith": "Or continue with",
     "google": "Continue with Google",
     "facebook": "Continue with Facebook",
+    "providerUnavailable": "Social sign-in is not configured",
     "strength": "Password strength",
     "strengthLevels": {
       "weak": "Weak",
@@ -579,7 +625,8 @@
     "roles": {
       "tadbirkor": "Business owner",
       "buxgalter": "Accountant",
-      "investor": "Investor"
+      "investor": "Investor",
+      "admin": "Administrator"
     },
     "artTitle": "Plan your finances with confidence",
     "artDescription": "See your business's key metrics in one place",
@@ -732,6 +779,8 @@
     "emailRequired": "Enter a valid email address",
     "passwordTooShort": "Password must be at least 8 characters",
     "passwordTooLong": "Password must be no longer than 128 characters",
+    "passwordConfirmationRequired": "Confirm your password",
+    "passwordsDoNotMatch": "Passwords do not match",
     "termsRequired": "Agree to the terms to continue",
     "invalidCredentials": "Email or password is incorrect",
     "emailInUse": "An account with this email already exists",
@@ -745,18 +794,28 @@
     "draftUnavailable": "The draft could not be saved on this device",
     "planAIUnavailable": "The AI planning service is unavailable. Try again later",
     "planGenerationFailed": "The business plan could not be created. Check your inputs",
+    "planEditFailed": "The business plan changes could not be saved. Please try again",
     "planServiceUnavailable": "Could not connect to the planning service",
     "planSessionRequired": "Sign in again to save your generated business plan",
     "calculationFailed": "The calculation failed. Check your inputs",
     "scenarioFailed": "The scenario could not be calculated. Check your inputs",
-    "unsupportedPlanFile": "Upload a PDF or DOCX document",
+    "unsupportedPlanFile": "Upload a PDF, DOCX, XLSX, or TXT document",
     "selectPlanFile": "Choose a document to analyze first",
     "analysisFailed": "The document could not be analyzed. Check it and try again",
     "analysisUnavailable": "Could not connect to the document analysis service",
+    "aiLimitReached": "Your daily AI request limit has been reached. Upgrade your plan for more requests.",
     "chatAIUnavailable": "AI chat is unavailable right now. Try again later",
     "chatFailed": "Could not get a response. Please try again",
+    "chatCopyFailed": "Could not copy the response. Please try again",
     "documentExportFailed": "Could not create the document. Please try again",
-    "documentExportUnavailable": "The document export service is unavailable"
+    "documentExportUnavailable": "The document export service is unavailable",
+    "documentExportUpgradeRequired": "Document exports are available on Pro and Business plans. Upgrade to continue.",
+    "documentExportBusinessRequired": "Agent-Synergy export is available on the Business plan.",
+    "planHistoryFailed": "Could not load this plan's version history.",
+    "planHistoryActionFailed": "The plan history action could not be completed.",
+    "planVersionNotFound": "That plan version is no longer available.",
+    "planShareFailed": "Could not update the share link.",
+    "shareLinkCopyFailed": "Could not copy the share link. Select and copy it manually."
   },
   "finadvisor": {
     "title": "Your financial plan",
@@ -811,6 +870,8 @@
       "next": "Continue",
       "generate": "Generate plan",
       "generating": "Calculating...",
+      "generationProgressCalculating": "Calculating financial projections...",
+      "generationProgressWriting": "Writing the plan... {chunks} streamed updates received.",
       "steps": {
         "format": { "short": "Format", "title": "Location and restaurant format" },
         "menu": { "short": "Menu", "title": "Menu and expected demand" },
@@ -847,16 +908,29 @@
     "analyzer": {
       "eyebrow": "Plan analyzer",
       "title": "Check bank readiness",
-      "description": "Upload your existing business plan. Text will be extracted and checked against bank-readiness criteria.",
-      "dropPrompt": "Drag and drop a PDF or DOCX document here",
-      "acceptedFiles": "PDF and Word (.docx) files are supported",
+      "description": "Upload your existing business plan. Text will be extracted and checked against bank-readiness criteria. This is an initial estimate, not a bank decision.",
+      "dropPrompt": "Drag and drop a PDF, DOCX, XLSX, or TXT document here",
+      "acceptedFiles": "PDF, DOCX, XLSX, and TXT files are supported",
       "chooseFile": "Choose file",
       "analyze": "Analyze plan",
       "analyzing": "Analyzing...",
       "readinessScore": "Bank-readiness score",
       "score": "Readiness score: {score} out of 100",
       "missingTitle": "Recommended improvements",
-      "noMissingItems": "The document includes the key sections checked."
+      "noMissingItems": "The document includes the key sections checked.",
+      "criteriaTitle": "Criterion scores",
+      "improvementsTitle": "Suggested fixes and draft sections",
+      "fixLabel": "Action",
+      "rewriteLabel": "Draft",
+      "criteria": {
+        "market_analysis": "Market analysis",
+        "financial_projections": "Financial projections",
+        "repayment_ability": "Repayment ability",
+        "risks": "Risks and mitigation",
+        "collateral": "Collateral",
+        "team": "Team",
+        "legal": "Legal and permits"
+      }
     },
     "chat": {
       "eyebrow": "AI assistant",
@@ -874,19 +948,60 @@
       "messageLabel": "Your message",
       "placeholder": "Type your question...",
       "send": "Send",
-      "sending": "Sending..."
+      "sending": "Sending...",
+      "sourcesTitle": "Sources",
+      "copyResponse": "Copy response",
+      "responseCopied": "Response copied"
     },
     "reports": {
       "eyebrow": "Results",
       "title": "Business plan report",
+      "versionLabel": "Version {version}",
+      "editPlan": "Edit plan",
+      "summaryLabel": "Summary",
+      "sectionLabel": "Section {number}",
+      "sectionTitleLabel": "Section title",
+      "sectionContentLabel": "Section content",
+      "saveRevision": "Save revision",
+      "saving": "Saving...",
+      "cancelEdit": "Cancel",
+      "savedVersion": "Saved as version {version}.",
       "emptyTitle": "No report yet",
       "emptyDescription": "Create a business plan first. Its prepared calculations and AI explanations will appear here.",
       "calculationsTitle": "Financial calculations",
       "sectionsTitle": "Business plan sections",
+      "markdownTitle": "Markdown version",
       "currency": "UZS",
       "exportPdf": "Download PDF",
       "exportExcel": "Download Excel",
+      "exportBankPack": "Download bank pack",
+      "exportSynergy": "Download Agent-Synergy",
       "exporting": "Preparing...",
+      "historyTitle": "Version history",
+      "historyLoading": "Loading plan history...",
+      "currentVersion": "Current",
+      "restoreVersion": "Restore",
+      "planActionWorking": "Working...",
+      "duplicatePlan": "Duplicate plan",
+      "planDuplicated": "A separate plan copy was created.",
+      "restoredVersion": "Restored version {version} as a new revision.",
+      "enableShareLink": "Enable read-only link",
+      "revokeShareLink": "Revoke share link",
+      "regenerateShareLink": "Generate a new share link",
+      "shareLinkLabel": "Read-only share link",
+      "copyShareLink": "Copy link",
+      "copyingShareLink": "Copying...",
+      "shareLinkRegenerateNotice": "The link is active but hidden. Generate a new link to copy it.",
+      "shareLinkEnabled": "Read-only sharing is enabled.",
+      "shareLinkRevoked": "The share link has been revoked.",
+      "shareLinkCopied": "Share link copied.",
+      "sharedPlanLoading": "Loading shared plan...",
+      "sharedPlanTitle": "Shared business plan",
+      "sharedPlanReadOnly": "Read-only access",
+      "sharedPlanCreated": "Created {date}",
+      "sharedPlanNotFound": "This shared plan is unavailable or its link has been revoked.",
+      "sharedPlanUnavailable": "The sharing service is unavailable. Try again later.",
+      "sharedPlanFailed": "Could not load this shared plan.",
       "calculations": {
         "monthly_revenue": "Monthly revenue",
         "monthly_payroll": "Monthly payroll",
@@ -916,8 +1031,81 @@
       "periods": { "weekly": "Weekly", "monthly": "Monthly", "yearly": "Yearly" },
       "plans": { "free": "Free", "pro": "Pro", "business": "Business" },
       "status": { "active": "Active", "trial": "Trial", "inactive": "Inactive" },
-      "mockNotice": "Subscription status is shown for demonstration. A payment provider can be connected later.",
-      "manageUnavailable": "Subscription management is not available yet"
+      "checkout": {
+        "title": "Choose a plan",
+        "description": "Choose a paid plan and billing period. Checkout availability depends on the configured payment provider.",
+        "planLabel": "Paid plan",
+        "periodLabel": "Billing period",
+        "periodSuffix": { "weekly": "per week", "monthly": "per month", "yearly": "per year" },
+        "placeholderPrice": "Monthly and yearly prices are provisional (TODO(DECISION D1)) and cannot be charged. Choose weekly billing.",
+        "signInRequired": "Sign in as a business owner to start checkout.",
+        "ownerRequired": "Only business owners can start a subscription checkout.",
+        "start": "Continue to checkout",
+        "starting": "Preparing checkout...",
+        "activationNotice": "Returning from checkout does not activate a subscription. Access changes only after verified payment confirmation.",
+        "errors": {
+          "placeholderPrice": "This billing period uses a provisional price and is not available for checkout.",
+          "unavailable": "Checkout is currently unavailable. Try again later.",
+          "failed": "Checkout could not be prepared. Please try again."
+        },
+        "return": {
+          "success": {
+            "title": "Checkout returned",
+            "description": "We are awaiting verified payment confirmation. Your subscription and access will change only after the provider confirms payment.",
+            "backToBilling": "Return to billing"
+          },
+          "cancel": {
+            "title": "Checkout canceled",
+            "description": "No subscription change was made by this return page. If a payment was completed, access changes only after verified provider confirmation.",
+            "backToBilling": "Return to billing"
+          }
+        }
+      },
+      "manage": {
+        "title": "Subscription details",
+        "loading": "Loading subscription details...",
+        "retry": "Retry",
+        "subscriptionStatus": "Status",
+        "nextCharge": "Next charge",
+        "accessUntil": "Access through",
+        "pendingPlan": "Scheduled plan change",
+        "cancel": "Cancel at period end",
+        "canceling": "Scheduling cancellation...",
+        "cancelConfirm": "Cancel at the end of the paid period? Your access will remain until then.",
+        "updatePaymentMethod": "Update payment method",
+        "updatingPaymentMethod": "Opening payment method...",
+        "paymentMethodUnavailable": "Payment method updates are unavailable until your provider customer profile is ready.",
+        "schedulePlanChange": "Schedule plan change",
+        "schedulingPlan": "Scheduling plan change...",
+        "notices": {
+          "canceled": "Your subscription remains active until the paid period ends.",
+          "planScheduled": "Your plan change is scheduled for the next renewal."
+        },
+        "errors": {
+          "unavailable": "The billing service is unavailable. Try again later.",
+          "failed": "The billing action could not be completed. Try again.",
+          "paymentMethodUnavailable": "A payment method update is not available for this subscription yet."
+        },
+        "status": {
+          "active": "Active",
+          "incomplete": "Checkout pending",
+          "past_due": "Payment past due",
+          "canceled": "Canceled",
+          "expired": "Expired",
+          "inactive": "Inactive"
+        },
+        "invoiceStatus": {
+          "draft": "Draft",
+          "open": "Open",
+          "paid": "Paid",
+          "void": "Voided",
+          "uncollectible": "Uncollectible"
+        },
+        "invoices": {
+          "title": "Invoices",
+          "empty": "No invoices yet."
+        }
+      }
   },
   "marketplace": {
     "hero": {
@@ -1064,7 +1252,17 @@
       "waiter": "Waiter",
       "taxTitle": "Tax",
       "estimatedDue": "Estimated due",
-      "source": "Source"
+      "source": "Source",
+      "taxRulesDescription": "Tax rates are shown with their source and verification status. Unverified rules are estimates and may not apply to every business.",
+      "estimate": "Estimate — not verified",
+      "verified": "Verified",
+      "rate": "Configured rate: {rate}%",
+      "effectiveDate": "Effective date: {date}",
+      "verifiedBy": "Verified by: {name}",
+      "taxRuleNames": {
+        "turnover_tax": "Turnover tax",
+        "profit_tax": "Profit tax"
+      }
     },
     "dashboard": {
       "title": "Dashboard",
@@ -1093,13 +1291,27 @@
       "emailNotifications": "Email notifications",
       "enabled": "enabled"
     },
+    "onboardingRole": {
+      "title": "Choose your account role",
+      "description": "Select the role that best describes how you will use FinAdvisor.",
+      "roleLabel": "Account role",
+      "continue": "Continue",
+      "saving": "Saving...",
+      "saveFailed": "We couldn't save your role. Please try again."
+    },
     "admin": {
       "title": "Admin console",
       "users": "Users",
       "planModeration": "Plan moderation",
       "kycReview": "KYC review",
       "auditLog": "Audit log",
-      "featureFlags": "Feature flags"
+      "featureFlags": "Feature flags",
+      "aiStatusTitle": "AI provider status",
+      "aiConnected": "Configured",
+      "aiDisconnected": "Not configured",
+      "aiStatusUnavailable": "AI status could not be retrieved.",
+      "aiProvider": "Provider",
+      "aiModel": "Model"
     },
     "agent": {
       "title": "Desktop agent",
@@ -1146,29 +1358,110 @@
       "mainInvestment": "Main investment",
       "mainRevenue": "Main revenue",
       "labels": {
-        "credit": "Credit calculator",
-        "capex": "Startup cost calculator",
-        "revenue": "Revenue and profit calculator",
-        "break-even": "Break-even calculator",
-        "reverse": "Reverse credit calculator"
+        "startup-cost": "Startup cost",
+        "payroll": "Payroll",
+        "tax": "Tax comparison",
+        "loan": "Loan affordability",
+        "profit": "Revenue, profit and break-even"
       },
+      "descriptions": {
+        "startup-cost": "Estimate startup costs from your itemized quantities and prices.",
+        "payroll": "Estimate payroll and show employer contributions only when their rate is configured.",
+        "tax": "Compare tax regimes using current rule provenance and estimate status.",
+        "loan": "Review a repayment schedule and test it against available monthly cash.",
+        "profit": "Project operating periods, break-even revenue and sensitivity scenarios."
+      },
+      "saveToPlan": "Save result to a business plan",
+      "backToCalculators": "Back to calculators",
+      "calculate": "Calculate",
+      "loading": "Calculating...",
+      "saveLoading": "Saving...",
+      "selectPlan": "Choose a business plan",
+      "plansLoading": "Loading your plans...",
+      "noPlans": "No saved business plans are available yet.",
+      "createPlan": "Create a business plan",
+      "signInRequired": "Sign in as a business owner to save this result to a plan.",
+      "planSaved": "Calculation saved to your plan.",
+      "savedAt": "Saved",
+      "addPosition": "Add position",
+      "removePosition": "Remove",
+      "estimate": "Estimate",
+      "verified": "Verified",
+      "unverified": "Not verified",
+      "contributionUnavailable": "Employer contribution totals are unavailable until the rate is verified.",
+      "loanAffordable": "All scheduled payments fit within the available monthly cash.",
+      "loanNotAffordable": "At least one scheduled payment exceeds the available monthly cash.",
+      "categories": {
+        "rent_deposit": "Rent deposit",
+        "renovation": "Renovation",
+        "kitchen_equipment": "Kitchen equipment",
+        "furniture": "Furniture",
+        "licenses": "Licenses",
+        "initial_stock": "Initial stock",
+        "marketing": "Marketing",
+        "reserve": "Reserve"
+      },
+      "methods": { "annuity": "Annuity", "differential": "Differential" },
+      "periods": { "daily": "Daily", "weekly": "Weekly", "monthly": "Monthly", "yearly": "Yearly" },
       "fields": {
-        "itemAmount": "Equipment amount (UZS)",
-        "workingCapital": "Working capital (UZS)",
-        "contingency": "Contingency (%)",
-        "units": "Units per period",
-        "pricePerUnit": "Price per unit (UZS)",
-        "fixedCosts": "Fixed costs (UZS)",
-        "variableCosts": "Variable costs (%)",
-        "variableCostPerUnit": "Variable cost per unit (UZS)",
-        "monthlyPayment": "Monthly payment (UZS)",
-        "annualRate": "Annual rate (%)",
+        "category": "Cost category",
+        "name": "Item name",
+        "quantity": "Quantity",
+        "unitCost": "Unit cost (UZS)",
+        "role": "Role",
+        "employeeCount": "Number of employees",
+        "monthlySalary": "Monthly salary (UZS)",
+        "annualRevenue": "Annual revenue (UZS)",
+        "annualExpenses": "Annual expenses (UZS)",
+        "principal": "Loan principal (UZS)",
+        "availableCash": "Available monthly cash (UZS)",
+        "annualRate": "Annual interest rate (%)",
         "term": "Term (months)",
-        "principal": "Principal (UZS)"
+        "method": "Repayment method",
+        "dailyRevenue": "Daily revenue (UZS)",
+        "monthlyFixedCosts": "Monthly fixed costs (UZS)",
+        "variableCosts": "Variable costs (%)",
+        "operatingDaysPerWeek": "Operating days per week",
+        "operatingDaysPerMonth": "Operating days per month",
+        "operatingDaysPerYear": "Operating days per year",
+        "targetProfit": "Target monthly profit (UZS)"
+      },
+      "results": {
+        "totalStartupCost": "Total startup cost",
+        "monthlyPayroll": "Monthly payroll",
+        "annualPayroll": "Annual payroll",
+        "monthlyEmployerCost": "Monthly employer cost",
+        "taxRegime": "Tax regime",
+        "taxAmount": "Estimated tax",
+        "profitAfterTax": "Profit after tax",
+        "taxableBase": "Taxable base",
+        "firstPayment": "First monthly payment",
+        "maximumPayment": "Maximum monthly payment",
+        "totalPayment": "Total payments",
+        "totalInterest": "Total interest",
+        "paymentSurplus": "Minimum cash remaining after a payment",
+        "schedule": "Repayment schedule",
+        "principalPaid": "Principal repaid",
+        "interest": "Interest",
+        "remainingBalance": "Remaining balance",
+        "availableCash": "Available monthly cash",
+        "monthlyRevenue": "Monthly revenue",
+        "monthlyProfit": "Monthly operating profit",
+        "breakEvenRevenue": "Monthly break-even revenue",
+        "targetRevenue": "Revenue needed for target profit",
+        "revenue": "Revenue",
+        "operatingProfit": "Operating profit",
+        "payment": "Payment",
+        "month": "Month",
+        "formula": "Formula",
+        "result": "Calculation result",
+        "chart": "Result chart"
       },
       "errors": {
-        "calculationFailed": "Calculation failed.",
-        "serviceUnavailable": "The calculation service is unavailable."
+        "calculationFailed": "Calculation failed. Check the entered values.",
+        "serviceUnavailable": "The calculation service is unavailable.",
+        "plansLoadFailed": "Could not load your business plans.",
+        "planSaveFailed": "Could not save the result to this plan."
       }
     },
     "download": {
@@ -1228,11 +1521,35 @@
         "verificationFailed": "Verification failed."
       }
     },
-    "resetPassword": {
-      "title": "Reset password",
-      "sendLink": "Send reset link",
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "description": "Enter your email address and we’ll send a password reset link if an account exists.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "submitting": "Sending...",
       "sent": "If the address is registered, a password reset link will be sent.",
-      "error": "Unable to send reset link."
+      "error": "Could not send the reset link. Please try again.",
+      "backToLogin": "Back to log in"
+    },
+    "resetPassword": {
+      "title": "Set a new password",
+      "description": "Choose a new password for your account.",
+      "password": "New password",
+      "confirmation": "Confirm new password",
+      "submit": "Reset password",
+      "submitting": "Resetting...",
+      "success": "Your password has been reset. You can now log in.",
+      "invalidToken": "This password reset link is invalid or has expired.",
+      "error": "Could not reset your password. Please try again.",
+      "backToLogin": "Back to log in"
+    },
+    "verifyEmail": {
+      "title": "Verify your email",
+      "verifying": "Verifying your email...",
+      "success": "Your email has been verified.",
+      "error": "This verification link is invalid or has expired.",
+      "missingToken": "The verification link is missing its token.",
+      "backToLogin": "Back to log in"
     },
     "wizard": {
       "title": "Plan wizard",

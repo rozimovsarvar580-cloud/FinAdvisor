@@ -15,7 +15,12 @@ dev = ["pytest>=8.3,<9", "ruff>=0.8,<1"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-finance_engine = ["tax_rules_2026.yaml"]
+finance_engine = [
+  "ai_model_pricing.yaml",
+  "bank_products_2026.yaml",
+  "startup_cost_catalog.yaml",
+  "tax_rules_2026.yaml"
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

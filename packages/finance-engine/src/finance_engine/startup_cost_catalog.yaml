@@ -1,0 +1,59 @@
+version: 1
+currency: UZS
+categories:
+  - key: rent_deposit
+    name: Rent deposit
+    unit: month
+    unit_price: null
+    source_url: TODO(VERIFY)
+    effective_date: TODO(VERIFY)
+    verified: false
+  - key: renovation
+    name: Renovation
+    unit: m2
+    unit_price: null
+    source_url: TODO(VERIFY)
+    effective_date: TODO(VERIFY)
+    verified: false
+  - key: kitchen_equipment
+    name: Kitchen equipment
+    unit: item
+    unit_price: null
+    source_url: TODO(VERIFY)
+    effective_date: TODO(VERIFY)
+    verified: false
+  - key: furniture
+    name: Furniture
+    unit: item
+    unit_price: null
+    source_url: TODO(VERIFY)
+    effective_date: TODO(VERIFY)
+    verified: false
+  - key: licenses
+    name: Licenses and permits
+    unit: item
+    unit_price: null
+    source_url: TODO(VERIFY)
+    effective_date: TODO(VERIFY)
+    verified: false
+  - key: initial_stock
+    name: Initial stock
+    unit: item
+    unit_price: null
+    source_url: TODO(VERIFY)
+    effective_date: TODO(VERIFY)
+    verified: false
+  - key: marketing
+    name: Opening marketing
+    unit: item
+    unit_price: null
+    source_url: TODO(VERIFY)
+    effective_date: TODO(VERIFY)
+    verified: false
+  - key: reserve
+    name: Operating reserve
+    unit: month
+    unit_price: null
+    source_url: TODO(VERIFY)
+    effective_date: TODO(VERIFY)
+    verified: false

@@ -1,0 +1,5 @@
+{
+  "provider": "openai",
+  "api_key": "replace-with-your-server-side-api-key",
+  "model": "gpt-4o-mini"
+}

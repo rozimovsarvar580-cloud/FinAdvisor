@@ -17,8 +17,8 @@
   "businessPage": {
     "hero": {
       "eyebrow": "Biznes uchun",
-      "title": "Desktop agent komissiyasi qanday baholanishini ko‘ring",
-      "description": "Desktop agent qayd etgan yillik tushum asosidagi progressiv komissiya bahosini ko‘ring."
+      "title": "Kompyuter agenti komissiyasi qanday hisoblanishini ko‘ring",
+      "description": "Kompyuter agenti qayd etgan yillik tushum asosida progressiv komissiya miqdorini ko‘ring."
     },
     "commissionTitle": "Yillik komissiyani baholang",
     "commissionDescription": "Progressiv hisob-kitobni ko‘rish uchun slayderdan foydalaning yoki summani kiriting."
@@ -31,6 +31,49 @@
       "primaryCta": "Reja tuzishni boshlash",
         "secondaryCta": "Namuna rejani ko‘rish",
         "footnote": "Raqamlar aniq hisoblanadi. AI ularni sodda tilda tushuntiradi.",
+        "profileSettings": {
+          "title": "Profil sozlamalari",
+          "profileTitle": "Profil",
+          "role": "Hisob turi",
+          "name": "Ism",
+          "language": "Til",
+          "localeNames": {
+            "uz": "O‘zbekcha",
+            "ru": "Ruscha",
+            "en": "Inglizcha"
+          },
+          "loading": "Profil yuklanmoqda...",
+          "loadFailed": "Profil sozlamalarini yuklab bo‘lmadi. Qayta urinib ko‘ring.",
+          "profileSaveFailed": "Profilni saqlab bo‘lmadi. Qayta urinib ko‘ring.",
+          "profileSaved": "Profil sozlamalari saqlandi.",
+          "saveProfile": "Profilni saqlash",
+          "saving": "Saqlanmoqda...",
+          "connectedAccounts": "Ulangan hisoblar",
+          "connected": "Ulangan",
+          "noConnectedAccounts": "Ijtimoiy hisoblar ulanmagan.",
+          "providers": {
+            "google": "Google hisobi",
+            "facebook": "Facebook hisobi"
+          },
+          "passwordTitle": "Parolni o‘zgartirish",
+          "currentPassword": "Joriy parol",
+          "newPassword": "Yangi parol",
+          "confirmPassword": "Yangi parolni tasdiqlang",
+          "passwordMismatch": "Parollar mos kelmaydi.",
+          "currentPasswordIncorrect": "Joriy parol noto‘g‘ri.",
+          "passwordChangeFailed": "Parolni o‘zgartirib bo‘lmadi. Qayta urinib ko‘ring.",
+          "passwordChanged": "Parol o‘zgartirildi.",
+          "changePassword": "Parolni o‘zgartirish",
+          "changingPassword": "O‘zgartirilmoqda...",
+          "deleteAccountTitle": "Hisobni o‘chirishni so‘rash",
+          "deleteAccountDescription": "Hisobni o‘chirish so‘rovi yuboriladi; hisob darhol o‘chirilmaydi.",
+          "confirmDeletionRequest": "Tushundim va hisobni o‘chirishni so‘rayman.",
+          "deletionRequestFailed": "O‘chirish so‘rovini yuborib bo‘lmadi. Qayta urinib ko‘ring.",
+          "deletionRequestSaved": "O‘chirish so‘rovingiz yuborildi.",
+          "deletionRequestExists": "Hisobni o‘chirishni avval so‘ragansiz.",
+          "requestDeletion": "O‘chirishni so‘rash",
+          "requestingDeletion": "Yuborilmoqda..."
+        },
         "dashboard": {
           "ariaLabel": "Biznesni rejalashtirish paneli namunasi",
           "title": "Reja sharhi",
@@ -75,10 +118,10 @@
         },
         "story": {
           "eyebrow": "Restoran misolida",
-          "title": "G‘oyadan asoslangan qarorgacha",
+          "title": "G‘oyadan asosli qarorgacha",
           "paragraph1": "Tasavvur qiling: siz o‘z restoraningizni ochmoqchisiz. Taomlar va joy tayyor, ammo xarajatlar, jamoa soni va kutilayotgan tushum bo‘yicha savollar ko‘p.",
           "paragraph2": "Turli jadvallardagi taxminlar bir-biriga mos kelmasa, bankka reja tayyorlash yoki mablag‘ ehtiyojini tushuntirish qiyinlashadi.",
-          "paragraph3": "FinAdvisor ma’lumotlarni tartibga solishga, moliyaviy ko‘rsatkichlarni maxsus dvigatelda hisoblashga va natijalarni tushunarli biznes-rejaga aylantirishga yordam beradi.",
+          "paragraph3": "FinAdvisor ma’lumotlarni tartibga solish, moliyaviy ko‘rsatkichlarni maxsus hisoblash tizimida hisoblash va natijalarni tushunarli biznes-rejaga aylantirishga yordam beradi.",
           "exampleLabel": "Restoran loyihasi",
           "exampleTitle": "Bitta reja, muhim savollar",
           "example": {
@@ -98,7 +141,7 @@
         },
         "approach": {
           "eyebrow": "Yondashuvimiz",
-          "title": "Ma’lumotdan boshqariladigan qarorgacha",
+          "title": "Ma’lumotlardan asosli qarorgacha",
           "description": "Har bir bosqich siz kiritgan ma’lumot va tekshiriladigan hisob-kitoblarga tayanadi.",
           "steps": [
             {
@@ -107,7 +150,7 @@
             },
             {
               "title": "AI tushuntiradi",
-              "description": "Moliyaviy dvigatel hisoblagan raqamlar izohlanadi; AI ularni hisoblamaydi."
+              "description": "Moliyaviy hisoblash tizimi chiqargan natijalar izohlanadi; AI ularni hisoblamaydi."
             },
             {
               "title": "Taqdim eting",
@@ -135,7 +178,7 @@
               "description": "Kiritilgan taxminlar va ularning hisob-kitobdagi natijalarini bir joyda ko‘rib, tadbirkorga biznes-rejani tayyorlashda ko‘maklashing."
             },
             "investor": {
-              "label": "Investor",
+              "label": "Sarmoyador",
               "title": "Loyiha taxminlarini tushunarli ko‘ring",
               "description": "Loyiha egasi tuzgan reja va asosiy taxminlarni ko‘rib chiqing. Bu vosita tekshiruv yoki mustaqil tahlilning o‘rnini bosmaydi."
             }
@@ -147,7 +190,7 @@
           "items": {
             "accuracy": {
               "title": "Asoslangan hisob-kitoblar",
-              "description": "Moliyaviy ko‘rsatkichlarni maxsus hisoblash dvigateli rejaga kiritilgan ma’lumotlar asosida hisoblaydi."
+              "description": "Moliyaviy ko‘rsatkichlarni maxsus hisoblash tizimi rejaga kiritilgan ma’lumotlar asosida hisoblaydi."
             },
             "transparency": {
               "title": "Aniq taxminlar",
@@ -162,7 +205,7 @@
         "comparison": {
           "eyebrow": "Maqsadli yondashuv",
           "title": "FinAdvisor va umumiy AI",
-          "description": "FinAdvisor biznes-reja oqimiga mo‘ljallangan: moliyaviy natijalar maxsus dvigatelda hisoblanib, keyin izohlanadi.",
+          "description": "FinAdvisor biznes-reja tuzishga mo‘ljallangan: moliyaviy natijalar maxsus hisoblash tizimida hisoblanib, keyin izohlanadi.",
           "headers": {
             "criteria": "Mezon",
             "finadvisor": "FinAdvisor",
@@ -171,7 +214,7 @@
           "rows": {
             "calculations": {
               "label": "Moliyaviy hisob",
-              "finadvisor": "Alohida moliyaviy dvigatel bajaradi",
+              "finadvisor": "Alohida moliyaviy hisoblash tizimi hisoblaydi",
               "generalAi": "Natija modelga va so‘rovga bog‘liq"
             },
             "localRules": {
@@ -241,7 +284,7 @@
         },
         {
           "title": "Moliyaviy modelni hisoblang",
-          "description": "Moliyaviy dvigatel daromad, xarajat va asosiy ko‘rsatkichlarni hisoblaydi."
+          "description": "Moliyaviy hisoblash tizimi tushum, xarajat va asosiy ko‘rsatkichlarni hisoblaydi."
         },
         {
           "title": "Rejani ko‘rib chiqing",
@@ -356,7 +399,7 @@
         },
         "q2": {
           "question": "AI moliyaviy natijalarni o‘zi hisoblaydimi?",
-          "answer": "Yo‘q. Barcha moliyaviy hisob-kitoblarni alohida moliyaviy dvigatel bajaradi. AI faqat tayyor natijalarni izohlaydi va matn tuzadi."
+          "answer": "Yo‘q. Barcha moliyaviy hisob-kitoblarni alohida hisoblash tizimi bajaradi. AI faqat tayyor natijalarni izohlaydi va matn tuzadi."
         },
         "q3": {
           "question": "Yaratilgan reja bank krediti kafolatimi?",
@@ -402,11 +445,11 @@
     },
     "popular": "Ommabop",
     "selectPlan": "Tanlash",
-    "viewBilling": "To‘lovlar sahifasini ko‘rish",
+    "viewBilling": "To‘lovga o‘tish",
     "checkingSession": "Tekshirilmoqda...",
     "derivedPricePlaceholder": "Oylik va yillik narxlar yakuniy emas, vaqtinchalik qiymatlardir ({marker}).",
     "periodSelectorLabel": "To‘lov davri",
-    "paymentNotice": "Onlayn to‘lov hali ulanmagan. Tarifni tanlash ro‘yxatdan o‘tishga, tizimga kirgan foydalanuvchilar uchun esa joriy to‘lovlar sahifasiga olib boradi; bu to‘lovni boshlamaydi.",
+    "paymentNotice": "To‘lov provayderi sozlangan bo‘lsa, tizimga kirgandan keyin haftalik tarifni to‘lovga yuborish mumkin. Oylik va yillik narxlar vaqtinchalik va ular bo‘yicha hozircha to‘lov qilib bo‘lmaydi.",
     "refundDraftNotice": "Qaytarish haqidagi matn faqat loyiha bo‘lib, va’da yoki yakuniy qoida emas. Ishlatishdan oldin yuridik ko‘rib chiqilishi kerak (TODO(H8)).",
     "faq": {
       "eyebrow": "Tariflar haqida savollar",
@@ -423,7 +466,7 @@
         },
         "q3": {
           "question": "Hozir tarif uchun onlayn to‘lash mumkinmi?",
-          "answer": "Onlayn to‘lov hali ulanmagan. Tarifni tanlash ro‘yxatdan o‘tishga, tizimga kirgan foydalanuvchilar uchun esa to‘lovlar sahifasiga olib boradi; pul yechilmaydi va obuna o‘zgarmaydi."
+          "answer": "Tizimga kirgandan keyin haftalik tarif bo‘yicha to‘lovni tayyorlash mumkin. Tekshirilgan provayder tasdig‘i olinmaguncha obuna faol bo‘lmaydi; vaqtinchalik oylik va yillik narxlar bo‘yicha to‘lov qilib bo‘lmaydi."
         }
       }
     },
@@ -439,7 +482,7 @@
       },
       "pro": {
         "name": "Pro",
-        "description": "Jiddiy rejalashtirish uchun",
+        "description": "Batafsil rejalashtirish uchun",
         "features": {
           "aiAnalysis": "AI tahlili",
           "credit": "Kredit tahlili",
@@ -556,6 +599,8 @@
     "name": "Ism",
     "email": "Elektron pochta",
     "password": "Parol",
+    "showPassword": "Parolni ko‘rsatish",
+    "hidePassword": "Parolni yashirish",
     "role": "Hisob turi",
     "rememberMe": "Meni eslab qol",
     "forgotPassword": "Parolni unutdingizmi?",
@@ -569,6 +614,7 @@
     "continueWith": "Yoki quyidagilar bilan davom eting",
     "google": "Google bilan davom etish",
     "facebook": "Facebook bilan davom etish",
+    "providerUnavailable": "Ijtimoiy tarmoq orqali kirish sozlanmagan",
     "strength": "Parol kuchi",
     "strengthLevels": {
       "weak": "Zaif",
@@ -579,7 +625,8 @@
     "roles": {
       "tadbirkor": "Tadbirkor",
       "buxgalter": "Buxgalter",
-      "investor": "Investor"
+      "investor": "Sarmoyador",
+      "admin": "Tizim administratori"
     },
     "artTitle": "Moliyangizni ishonch bilan rejalashtiring",
     "artDescription": "Biznesingizning muhim ko‘rsatkichlarini bir joyda ko‘ring",
@@ -617,7 +664,7 @@
       "sections": {
         "service": {
           "title": "1. Xizmat",
-          "body": "FinAdvisor biznes-reja ma’lumotlarini tartibga solish, moliyaviy dvigatel hisoblagan natijalarni ko‘rish va tushuntiruvchi materiallardan foydalanish vositalarini taqdim etadi. TODO(LEGAL): Xizmat tavsifi va shartnomaviy majburiyatlarni aniqlashtirish."
+          "body": "FinAdvisor biznes-reja ma’lumotlarini tartibga solish, moliyaviy hisoblash tizimi chiqargan natijalarni ko‘rish va tushuntiruvchi materiallardan foydalanish vositalarini taqdim etadi. TODO(LEGAL): Xizmat tavsifi va shartnomaviy majburiyatlarni aniqlashtirish."
         },
         "accounts": {
           "title": "2. Hisoblar va kirish",
@@ -732,6 +779,8 @@
     "emailRequired": "To‘g‘ri elektron pochta manzilini kiriting",
     "passwordTooShort": "Parol kamida 8 belgidan iborat bo‘lishi kerak",
     "passwordTooLong": "Parol 128 belgidan oshmasligi kerak",
+    "passwordConfirmationRequired": "Parolni tasdiqlang",
+    "passwordsDoNotMatch": "Parollar mos kelmaydi",
     "termsRequired": "Davom etish uchun shartlarga rozilik bering",
     "invalidCredentials": "Elektron pochta yoki parol noto‘g‘ri",
     "emailInUse": "Bu elektron pochta bilan hisob allaqachon mavjud",
@@ -745,18 +794,28 @@
     "draftUnavailable": "Qoralamani ushbu qurilmada saqlab bo‘lmadi",
     "planAIUnavailable": "AI reja xizmatiga hozir ulanib bo‘lmadi. Keyinroq urinib ko‘ring",
     "planGenerationFailed": "Biznes-reja yaratilmadi. Kiritilgan ma’lumotlarni tekshiring",
+    "planEditFailed": "Biznes-rejadagi o‘zgarishlarni saqlab bo‘lmadi. Qayta urinib ko‘ring",
     "planServiceUnavailable": "Reja xizmatiga ulanib bo‘lmadi. Keyinroq urinib ko‘ring",
     "planSessionRequired": "Yaratilgan biznes-rejani saqlash uchun qayta tizimga kiring",
     "calculationFailed": "Hisob-kitob bajarilmadi. Kiritilgan ma’lumotlarni tekshiring",
     "scenarioFailed": "Ssenariy hisoblanmadi. Kiritilgan ma’lumotlarni tekshiring",
-    "unsupportedPlanFile": "Faqat PDF yoki DOCX hujjatlarini yuklang",
+    "unsupportedPlanFile": "PDF, DOCX, XLSX yoki TXT hujjatini yuklang",
     "selectPlanFile": "Tahlil qilish uchun avval hujjat tanlang",
     "analysisFailed": "Hujjat tahlil qilinmadi. Faylni tekshirib, qayta urinib ko‘ring",
     "analysisUnavailable": "Hujjat tahlili xizmatiga ulanib bo‘lmadi",
+    "aiLimitReached": "Kunlik AI so‘rovlari chegarasiga yetdingiz. Ko‘proq so‘rov uchun tarifni yangilang.",
     "chatAIUnavailable": "AI chat hozircha ishlamayapti. Keyinroq urinib ko‘ring",
     "chatFailed": "Javob olishda xatolik yuz berdi. Qayta urinib ko‘ring",
+    "chatCopyFailed": "Javobni nusxalab bo‘lmadi. Qayta urinib ko‘ring",
     "documentExportFailed": "Hujjatni yaratib bo‘lmadi. Qayta urinib ko‘ring",
-    "documentExportUnavailable": "Hujjat eksporti xizmatiga ulanib bo‘lmadi"
+    "documentExportUnavailable": "Hujjat eksporti xizmatiga ulanib bo‘lmadi",
+    "documentExportUpgradeRequired": "Hujjatlarni eksport qilish Pro va Business tariflarida mavjud. Davom etish uchun tarifni yangilang.",
+    "documentExportBusinessRequired": "Agent-Synergy eksporti Business tarifida mavjud.",
+    "planHistoryFailed": "Reja versiyalari tarixini yuklab bo‘lmadi.",
+    "planHistoryActionFailed": "Reja tarixi amalini bajarib bo‘lmadi.",
+    "planVersionNotFound": "Bu reja versiyasi endi mavjud emas.",
+    "planShareFailed": "Ulashish havolasini yangilab bo‘lmadi.",
+    "shareLinkCopyFailed": "Havolani nusxalab bo‘lmadi. Uni belgilang va qo‘lda nusxalang."
   },
   "finadvisor": {
     "title": "Moliyaviy rejangiz",
@@ -767,10 +826,10 @@
       "calculators": "Kalkulyatorlar",
       "whatIf": "What-if ssenariysi",
       "analyzer": "Reja tahlilchisi",
-      "chat": "AI chat",
+      "chat": "AI bilan suhbat",
       "reports": "Hisobotlar",
       "investorMarketplace": "Investorlar bozori",
-      "desktopAgent": "Desktop agent"
+      "desktopAgent": "Kompyuter agenti"
     },
     "wizard": {
       "eyebrow": "Restoran shabloni",
@@ -811,8 +870,10 @@
       "next": "Davom etish",
       "generate": "Rejani yaratish",
       "generating": "Hisoblanmoqda...",
+      "generationProgressCalculating": "Moliyaviy prognozlar hisoblanmoqda...",
+      "generationProgressWriting": "Reja yozilmoqda... Olingan oqim bo‘laklari: {chunks}.",
       "steps": {
-        "format": { "short": "Format", "title": "Joy va restoran formati" },
+        "format": { "short": "Tur", "title": "Joy va restoran formati" },
         "menu": { "short": "Menyu", "title": "Menyu va kutilayotgan talab" },
         "staff": { "short": "Xodimlar", "title": "Jamoa va ish haqi" },
         "equipment": { "short": "Uskuna", "title": "Uskuna va boshlang‘ich xarajatlar" },
@@ -820,7 +881,7 @@
       }
     },
     "calculators": {
-      "eyebrow": "Moliyaviy dvigatel",
+      "eyebrow": "Moliyaviy hisob-kitoblar",
       "title": "Kalkulyatorlar",
       "types": { "breakEven": "Zararsizlik nuqtasi", "dscr": "Qarz qoplash (DSCR)" },
       "fixedCosts": "Oylik doimiy xarajatlar (UZS)",
@@ -830,33 +891,46 @@
       "calculate": "Hisoblash",
       "loading": "Hisoblanmoqda...",
       "result": "Hisob natijasi",
-      "formula": "Formula"
+      "formula": "Hisoblash formulasi"
     },
     "whatIf": {
       "eyebrow": "Ssenariy tahlili",
       "title": "Maqsadli foyda uchun qancha tushum kerak?",
-      "description": "Maqsad va xarajat taxminlarini o‘zgartirib, kerakli tushumni moliyaviy dvigatel orqali hisoblang.",
+      "description": "Maqsad va xarajat taxminlarini o‘zgartirib, kerakli tushumni moliyaviy hisoblash tizimi orqali hisoblang.",
       "targetProfit": "Maqsadli oylik foyda (UZS)",
       "fixedCosts": "Oylik doimiy xarajatlar (UZS)",
       "variableCostPercent": "O‘zgaruvchan xarajatlar (%)",
       "run": "Ssenariyni hisoblash",
       "loading": "Hisoblanmoqda...",
       "requiredRevenue": "Kerakli oylik tushum",
-      "formula": "Formula"
+      "formula": "Hisoblash formulasi"
     },
     "analyzer": {
       "eyebrow": "Reja tahlilchisi",
       "title": "Bankka tayyorgarlikni tekshiring",
-      "description": "Mavjud biznes-rejangizni yuklang. Hujjatdan matn ajratiladi va bankka tayyorgarlik mezonlari tekshiriladi.",
-      "dropPrompt": "PDF yoki DOCX hujjatini shu yerga sudrab keling",
-      "acceptedFiles": "PDF va Word (.docx) formatlari qabul qilinadi",
+      "description": "Mavjud biznes-rejangizni yuklang. Hujjatdan matn ajratilib, bankka tayyorgarlik mezonlari tekshiriladi. Bu dastlabki baho, bank qarori emas.",
+      "dropPrompt": "PDF, DOCX, XLSX yoki TXT hujjatini shu yerga sudrab keling",
+      "acceptedFiles": "PDF, DOCX, XLSX va TXT fayllari qabul qilinadi",
       "chooseFile": "Fayl tanlash",
       "analyze": "Rejani tahlil qilish",
       "analyzing": "Tahlil qilinmoqda...",
       "readinessScore": "Bankka tayyorgarlik bahosi",
       "score": "Tayyorgarlik bahosi: {score} dan 100",
       "missingTitle": "To‘ldirish tavsiya etiladi",
-      "noMissingItems": "Asosiy tekshiriladigan bo‘limlar hujjatda topildi."
+      "noMissingItems": "Asosiy tekshiriladigan bo‘limlar hujjatda topildi.",
+      "criteriaTitle": "Mezonlar bo‘yicha baholar",
+      "improvementsTitle": "Tavsiyalar va bo‘lim loyihalari",
+      "fixLabel": "Nima qo‘shish kerak",
+      "rewriteLabel": "Loyiha matni",
+      "criteria": {
+        "market_analysis": "Bozor tahlili",
+        "financial_projections": "Moliyaviy prognozlar",
+        "repayment_ability": "Qarzni qaytarish qobiliyati",
+        "risks": "Xatarlar va ularni kamaytirish",
+        "collateral": "Garov",
+        "team": "Jamoa",
+        "legal": "Huquqiy masalalar va ruxsatnomalar"
+      }
     },
     "chat": {
       "eyebrow": "AI yordamchi",
@@ -874,19 +948,60 @@
       "messageLabel": "Xabaringiz",
       "placeholder": "Savolingizni yozing...",
       "send": "Yuborish",
-      "sending": "Yuborilmoqda..."
+      "sending": "Yuborilmoqda...",
+      "sourcesTitle": "Manbalar",
+      "copyResponse": "Javobdan nusxa olish",
+      "responseCopied": "Javob nusxalandi"
     },
     "reports": {
       "eyebrow": "Natijalar",
       "title": "Biznes-reja hisoboti",
+      "versionLabel": "{version}-versiya",
+      "editPlan": "Rejani tahrirlash",
+      "summaryLabel": "Qisqacha mazmun",
+      "sectionLabel": "{number}-bo‘lim",
+      "sectionTitleLabel": "Bo‘lim sarlavhasi",
+      "sectionContentLabel": "Bo‘lim mazmuni",
+      "saveRevision": "Yangi tahrirni saqlash",
+      "saving": "Saqlanmoqda...",
+      "cancelEdit": "Bekor qilish",
+      "savedVersion": "{version}-versiya sifatida saqlandi.",
       "emptyTitle": "Hali hisobot yo‘q",
       "emptyDescription": "Avval biznes-reja yarating. Uning tayyorlangan raqamlari va AI izohlari shu yerda ko‘rinadi.",
       "calculationsTitle": "Moliyaviy hisob-kitoblar",
       "sectionsTitle": "Biznes-reja bo‘limlari",
+      "markdownTitle": "Markdown ko‘rinishi",
       "currency": "UZS",
       "exportPdf": "PDF yuklab olish",
       "exportExcel": "Excel yuklab olish",
+      "exportBankPack": "Bank to‘plamini yuklab olish",
+      "exportSynergy": "Agent-Synergy yuklab olish",
       "exporting": "Tayyorlanmoqda...",
+      "historyTitle": "Versiyalar tarixi",
+      "historyLoading": "Reja tarixi yuklanmoqda...",
+      "currentVersion": "Joriy",
+      "restoreVersion": "Tiklash",
+      "planActionWorking": "Bajarilmoqda...",
+      "duplicatePlan": "Rejadan nusxa olish",
+      "planDuplicated": "Rejaning alohida nusxasi yaratildi.",
+      "restoredVersion": "{version}-versiya yangi tahrir sifatida tiklandi.",
+      "enableShareLink": "Faqat o‘qish havolasini yoqish",
+      "revokeShareLink": "Ulashish havolasini bekor qilish",
+      "regenerateShareLink": "Yangi ulashish havolasini yaratish",
+      "shareLinkLabel": "Faqat o‘qish uchun havola",
+      "copyShareLink": "Havolani nusxalash",
+      "copyingShareLink": "Nusxalanmoqda...",
+      "shareLinkRegenerateNotice": "Havola faol, ammo yashirilgan. Nusxalash uchun yangi havola yarating.",
+      "shareLinkEnabled": "Faqat o‘qish uchun ulashish yoqildi.",
+      "shareLinkRevoked": "Ulashish havolasi bekor qilindi.",
+      "shareLinkCopied": "Ulashish havolasi nusxalandi.",
+      "sharedPlanLoading": "Ulashilgan reja yuklanmoqda...",
+      "sharedPlanTitle": "Ulashilgan biznes-reja",
+      "sharedPlanReadOnly": "Faqat o‘qish uchun",
+      "sharedPlanCreated": "Yaratilgan sana: {date}",
+      "sharedPlanNotFound": "Reja mavjud emas yoki ulashish havolasi bekor qilingan.",
+      "sharedPlanUnavailable": "Ulashish xizmati ishlamayapti. Keyinroq urinib ko‘ring.",
+      "sharedPlanFailed": "Ulashilgan rejani yuklab bo‘lmadi.",
       "calculations": {
         "monthly_revenue": "Oylik tushum",
         "monthly_payroll": "Oylik ish haqi fondi",
@@ -916,8 +1031,81 @@
     "periods": { "weekly": "Haftalik", "monthly": "Oylik", "yearly": "Yillik" },
     "plans": { "free": "Free", "pro": "Pro", "business": "Business" },
     "status": { "active": "Faol", "trial": "Sinov muddati", "inactive": "Faol emas" },
-    "mockNotice": "Obuna holati hozircha namoyish uchun. To‘lov provayderi keyin ulanadi.",
-    "manageUnavailable": "Obunani boshqarish hozircha mavjud emas"
+    "checkout": {
+      "title": "Tarifni tanlang",
+      "description": "Pullik tarif va to‘lov davrini tanlang. To‘lov imkoniyati sozlangan provayderga bog‘liq.",
+      "planLabel": "Pullik tarif",
+      "periodLabel": "To‘lov davri",
+      "periodSuffix": { "weekly": "haftasiga", "monthly": "oyiga", "yearly": "yiliga" },
+      "placeholderPrice": "Oylik va yillik narxlar vaqtinchalik (TODO(DECISION D1)) va ulardan to‘lov uchun foydalanib bo‘lmaydi. Haftalik davrni tanlang.",
+      "signInRequired": "To‘lovni boshlash uchun biznes egasi sifatida tizimga kiring.",
+      "ownerRequired": "Obunani faqat biznes egasi rasmiylashtirishi mumkin.",
+      "start": "To‘lovga o‘tish",
+      "starting": "To‘lov tayyorlanmoqda...",
+      "activationNotice": "To‘lov sahifasidan qaytish obunani faollashtirmaydi. Imkoniyatlar faqat tekshirilgan to‘lov tasdig‘idan keyin o‘zgaradi.",
+      "errors": {
+        "placeholderPrice": "Bu davr uchun vaqtinchalik narx ko‘rsatilgan, shu sababli to‘lov mavjud emas.",
+        "unavailable": "Hozir to‘lov xizmati mavjud emas. Keyinroq qayta urinib ko‘ring.",
+        "failed": "To‘lovni tayyorlab bo‘lmadi. Qayta urinib ko‘ring."
+      },
+      "return": {
+        "success": {
+          "title": "To‘lov sahifasidan qaytildi",
+          "description": "To‘lovning tekshirilgan tasdig‘i kutilmoqda. Obuna va imkoniyatlar faqat provayder to‘lovni tasdiqlagandan keyin o‘zgaradi.",
+          "backToBilling": "To‘lovga qaytish"
+        },
+        "cancel": {
+          "title": "To‘lov bekor qilindi",
+          "description": "Ushbu qaytish sahifasi obunani o‘zgartirmadi. Agar to‘lov amalga oshirilgan bo‘lsa, imkoniyatlar faqat provayderning tekshirilgan tasdig‘idan keyin o‘zgaradi.",
+          "backToBilling": "To‘lovga qaytish"
+        }
+      }
+    },
+    "manage": {
+      "title": "Obuna ma'lumotlari",
+      "loading": "Obuna ma'lumotlari yuklanmoqda...",
+      "retry": "Qayta urinish",
+      "subscriptionStatus": "Holati",
+      "nextCharge": "Keyingi to'lov",
+      "accessUntil": "Imkoniyatlardan foydalanish muddati",
+      "pendingPlan": "Rejalashtirilgan tarif o'zgarishi",
+      "cancel": "Davr oxirida bekor qilish",
+      "canceling": "Bekor qilish rejalashtirilmoqda...",
+      "cancelConfirm": "Obunani to'langan davr oxirida bekor qilinsinmi? Imkoniyatlardan shu sanagacha foydalanasiz.",
+      "updatePaymentMethod": "To'lov usulini yangilash",
+      "updatingPaymentMethod": "To'lov sahifasi ochilmoqda...",
+      "paymentMethodUnavailable": "Provayderdagi mijoz profilingiz tayyor bo'lgach, to'lov usulini yangilash mumkin bo'ladi.",
+      "schedulePlanChange": "Tarif o'zgarishini rejalashtirish",
+      "schedulingPlan": "Tarif o'zgarishi rejalashtirilmoqda...",
+      "notices": {
+        "canceled": "Obuna to'langan davr oxirigacha faol qoladi.",
+        "planScheduled": "Tarif o'zgarishi keyingi yangilanish vaqtiga rejalashtirildi."
+      },
+      "errors": {
+        "unavailable": "To'lov xizmati hozir mavjud emas. Keyinroq urinib ko'ring.",
+        "failed": "Obuna amaliyotini bajarib bo'lmadi. Qayta urinib ko'ring.",
+        "paymentMethodUnavailable": "Bu obuna uchun to'lov usulini hozircha yangilab bo'lmaydi."
+      },
+      "status": {
+        "active": "Faol",
+        "incomplete": "To'lov yakunlanishi kutilmoqda",
+        "past_due": "To'lov muddati o'tgan",
+        "canceled": "Bekor qilingan",
+        "expired": "Muddati tugagan",
+        "inactive": "Faol emas"
+      },
+      "invoiceStatus": {
+        "draft": "Qoralama",
+        "open": "Ochiq",
+        "paid": "To'langan",
+        "void": "Bekor qilingan",
+        "uncollectible": "Undirib bo'lmaydi"
+      },
+      "invoices": {
+        "title": "Hisob-fakturalar",
+        "empty": "Hozircha hisob-fakturalar yo'q."
+      }
+    }
   },
   "marketplace": {
     "hero": {
@@ -992,9 +1180,9 @@
     "amountPlaceholder": "250000000"
   },
   "desktopAgent": {
-    "eyebrow": "Desktop agent",
+    "eyebrow": "Kompyuter agenti",
     "title": "Lokal ish jarayonlarini sinxronlash",
-    "description": "Agent mahalliy sinxronlash vazifalarini ustuvorlik bo‘yicha tartibga soladi, moliyaviy hisob-kitoblar esa moliyaviy dvigatelda qoladi.",
+    "description": "Agent qurilmadagi sinxronlash vazifalarini ustuvorlik bo‘yicha tartibga soladi, moliyaviy hisob-kitoblar esa moliyaviy hisoblash tizimida bajariladi.",
     "downloadFor": "Uchun yuklab oling",
     "recommended": "Tavsiya etilgan paket: {platform}",
     "detected": "Aniqlandi: {platform}",
@@ -1064,7 +1252,17 @@
       "waiter": "Ofitsiant",
       "taxTitle": "Soliq",
       "estimatedDue": "Taxminiy to‘lov",
-      "source": "Manba"
+      "source": "Manba",
+      "taxRulesDescription": "Soliq stavkalari manbasi va tekshiruv holati bilan ko‘rsatiladi. Tekshirilmagan qoidalar taxminiy bo‘lib, har bir biznesga mos kelmasligi mumkin.",
+      "estimate": "Taxmin — tekshirilmagan",
+      "verified": "Tekshirilgan",
+      "rate": "Sozlangan stavka: {rate}%",
+      "effectiveDate": "Kuchga kirish sanasi: {date}",
+      "verifiedBy": "Tekshirgan: {name}",
+      "taxRuleNames": {
+        "turnover_tax": "Aylanmadan olinadigan soliq",
+        "profit_tax": "Foyda solig‘i"
+      }
     },
     "dashboard": {
       "title": "Boshqaruv paneli",
@@ -1093,13 +1291,27 @@
       "emailNotifications": "Elektron pochta bildirishnomalari",
       "enabled": "yoqilgan"
     },
+    "onboardingRole": {
+      "title": "Hisob turini tanlang",
+      "description": "FinAdvisor’dan qanday foydalanishingizga mos hisob turini tanlang.",
+      "roleLabel": "Hisob turi",
+      "continue": "Davom etish",
+      "saving": "Saqlanmoqda...",
+      "saveFailed": "Hisob turini saqlab bo‘lmadi. Qayta urinib ko‘ring."
+    },
     "admin": {
       "title": "Administrator paneli",
       "users": "Foydalanuvchilar",
       "planModeration": "Rejalarni moderatsiya qilish",
       "kycReview": "KYC tekshiruvi",
       "auditLog": "Audit jurnali",
-      "featureFlags": "Funksiya bayroqlari"
+      "featureFlags": "Funksiya bayroqlari",
+      "aiStatusTitle": "Sun’iy intellekt provayderi holati",
+      "aiConnected": "Sozlangan",
+      "aiDisconnected": "Sozlanmagan",
+      "aiStatusUnavailable": "Sun’iy intellekt holatini olib bo‘lmadi.",
+      "aiProvider": "Provayder",
+      "aiModel": "AI modeli"
     },
     "agent": {
       "title": "Kompyuter agenti",
@@ -1146,29 +1358,110 @@
       "mainInvestment": "Asosiy investitsiya",
       "mainRevenue": "Asosiy tushum",
       "labels": {
-        "credit": "Kredit kalkulyatori",
-        "capex": "Boshlang‘ich xarajatlar kalkulyatori",
-        "revenue": "Tushum va foyda kalkulyatori",
-        "break-even": "Zararsizlik nuqtasi kalkulyatori",
-        "reverse": "Teskari kredit kalkulyatori"
+        "startup-cost": "Boshlang‘ich xarajatlar",
+        "payroll": "Ish haqi",
+        "tax": "Soliqlarni taqqoslash",
+        "loan": "Kredit to‘lov qobiliyati",
+        "profit": "Tushum, foyda va zararsizlik"
       },
+      "descriptions": {
+        "startup-cost": "Miqdor va narxlarni kiritib, boshlang‘ich xarajatlarni hisoblang.",
+        "payroll": "Ish haqi xarajatlarini hisoblang; ish beruvchi badali stavka belgilangandan keyingina ko‘rsatiladi.",
+        "tax": "Soliq rejimlarini manbalar va tekshirilganlik holati bilan taqqoslang.",
+        "loan": "To‘lov jadvalini ko‘rib, oylik mavjud mablag‘ bilan taqqoslang.",
+        "profit": "Davrlar bo‘yicha natijalar, zararsizlik nuqtasi va sezgirlik ssenariylarini hisoblang."
+      },
+      "saveToPlan": "Natijani biznes-rejaga saqlash",
+      "backToCalculators": "Kalkulyatorlarga qaytish",
+      "calculate": "Hisoblash",
+      "loading": "Hisoblanmoqda...",
+      "saveLoading": "Saqlanmoqda...",
+      "selectPlan": "Biznes-rejani tanlang",
+      "plansLoading": "Rejalaringiz yuklanmoqda...",
+      "noPlans": "Hozircha saqlangan biznes-rejalar yo‘q.",
+      "createPlan": "Biznes-reja yaratish",
+      "signInRequired": "Natijani rejaga saqlash uchun tadbirkor hisobiga kiring.",
+      "planSaved": "Hisob-kitob rejangizga saqlandi.",
+      "savedAt": "Saqlandi",
+      "addPosition": "Lavozim qo‘shish",
+      "removePosition": "Olib tashlash",
+      "estimate": "Taxminiy",
+      "verified": "Tekshirilgan",
+      "unverified": "Tekshirilmagan",
+      "contributionUnavailable": "Stavka tekshirilmaguncha ish beruvchi badali jami ko‘rsatilmaydi.",
+      "loanAffordable": "Jadvaldagi barcha to‘lovlar oylik mavjud mablag‘ doirasida.",
+      "loanNotAffordable": "Jadvaldagi kamida bitta to‘lov oylik mavjud mablag‘dan oshadi.",
+      "categories": {
+        "rent_deposit": "Ijara depoziti",
+        "renovation": "Ta’mirlash",
+        "kitchen_equipment": "Oshxona jihozlari",
+        "furniture": "Mebel",
+        "licenses": "Litsenziyalar",
+        "initial_stock": "Dastlabki zaxira",
+        "marketing": "Reklama va marketing xarajatlari",
+        "reserve": "Zaxira"
+      },
+      "methods": { "annuity": "Annuitet", "differential": "Differensial" },
+      "periods": { "daily": "Kunlik", "weekly": "Haftalik", "monthly": "Oylik", "yearly": "Yillik" },
       "fields": {
-        "itemAmount": "Uskuna qiymati (UZS)",
-        "workingCapital": "Aylanma mablag‘ (UZS)",
-        "contingency": "Zaxira (%)",
-        "units": "Davrdagi birliklar soni",
-        "pricePerUnit": "Bir birlik narxi (UZS)",
-        "fixedCosts": "Doimiy xarajatlar (UZS)",
-        "variableCosts": "O‘zgaruvchan xarajatlar (%)",
-        "variableCostPerUnit": "Bir birlik uchun o‘zgaruvchan xarajat (UZS)",
-        "monthlyPayment": "Oylik to‘lov (UZS)",
-        "annualRate": "Yillik stavka (%)",
+        "category": "Xarajat turi",
+        "name": "Nomi",
+        "quantity": "Miqdori",
+        "unitCost": "Birlik narxi (UZS)",
+        "role": "Lavozim",
+        "employeeCount": "Xodimlar soni",
+        "monthlySalary": "Oylik ish haqi (UZS)",
+        "annualRevenue": "Yillik tushum (UZS)",
+        "annualExpenses": "Yillik xarajatlar (UZS)",
+        "principal": "Kredit summasi (UZS)",
+        "availableCash": "Oylik mavjud mablag‘ (UZS)",
+        "annualRate": "Yillik foiz stavkasi (%)",
         "term": "Muddat (oy)",
-        "principal": "Asosiy qarz (UZS)"
+        "method": "To‘lov usuli",
+        "dailyRevenue": "Kunlik tushum (UZS)",
+        "monthlyFixedCosts": "Oylik doimiy xarajatlar (UZS)",
+        "variableCosts": "O‘zgaruvchan xarajatlar (%)",
+        "operatingDaysPerWeek": "Haftadagi ish kunlari",
+        "operatingDaysPerMonth": "Oydagi ish kunlari",
+        "operatingDaysPerYear": "Yildagi ish kunlari",
+        "targetProfit": "Maqsadli oylik foyda (UZS)"
+      },
+      "results": {
+        "totalStartupCost": "Jami boshlang‘ich xarajat",
+        "monthlyPayroll": "Oylik ish haqi",
+        "annualPayroll": "Yillik ish haqi",
+        "monthlyEmployerCost": "Oylik ish beruvchi xarajati",
+        "taxRegime": "Soliq rejimi",
+        "taxAmount": "Hisoblangan soliq",
+        "profitAfterTax": "Soliqdan keyingi foyda",
+        "taxableBase": "Soliq bazasi",
+        "firstPayment": "Birinchi oylik to‘lov",
+        "maximumPayment": "Eng yuqori oylik to‘lov",
+        "totalPayment": "Jami to‘lov",
+        "totalInterest": "Jami foizlar",
+        "paymentSurplus": "To‘lovdan keyingi eng kam mablag‘ qoldig‘i",
+        "schedule": "To‘lov jadvali",
+        "principalPaid": "Asosiy qarz to‘lovi",
+        "interest": "Foizlar",
+        "remainingBalance": "Qolgan qarz",
+        "availableCash": "Oylik mavjud mablag‘",
+        "monthlyRevenue": "Oylik tushum",
+        "monthlyProfit": "Oylik operatsion foyda",
+        "breakEvenRevenue": "Oylik zararsizlik tushumi",
+        "targetRevenue": "Maqsadli foyda uchun tushum",
+        "revenue": "Tushum",
+        "operatingProfit": "Operatsion foyda",
+        "payment": "To‘lov",
+        "month": "Oy",
+        "formula": "Hisoblash formulasi",
+        "result": "Hisob-kitob natijasi",
+        "chart": "Natijalar diagrammasi"
       },
       "errors": {
-        "calculationFailed": "Hisoblab bo‘lmadi.",
-        "serviceUnavailable": "Hisoblash xizmati vaqtincha ishlamayapti."
+        "calculationFailed": "Hisoblab bo‘lmadi. Kiritilgan qiymatlarni tekshiring.",
+        "serviceUnavailable": "Hisoblash xizmati vaqtincha ishlamayapti.",
+        "plansLoadFailed": "Biznes-rejalaringizni yuklab bo‘lmadi.",
+        "planSaveFailed": "Natijani rejaga saqlab bo‘lmadi."
       }
     },
     "download": {
@@ -1228,11 +1521,35 @@
         "verificationFailed": "Elektron pochtani tasdiqlab bo‘lmadi."
       }
     },
-    "resetPassword": {
-      "title": "Parolni tiklash",
-      "sendLink": "Tiklash havolasini yuborish",
+    "forgotPassword": {
+      "title": "Parolni unutdingizmi?",
+      "description": "Elektron pochta manzilingizni kiriting. Hisob mavjud bo‘lsa, parolni tiklash havolasini yuboramiz.",
+      "email": "Elektron pochta",
+      "submit": "Tiklash havolasini yuborish",
+      "submitting": "Yuborilmoqda...",
       "sent": "Agar manzil ro‘yxatdan o‘tgan bo‘lsa, unga parolni tiklash havolasi yuboriladi.",
-      "error": "Parolni tiklash havolasini yuborib bo‘lmadi."
+      "error": "Tiklash havolasini yuborib bo‘lmadi. Qayta urinib ko‘ring.",
+      "backToLogin": "Kirish sahifasiga qaytish"
+    },
+    "resetPassword": {
+      "title": "Yangi parol yarating",
+      "description": "Hisobingiz uchun yangi parolni tanlang.",
+      "password": "Yangi parol",
+      "confirmation": "Yangi parolni tasdiqlang",
+      "submit": "Parolni tiklash",
+      "submitting": "Tiklanmoqda...",
+      "success": "Parol yangilandi. Endi hisobingizga kirishingiz mumkin.",
+      "invalidToken": "Parolni tiklash havolasi yaroqsiz yoki muddati o‘tgan.",
+      "error": "Parolni tiklab bo‘lmadi. Qayta urinib ko‘ring.",
+      "backToLogin": "Kirish sahifasiga qaytish"
+    },
+    "verifyEmail": {
+      "title": "Elektron pochtani tasdiqlang",
+      "verifying": "Elektron pochta tasdiqlanmoqda...",
+      "success": "Elektron pochta tasdiqlandi.",
+      "error": "Tasdiqlash havolasi yaroqsiz yoki muddati o‘tgan.",
+      "missingToken": "Tasdiqlash havolasida token yo‘q.",
+      "backToLogin": "Kirish sahifasiga qaytish"
     },
     "wizard": {
       "title": "Reja tuzish ustasi",

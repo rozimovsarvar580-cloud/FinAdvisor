@@ -10,12 +10,13 @@ from sqlalchemy.pool import StaticPool
 from finadvisor_api import auth as auth_module
 from finadvisor_api.database import Base, get_db
 from finadvisor_api.main import app
-from finadvisor_api.models import User
+from finadvisor_api.models import OAuthAccount, User
 
 
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> Iterator[TestClient]:
     monkeypatch.setenv("JWT_SECRET", "unit-test-secret-key-at-least-32-bytes-long")
+    monkeypatch.setattr(auth_module, "send_auth_email", lambda *args: None)
     engine = create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
@@ -162,7 +163,7 @@ def test_oauth_exchange_validates_google_token_and_reuses_provider_identity(
     )
 
     first = client.post(
-        "/auth/oauth",
+        "/auth/oauth/provider-token",
         json={
             "provider": "google",
             "access_token": "provider-access-token",
@@ -170,7 +171,7 @@ def test_oauth_exchange_validates_google_token_and_reuses_provider_identity(
         },
     )
     second = client.post(
-        "/auth/oauth",
+        "/auth/oauth/provider-token",
         json={
             "provider": "google",
             "access_token": "provider-access-token",
@@ -204,7 +205,7 @@ def test_oauth_exchange_rejects_invalid_provider_tokens(
     )
 
     response = client.post(
-        "/auth/oauth",
+        "/auth/oauth/provider-token",
         json={"provider": "facebook", "access_token": "invalid-provider-token"},
     )
 
@@ -240,7 +241,7 @@ def test_oauth_exchange_reads_facebook_profile(
     )
 
     response = client.post(
-        "/auth/oauth",
+        "/auth/oauth/provider-token",
         json={
             "provider": "facebook",
             "access_token": "provider-access-token",
@@ -257,7 +258,7 @@ def test_oauth_exchange_reads_facebook_profile(
     assert requests[0].url.params["fields"] == "id,name,email,picture"
 
 
-def test_oauth_exchange_does_not_link_an_existing_email_implicitly(
+def test_oauth_exchange_links_an_existing_email_only_when_verified(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     async_client = httpx.AsyncClient
@@ -291,9 +292,23 @@ def test_oauth_exchange_does_not_link_an_existing_email_implicitly(
     )
 
     response = client.post(
-        "/auth/oauth",
+        "/auth/oauth/provider-token",
         json={"provider": "google", "access_token": "provider-access-token"},
     )
 
-    assert response.status_code == 409
-    assert response.json()["detail"] == "auth.account_exists"
+    assert response.status_code == 200
+    db_generator = app.dependency_overrides[get_db]()
+    db = next(db_generator)
+    try:
+        user = db.scalar(select(User).where(User.email == "owner@example.com"))
+        account = db.scalar(
+            select(OAuthAccount).where(
+                OAuthAccount.provider == "google",
+                OAuthAccount.provider_account_id == "google-user-456",
+            )
+        )
+        assert user is not None
+        assert account is not None
+        assert account.user_id == user.id
+    finally:
+        db_generator.close()

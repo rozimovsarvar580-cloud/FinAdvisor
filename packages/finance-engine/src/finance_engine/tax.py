@@ -23,6 +23,18 @@ class TaxRegimeResult:
     effective_from: str
     published_at: str
     eligibility_note: str
+    verified: bool
+    verified_by: str | None
+
+
+@dataclass(frozen=True)
+class TaxRuleProvenance:
+    key: str
+    rate: str | None
+    source_url: str
+    effective_date: str
+    verified: bool
+    verified_by: str | None
 
 
 @dataclass(frozen=True)
@@ -43,6 +55,72 @@ def _load_tax_rules(rules_path: Path) -> dict[str, Any]:
     if not isinstance(rules.get("source"), dict):
         raise TypeError(f"Tax rules source metadata is missing: {rules_path}")
     return rules
+
+
+def _provenance(rule_key: str, rule: object, rules_path: Path) -> TaxRuleProvenance:
+    if not isinstance(rule, dict):
+        raise TypeError(f"Invalid tax rule {rule_key}: {rules_path}")
+    source_url = rule.get("source_url")
+    effective_date = rule.get("effective_date")
+    verified = rule.get("verified")
+    verified_by = rule.get("verified_by")
+    rate = rule.get("rate")
+    if (
+        not isinstance(source_url, str)
+        or not source_url.strip()
+        or not isinstance(effective_date, str)
+        or not effective_date.strip()
+        or not isinstance(verified, bool)
+        or (verified_by is not None and not isinstance(verified_by, str))
+        or (
+            rate is not None
+            and (
+                isinstance(rate, bool)
+                or not isinstance(rate, (str, int, Decimal))
+            )
+        )
+    ):
+        raise TypeError(f"Tax rule {rule_key} has invalid provenance metadata")
+    if verified and not verified_by:
+        raise ValueError(f"Verified tax rule {rule_key} must name verified_by")
+    return TaxRuleProvenance(
+        key=rule_key,
+        rate=str(rate) if rate is not None else None,
+        source_url=source_url,
+        effective_date=effective_date,
+        verified=verified,
+        verified_by=verified_by,
+    )
+
+
+def tax_rule_provenance(
+    rules_path: Path = DEFAULT_TAX_RULES,
+) -> tuple[str, tuple[TaxRuleProvenance, ...]]:
+    rules = _load_tax_rules(rules_path)
+    source = rules["source"]
+    source_name = source.get("name")
+    if not isinstance(source_name, str) or not source_name.strip():
+        raise TypeError(f"Tax rules source name is missing: {rules_path}")
+    records = [
+        _provenance(str(key), value, rules_path)
+        for key, value in rules["regimes"].items()
+    ]
+    payroll = rules.get("payroll")
+    if payroll is not None:
+        if not isinstance(payroll, dict):
+            raise TypeError(f"Invalid payroll rules: {rules_path}")
+        employer_contributions = payroll.get("employer_contributions")
+        if not isinstance(employer_contributions, list):
+            raise TypeError(f"Payroll employer_contributions must be a list: {rules_path}")
+        records.extend(
+            _provenance(
+                str(contribution.get("key", "")) if isinstance(contribution, dict) else "",
+                contribution,
+                rules_path,
+            )
+            for contribution in employer_contributions
+        )
+    return source_name, tuple(records)
 
 
 def compare_tax_regimes(
@@ -82,10 +160,12 @@ def compare_tax_regimes(
                 profit_after_tax=pretax_profit - tax_amount,
                 source_article=str(regime_rules["source_article"]),
                 source_name=str(source["name"]),
-                source_url=str(source["url"]),
-                effective_from=str(rules["effective_from"]),
+                source_url=str(regime_rules["source_url"]),
+                effective_from=str(regime_rules["effective_date"]),
                 published_at=str(rules["published_at"]),
                 eligibility_note=str(regime_rules["eligibility_note"]),
+                verified=bool(regime_rules["verified"]),
+                verified_by=regime_rules["verified_by"],
             )
         )
 

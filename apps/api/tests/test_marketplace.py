@@ -1,17 +1,22 @@
+import json
+
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from finadvisor_api import auth as auth_module
 from finadvisor_api import plans
 from finadvisor_api.database import Base, get_db
 from finadvisor_api.main import app
+from finadvisor_api.models import User
 
 
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     monkeypatch.setenv("JWT_SECRET", "unit-test-secret-key-at-least-32-bytes-long")
+    monkeypatch.setattr(auth_module, "send_auth_email", lambda *args: None)
     engine = create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
@@ -19,6 +24,7 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     )
     Base.metadata.create_all(bind=engine)
     testing_session_local = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+    app.state.test_session_factory = testing_session_local
 
     def override_get_db():
         with testing_session_local() as session:
@@ -35,7 +41,10 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
 
 
 def register_user(
-    client: TestClient, email: str, role: str = "tadbirkor"
+    client: TestClient,
+    email: str,
+    role: str = "tadbirkor",
+    subscription_plan: str = "pro",
 ) -> dict[str, str]:
     response = client.post(
         "/auth/register",
@@ -47,6 +56,11 @@ def register_user(
         },
     )
     assert response.status_code == 201
+    with client.app.state.test_session_factory() as db:
+        user = db.scalar(select(User).where(User.email == email))
+        assert user is not None
+        user.subscription_plan = subscription_plan
+        db.commit()
     return {"Authorization": f"Bearer {response.json()['access_token']}"}
 
 
@@ -104,6 +118,80 @@ def generate_saved_plan(
     )
     assert response.status_code == 200, response.text
     return response.json()["plan_id"]
+
+
+def test_plan_generation_streams_progress_and_saves_json_and_markdown(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    owner_headers = register_user(client, "streaming-plan-owner@example.com")
+    captured: dict[str, object] = {}
+
+    async def fake_stream(prompt: str, context: dict[str, object]):
+        captured["prompt"] = prompt
+        captured["context"] = context
+        yield '{"summary":"Owner-reviewed plan summary.","sections":['
+        yield '{"title":"Operations","content":"The restaurant will operate daily."}]}'
+
+    monkeypatch.setattr(plans, "stream", fake_stream)
+    payload = {
+        "locale": "en",
+        "business_name": "Streaming Restaurant",
+        "restaurant_format": "family",
+        "location": "Tashkent",
+        "seats": 40,
+        "menu_summary": "Local menu details",
+        "average_check": "100000",
+        "daily_customers": 50,
+        "operating_days_per_month": 30,
+        "monthly_rent": "10000000",
+        "monthly_utilities": "1000000",
+        "variable_cost_ratio_percent": "30",
+        "staff": [
+            {"role": "Cook", "employee_count": 10, "monthly_salary": "3000000"},
+            {"role": "Server", "employee_count": 20, "monthly_salary": "2000000"},
+        ],
+        "equipment": [],
+        "other_startup_cost": "0",
+        "loan_amount": "0",
+        "annual_interest_rate_percent": "0",
+        "loan_term_months": 0,
+        "target_monthly_profit": "10000000",
+    }
+
+    response = client.post(
+        "/plans/generate-and-save/stream",
+        json=payload,
+        headers=owner_headers,
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/event-stream")
+    parsed_events = []
+    for block in response.text.strip().split("\n\n"):
+        event, data = block.splitlines()
+        parsed_events.append((event.removeprefix("event: "), json.loads(data[6:])))
+    progress = [data for event, data in parsed_events if event == "progress"]
+    assert [item["phase"] for item in progress] == [
+        "calculating",
+        "writing",
+        "writing",
+        "writing",
+    ]
+    assert progress[-1]["chunks"] == 2
+    completed = next(data for event, data in parsed_events if event == "complete")
+    assert completed["summary"] == "Owner-reviewed plan summary."
+    assert completed["markdown"] == (
+        "# Owner-reviewed plan summary.\n\n"
+        "## Operations\n\nThe restaurant will operate daily."
+    )
+    assert completed["plan_id"].startswith("plan-")
+    business_context = captured["context"]["business"]
+    assert business_context["seats"] == 40
+    assert business_context["staff"] == [
+        {"role": "Cook", "employee_count": 10},
+        {"role": "Server", "employee_count": 20},
+    ]
 
 
 def test_only_published_owner_listings_are_public(

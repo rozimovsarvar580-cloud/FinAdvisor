@@ -1,10 +1,14 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+
+from ..auth_dependencies import require_role
 
 router = APIRouter(prefix="/wizard", tags=["wizard"])
 
 
 @router.get("/steps")
-async def wizard_steps() -> dict[str, object]:
+async def wizard_steps(
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> dict[str, object]:
     return {
         "steps": [
             {"id": "restaurant", "title": "Restaurant profile", "done": True},
@@ -16,7 +20,9 @@ async def wizard_steps() -> dict[str, object]:
 
 
 @router.post("/validate")
-async def validate_wizard() -> dict[str, object]:
+async def validate_wizard(
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> dict[str, object]:
     return {
         "valid": True,
         "warnings": ["Cash reserve should be at least 3 months."],

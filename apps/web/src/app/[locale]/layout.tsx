@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { isSupportedLocale } from "@/lib/locales";
-import { buildMetadata } from "@/lib/site-metadata";
+import { buildMetadata, buildProductStructuredData } from "@/lib/site-metadata";
 import "../globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -48,12 +48,19 @@ export default async function LocaleLayout({
 
   setRequestLocale(params.locale);
   const messages = await getMessages();
+  const structuredData = buildProductStructuredData(params.locale);
 
   return (
     <html lang={params.locale} suppressHydrationWarning>
       <body
         className={`${plusJakarta.variable} ${inter.variable} min-h-screen bg-background font-sans text-foreground antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c")
+          }}
+        />
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <Header />

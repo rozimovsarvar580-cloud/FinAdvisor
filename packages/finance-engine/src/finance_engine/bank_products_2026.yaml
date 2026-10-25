@@ -1,0 +1,18 @@
+version: 1
+jurisdiction: UZ
+effective_date: TODO(VERIFY)
+verified: false
+verified_by: null
+products:
+  - key: TODO(VERIFY)
+    bank_name: TODO(VERIFY)
+    product_name: TODO(VERIFY)
+    annual_interest_rate_percent: null
+    term_months_min: null
+    term_months_max: null
+    currency: TODO(VERIFY)
+    collateral_requirements: TODO(VERIFY)
+    source_url: TODO(VERIFY)
+    effective_date: TODO(VERIFY)
+    verified: false
+    verified_by: null
