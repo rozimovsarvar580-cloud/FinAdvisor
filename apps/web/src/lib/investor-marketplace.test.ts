@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   filterListings,
   formatMoneyString,
+  paginateListings,
   summarizeListings,
   type MarketplaceListing
 } from "./investor-marketplace";
@@ -48,6 +49,15 @@ describe("filterListings", () => {
 
   it("returns all listings for the all selector", () => {
     expect(filterListings(listings, { stage: "all" })).toHaveLength(2);
+  });
+
+  it("combines city and exact decimal funding range filters", () => {
+    expect(filterListings(listings, { city: "samar", minFunding: "250000000", maxFunding: "250000000" }).map((item) => item.id)).toEqual(["project-1"]);
+  });
+
+  it("paginates and clamps page numbers", () => {
+    expect(paginateListings(listings, 2, 1)).toMatchObject({ items: [listings[1]], currentPage: 2, totalPages: 2 });
+    expect(paginateListings(listings, 9, 1).currentPage).toBe(2);
   });
 });
 

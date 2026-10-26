@@ -12,6 +12,7 @@ import { Link } from "@/i18n/navigation";
 import {
   filterListings,
   formatMoneyString,
+  paginateListings,
   summarizeListings,
   type ListingStage,
   type MarketplaceListing
@@ -37,6 +38,12 @@ export function InvestorMarketplaceSection() {
   const [myListings, setMyListings] = useState<MarketplaceListing[]>([]);
   const [myPlans, setMyPlans] = useState<SavedPlan[]>([]);
   const [stage, setStage] = useState<(typeof stages)[number]>("all");
+  const [city, setCity] = useState("");
+  const [minFunding, setMinFunding] = useState("");
+  const [maxFunding, setMaxFunding] = useState("");
+  const [page, setPage] = useState(1);
+  const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [savedSearches, setSavedSearches] = useState<{ label: string; stage: string; city: string; minFunding: string; maxFunding: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -96,13 +103,17 @@ export function InvestorMarketplaceSection() {
     void loadListings();
   }, [loadListings]);
 
+  useEffect(() => {
+    try { setSavedIds(JSON.parse(localStorage.getItem("finadvisor:saved-listings") ?? "[]")); } catch { setSavedIds([]); }
+    try { setSavedSearches(JSON.parse(localStorage.getItem("finadvisor:saved-searches") ?? "[]")); } catch { setSavedSearches([]); }
+  }, []);
+
   const visibleListings = useMemo(
     () =>
-      filterListings(listings, {
-        stage: stage === "all" ? "all" : stage
-      }),
-    [listings, stage]
+      filterListings(listings, { stage, city, minFunding, maxFunding }),
+    [listings, stage, city, minFunding, maxFunding]
   );
+  const paginated = paginateListings(visibleListings, page, 10);
   const summary = summarizeListings(visibleListings);
 
   async function publishListing(event: FormEvent<HTMLFormElement>) {
@@ -214,17 +225,26 @@ export function InvestorMarketplaceSection() {
 
         <Card className="mt-8 p-6">
           <h3 className="text-xl font-semibold">{t("filters.title")}</h3>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <input aria-label={t("filters.city")} className="h-10 rounded-md border border-input bg-background px-3" placeholder={t("filters.city")} value={city} onChange={(event) => { setCity(event.target.value); setPage(1); }} />
+            <input aria-label={t("filters.minimumFunding")} className="h-10 rounded-md border border-input bg-background px-3" inputMode="numeric" placeholder={t("filters.minimumFunding")} value={minFunding} onChange={(event) => { setMinFunding(event.target.value.replace(/[^0-9]/g, "")); setPage(1); }} />
+            <input aria-label={t("filters.maximumFunding")} className="h-10 rounded-md border border-input bg-background px-3" inputMode="numeric" placeholder={t("filters.maximumFunding")} value={maxFunding} onChange={(event) => { setMaxFunding(event.target.value.replace(/[^0-9]/g, "")); setPage(1); }} />
+          </div>
           <div className="mt-4 flex flex-wrap gap-2">
             {stages.map((option) => (
               <Button
                 key={option}
-                onClick={() => setStage(option)}
+                onClick={() => { setStage(option); setPage(1); }}
                 size="sm"
                 variant={stage === option ? "default" : "outline"}
               >
                 {t(`stages.${option}`)}
               </Button>
             ))}
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" onClick={() => { const entry = { label: [city, stage, minFunding, maxFunding].filter(Boolean).join(" · ") || t("filters.title"), stage, city, minFunding, maxFunding }; const next = [...savedSearches.filter((item) => item.label !== entry.label), entry]; setSavedSearches(next); localStorage.setItem("finadvisor:saved-searches", JSON.stringify(next)); }}>{t("saved.saveSearch")}</Button>
+            {savedSearches.map((item) => <Button key={item.label} size="sm" variant="outline" onClick={() => { setStage(item.stage as typeof stage); setCity(item.city); setMinFunding(item.minFunding); setMaxFunding(item.maxFunding); setPage(1); }}>{item.label}</Button>)}
           </div>
         </Card>
 
@@ -373,7 +393,7 @@ export function InvestorMarketplaceSection() {
               </div>
             </div>
           ) : visibleListings.length > 0 ? (
-            visibleListings.map((listing) => (
+              paginated.items.map((listing) => (
               <Card className="p-6" key={listing.id}>
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -400,6 +420,7 @@ export function InvestorMarketplaceSection() {
                   </p>
                 </div>
                 <div className="mt-5">
+                  <Button className="mr-2" onClick={() => { const next = savedIds.includes(listing.id) ? savedIds.filter((id) => id !== listing.id) : [...savedIds, listing.id]; setSavedIds(next); localStorage.setItem("finadvisor:saved-listings", JSON.stringify(next)); }} size="sm" variant="outline">{t(savedIds.includes(listing.id) ? "saved.remove" : "saved.save")}</Button>
                   <Button asChild variant="outline">
                     <Link href={`/investors/${encodeURIComponent(listing.id)}`}>
                       {t("deal.viewPlan")}
@@ -416,6 +437,7 @@ export function InvestorMarketplaceSection() {
             />
           ) : null}
         </div>
+        {paginated.totalPages > 1 ? <nav aria-label={t("filters.pagination")} className="mt-6 flex items-center justify-center gap-3"><Button disabled={page <= 1} onClick={() => setPage(page - 1)} variant="outline">{t("filters.previous")}</Button><span>{page} / {paginated.totalPages}</span><Button disabled={page >= paginated.totalPages} onClick={() => setPage(page + 1)} variant="outline">{t("filters.next")}</Button></nav> : null}
         <p className="mt-6 text-sm text-muted-foreground">{t("disclaimer")}</p>
       </div>
     </section>

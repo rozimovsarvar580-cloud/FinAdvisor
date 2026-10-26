@@ -1185,7 +1185,13 @@
       "listings": "E’lon qilingan loyihalar"
     },
     "filters": {
-      "title": "Loyiha bosqichi bo‘yicha saralash"
+      "title": "Loyiha bosqichi bo‘yicha saralash",
+      "city": "Shahar",
+      "minimumFunding": "Eng kam moliyalashtirish (UZS)",
+      "maximumFunding": "Eng ko?p moliyalashtirish (UZS)",
+      "pagination": "E?lon sahifalari",
+      "previous": "Oldingi",
+      "next": "Keyingi"
     },
     "deal": {
       "ownerFundingTarget": "Egasi so‘rayotgan mablag‘ (UZS)"
@@ -1265,7 +1271,12 @@
       "title": "Hozircha e’lonlaringiz yo‘q",
       "description": "E’lon qilgan loyihalaringiz shu yerda ko‘rinadi va ularning ommaviyligini boshqarishingiz mumkin."
     },
-    "amountPlaceholder": "250000000"
+    "amountPlaceholder": "250000000",
+    "saved": {
+      "save": "E?lonni saqlash",
+      "remove": "Saqlangan e?lonni olib tashlash",
+      "saveSearch": "Qidiruvni saqlash"
+    }
   },
   "desktopAgent": {
     "eyebrow": "Kompyuter agenti",

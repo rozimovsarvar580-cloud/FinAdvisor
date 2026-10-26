@@ -26,16 +26,38 @@ export type MarketplaceListingDetail = MarketplaceListing & {
 
 export type ListingFilters = {
   stage?: ListingStage | "all";
+  city?: string;
+  minFunding?: string;
+  maxFunding?: string;
 };
 
 export function filterListings(
   listings: MarketplaceListing[],
   filters: ListingFilters = {}
 ): MarketplaceListing[] {
-  const { stage } = filters;
+  const { stage, city, minFunding, maxFunding } = filters;
   return listings.filter(
-    (listing) => !stage || stage === "all" || listing.stage === stage
+    (listing) => (!stage || stage === "all" || listing.stage === stage)
+      && (!city || listing.city.toLocaleLowerCase().includes(city.toLocaleLowerCase()))
+      && (!minFunding || compareMoney(listing.funding_target, minFunding) >= 0)
+      && (!maxFunding || compareMoney(listing.funding_target, maxFunding) <= 0)
   );
+}
+
+function compareMoney(left: string, right: string): number {
+  const normalize = (value: string) => {
+    const [whole, fraction = ""] = value.split(".");
+    return `${whole.replace(/^0+(?=\d)/, "")}.${fraction.padEnd(2, "0").slice(0, 2)}`;
+  };
+  const a = normalize(left);
+  const b = normalize(right);
+  return a.length === b.length ? a.localeCompare(b) : a.length - b.length;
+}
+
+export function paginateListings<T>(items: T[], page: number, pageSize: number) {
+  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+  const currentPage = Math.min(Math.max(1, page), totalPages);
+  return { items: items.slice((currentPage - 1) * pageSize, currentPage * pageSize), currentPage, totalPages };
 }
 
 export function summarizeListings(listings: MarketplaceListing[]) {

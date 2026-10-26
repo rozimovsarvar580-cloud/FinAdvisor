@@ -1185,7 +1185,13 @@
       "listings": "Published projects"
     },
     "filters": {
-      "title": "Filter by project stage"
+      "title": "Filter by project stage",
+      "city": "City",
+      "minimumFunding": "Minimum funding (UZS)",
+      "maximumFunding": "Maximum funding (UZS)",
+      "pagination": "Listing pages",
+      "previous": "Previous",
+      "next": "Next"
     },
     "deal": {
       "ownerFundingTarget": "Owner-requested funding (UZS)"
@@ -1265,7 +1271,12 @@
       "title": "No listings yet",
       "description": "Projects you publish will appear here so you can manage their visibility."
     },
-    "amountPlaceholder": "250000000"
+    "amountPlaceholder": "250000000",
+    "saved": {
+      "save": "Save listing",
+      "remove": "Remove saved listing",
+      "saveSearch": "Save search"
+    }
   },
   "desktopAgent": {
     "eyebrow": "Desktop agent",
