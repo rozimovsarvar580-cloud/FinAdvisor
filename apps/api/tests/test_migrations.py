@@ -21,7 +21,7 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
 
     assert sum(revision.down_revision is None for revision in revisions) == 1
     assert all(not isinstance(revision.down_revision, tuple) for revision in revisions)
-    assert script.get_heads() == ["20261026_18"]
+    assert script.get_heads() == ["20261026_19"]
 
     engine = create_engine(f"sqlite:///{database_path.as_posix()}")
     try:

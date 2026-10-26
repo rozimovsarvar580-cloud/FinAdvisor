@@ -12,6 +12,7 @@ from finadvisor_api.database import Base, get_db
 from finadvisor_api.main import app
 from finadvisor_api.models import (
     AIUsageDaily,
+    AuditLog,
     CommissionLedger,
     Invoice,
     Payment,
@@ -263,3 +264,20 @@ def test_admin_user_search_update_and_subscriptions_are_admin_only(admin_revenue
     assert client.get("/admin/subscriptions").status_code == 200
     admin_revenue_context["user"] = User(id="non-admin", email="user@example.com", name="User", role="tadbirkor")
     assert client.get("/admin/users").status_code == 403
+
+
+def test_audit_log_is_admin_only_and_includes_actor_ip_and_time(admin_revenue_context) -> None:
+    get_db_override = app.dependency_overrides[get_db]
+    with next(get_db_override()) as session:
+        session.add(AuditLog(id="audit-entry", actor_id="revenue-admin", action="export", ip_address="192.0.2.1"))
+        session.commit()
+    client = TestClient(app)
+    response = client.get("/admin/audit-log")
+    assert response.status_code == 200
+    entry = response.json()["items"][0]
+    assert entry["actor_id"] == "revenue-admin"
+    assert entry["action"] == "export"
+    assert entry["ip_address"] == "192.0.2.1"
+    assert entry["created_at"]
+    admin_revenue_context["user"] = User(id="non-admin", email="user@example.com", name="User", role="tadbirkor")
+    assert client.get("/admin/audit-log").status_code == 403

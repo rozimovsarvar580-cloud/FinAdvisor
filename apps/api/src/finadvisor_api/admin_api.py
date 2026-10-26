@@ -25,6 +25,7 @@ from finadvisor_api.auth import get_current_user
 from finadvisor_api.database import get_db
 from finadvisor_api.models import (
     AIUsageDaily,
+    AuditLog,
     CommissionLedger,
     CommissionStatement,
     Invoice,
@@ -38,6 +39,13 @@ from finadvisor_api.models import (
 )
 
 router = APIRouter(prefix="/admin", tags=["admin"])
+
+
+@router.get("/audit-log")
+def audit_log(user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)], limit: int = Query(default=100, ge=1, le=500)) -> dict[str, list[dict[str, object]]]:
+    _require_admin(user)
+    rows = db.scalars(select(AuditLog).order_by(AuditLog.created_at.desc()).limit(limit)).all()
+    return {"items": [{"id": row.id, "actor_id": row.actor_id, "action": row.action, "ip_address": row.ip_address, "created_at": row.created_at} for row in rows]}
 
 
 class ModerationAction(BaseModel):

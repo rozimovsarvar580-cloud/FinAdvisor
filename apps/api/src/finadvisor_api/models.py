@@ -66,6 +66,17 @@ class User(Base):
     )
 
 
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+    __table_args__ = (Index("ix_audit_logs_created_at", "created_at"), Index("ix_audit_logs_actor_id", "actor_id"))
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    actor_id: Mapped[str | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    action: Mapped[str] = mapped_column(String(64), nullable=False)
+    ip_address: Mapped[str] = mapped_column(String(64), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class OAuthAccount(Base):
     __tablename__ = "oauth_accounts"
     __table_args__ = (

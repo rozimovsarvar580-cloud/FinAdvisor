@@ -335,7 +335,7 @@ engine = `packages/finance-engine`.
 ## Stage 9 - Admin and operations
 - [x] 9.1 Admin panel
   - done: users (search, role, suspend), subscriptions, listings moderation, AI status, system health; admin-only
-- [ ] 9.2 Audit log
+- [x] 9.2 Audit log
   - done: security-relevant actions (login, role change, refund, export, admin actions) recorded with actor, IP, time; viewable by admins
 - [ ] 9.3 Structured logging and request ids
   - done: JSON logs with request id and user id, secrets and PII redacted, tests for redaction

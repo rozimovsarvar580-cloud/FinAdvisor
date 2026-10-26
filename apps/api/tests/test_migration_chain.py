@@ -19,4 +19,4 @@ def test_migrations_form_one_linear_chain() -> None:
 
     assert len(bases) == 1
     assert not merges
-    assert script.get_heads() == ["20261026_18"]
+    assert script.get_heads() == ["20261026_19"]

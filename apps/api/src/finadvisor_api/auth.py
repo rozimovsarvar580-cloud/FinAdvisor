@@ -440,6 +440,7 @@ def login(
         )
 
     login_attempt_limiter.clear_account(email)
+    request.state.login_actor_id = user.id
     return _issue_response(user, db)
 
 
@@ -616,6 +617,7 @@ def reset_password(
 
 
 def get_current_user(
+    request: Request,
     credentials: Annotated[
         HTTPAuthorizationCredentials | None, Depends(bearer_scheme)
     ],
@@ -629,16 +631,20 @@ def get_current_user(
         )
     if user.is_suspended:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.account_suspended")
+    request.state.audit_actor_id = user.id
     return user
 
 
 def get_current_user_allow_pending_role(
+    request: Request,
     credentials: Annotated[
         HTTPAuthorizationCredentials | None, Depends(bearer_scheme)
     ],
     db: Annotated[Session, Depends(get_db)],
 ) -> User:
-    return _get_current_user(credentials, db)
+    user = _get_current_user(credentials, db)
+    request.state.audit_actor_id = user.id
+    return user
 
 
 def _get_current_user(
