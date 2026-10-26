@@ -345,7 +345,7 @@ engine = `packages/finance-engine`.
   - done: `/health` (liveness) and `/ready` (db, redis, migrations) endpoints; used by Docker healthchecks
 - [x] 9.6 Transactional emails
   - done: welcome, verify, reset, receipt, payment failed, subscription ended, investor contact request, in uz/ru/en with plain-text fallback
-- [ ] 9.7 Backups and restore
+- [x] 9.7 Backups and restore
   - done: scripted Postgres backup and restore with documentation in `docs/RUNBOOK.md`; includes incident checklist and rollback steps
   - exists: docs/RUNBOOK.md, scripts/backup.sh
 
