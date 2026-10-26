@@ -101,9 +101,26 @@ def upgrade() -> None:
     )
     op.create_index("ix_moderation_audit_entries_actor_id", "moderation_audit_entries", ["actor_id"])
     op.create_index("ix_moderation_audit_entries_target_id", "moderation_audit_entries", ["target_id"])
+    op.create_table(
+        "accounting_records",
+        sa.Column("id", sa.String(64), primary_key=True, nullable=False),
+        sa.Column("owner_id", sa.String(36), nullable=False),
+        sa.Column("resource", sa.String(32), nullable=False),
+        sa.Column("client_id", sa.String(128), nullable=False),
+        sa.Column("data", sa.JSON(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
+        sa.CheckConstraint("resource IN ('inventory', 'stock-movements', 'sales', 'expenses', 'employees')", name="ck_accounting_record_resource"),
+        sa.ForeignKeyConstraint(["owner_id"], ["users.id"], ondelete="CASCADE"),
+        sa.UniqueConstraint("owner_id", "resource", "client_id", name="uq_accounting_record_client"),
+    )
+    op.create_index("ix_accounting_records_owner_id", "accounting_records", ["owner_id"])
+    op.create_index("ix_accounting_records_owner_resource", "accounting_records", ["owner_id", "resource"])
 
 
 def downgrade() -> None:
+    op.drop_index("ix_accounting_records_owner_resource", table_name="accounting_records")
+    op.drop_index("ix_accounting_records_owner_id", table_name="accounting_records")
+    op.drop_table("accounting_records")
     op.drop_index("ix_moderation_audit_entries_target_id", table_name="moderation_audit_entries")
     op.drop_index("ix_moderation_audit_entries_actor_id", table_name="moderation_audit_entries")
     op.drop_table("moderation_audit_entries")

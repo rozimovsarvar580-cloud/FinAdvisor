@@ -301,7 +301,7 @@ engine = `packages/finance-engine`.
   - done: investor dashboard, listing page, inbox, owner view of interest; new design system; 3 languages
 
 ## Stage 8 - Desktop agent (Windows and macOS)
-- [ ] 8.1 Accounting API for the agent
+- [x] 8.1 Accounting API for the agent
   - done: endpoints for inventory, stock movements, sales, expenses, employees with RBAC (accountant writes, owner reads and issues commands, investor denied); idempotent sync endpoints with client ids
   - exists: apps/api/tests/test_accounting_rbac.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_accounting_rbac.py -q

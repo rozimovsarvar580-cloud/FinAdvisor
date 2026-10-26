@@ -311,6 +311,22 @@ class LedgerEntry(Base):
     )
 
 
+class AccountingRecord(Base):
+    __tablename__ = "accounting_records"
+    __table_args__ = (
+        UniqueConstraint("owner_id", "resource", "client_id", name="uq_accounting_record_client"),
+        CheckConstraint("resource IN ('inventory', 'stock-movements', 'sales', 'expenses', 'employees')", name="ck_accounting_record_resource"),
+        Index("ix_accounting_records_owner_resource", "owner_id", "resource"),
+    )
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    owner_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    resource: Mapped[str] = mapped_column(String(32), nullable=False)
+    client_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    data: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class ChatConversation(Base):
     __tablename__ = "chat_conversations"
 
