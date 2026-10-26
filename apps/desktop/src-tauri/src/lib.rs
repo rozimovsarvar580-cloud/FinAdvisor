@@ -135,6 +135,19 @@ struct SyncStatementRequest<'a> {
     device_id: &'a str,
 }
 
+#[derive(Serialize)]
+struct OwnerChatRequest<'a> {
+    locale: &'a str,
+    message: &'a str,
+    conversation_id: Option<&'a str>,
+}
+
+#[derive(Serialize)]
+struct OwnerChatReply {
+    conversation_id: String,
+    content: String,
+}
+
 fn normalize_api_base_url(value: &str) -> Result<String, String> {
     let mut url = Url::parse(value.trim()).map_err(|_| "invalid_api_url".to_string())?;
     let host = url.host_str().unwrap_or_default();
@@ -359,6 +372,40 @@ async fn queue_statement_sync(
 }
 
 #[tauri::command]
+async fn send_owner_chat(
+    state: State<'_, AgentState>,
+    client: State<'_, Client>,
+    locale: String,
+    message: String,
+    conversation_id: Option<String>,
+) -> Result<OwnerChatReply, String> {
+    let message = message.trim();
+    if message.is_empty() || message.chars().count() > 4000 || !["uz", "ru", "en"].contains(&locale.as_str()) {
+        return Err("invalid_input".to_string());
+    }
+    let session = active_session(&state)?;
+    let response = send_authenticated(&session, client.post(api_v1_url(&session, "/chat/stream"))
+        .json(&OwnerChatRequest { locale: &locale, message, conversation_id: conversation_id.as_deref() })).await?;
+    let conversation_id = response.headers().get("x-conversation-id").and_then(|value| value.to_str().ok())
+        .ok_or_else(|| "invalid_api_response".to_string())?.to_string();
+    let body = response.text().await.map_err(map_request_error)?;
+    let mut content = String::new();
+    for frame in body.split("\n\n") {
+        let event = frame.lines().find_map(|line| line.strip_prefix("event: ")).unwrap_or("");
+        let data = frame.lines().find_map(|line| line.strip_prefix("data: "));
+        if let Some(data) = data {
+            let value: serde_json::Value = serde_json::from_str(data).map_err(|_| "invalid_api_response".to_string())?;
+            if event == "error" { return Err("api_request_failed".to_string()); }
+            if event != "metadata" {
+                if let Some(part) = value.get("text").and_then(serde_json::Value::as_str) { content.push_str(part); }
+            }
+        }
+    }
+    if content.trim().is_empty() { return Err("invalid_api_response".to_string()); }
+    Ok(OwnerChatReply { conversation_id, content })
+}
+
+#[tauri::command]
 fn logout(state: State<'_, AgentState>) -> Result<(), String> {
     *state
         .session
@@ -406,6 +453,7 @@ pub fn run() {
             load_dashboard,
             register_device,
             queue_statement_sync,
+            send_owner_chat,
             logout,
             restore_session
             ,queue_offline_record, sync_offline_queue

@@ -13,7 +13,7 @@ export function escapeHtml(value) {
   });
 }
 
-export function renderDashboard(dashboard, locale = "uz", busy = false, syncStatus = { online: true, queued: 0 }) {
+export function renderDashboard(dashboard, locale = "uz", busy = false, syncStatus = { online: true, queued: 0 }, chat = { messages: [], busy: false }) {
   const t = getMessages(locale);
   const translateStatus = (status) =>
     ({ registered: t.registered, queued: t.queued })[status] ?? status;
@@ -49,6 +49,17 @@ export function renderDashboard(dashboard, locale = "uz", busy = false, syncStat
     : `<tr><td colspan="3" class="empty-state">${escapeHtml(t.noCommands)}</td></tr>`;
 
   return `
+    <section class="panel" aria-labelledby="owner-chat-title">
+      <div class="section-heading"><h2 id="owner-chat-title">${escapeHtml(t.ownerChat)}</h2></div>
+      <div class="chat-transcript" role="log" aria-label="${escapeHtml(t.chatTranscript)}" aria-live="polite">
+        ${chat.messages.length ? chat.messages.map((message) => `<p class="chat-message chat-${message.role}"><strong>${escapeHtml(t[message.role])}:</strong> ${escapeHtml(message.content)}</p>`).join("") : `<p class="empty-state">${escapeHtml(t.chatEmpty)}</p>`}
+      </div>
+      <form id="chat-form" class="inline-form">
+        <label class="sr-only" for="chat-message">${escapeHtml(t.chatPlaceholder)}</label>
+        <input id="chat-message" name="message" maxlength="4000" required placeholder="${escapeHtml(t.chatPlaceholder)}" ${chat.busy ? "disabled" : ""} />
+        <button class="button" type="submit" ${chat.busy ? "disabled" : ""}>${escapeHtml(chat.busy ? t.chatSending : t.chatSend)}</button>
+      </form>
+    </section>
     <p class="sync-status" role="status">${escapeHtml(syncStatus.online ? t.syncOnline : t.syncOffline)} · ${escapeHtml(t.queuedRecords)}: ${Number(syncStatus.queued) || 0}</p>
     <section class="panel">
       <div class="section-heading"><h2>${escapeHtml(t.devices)}</h2></div>

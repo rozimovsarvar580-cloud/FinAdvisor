@@ -251,6 +251,20 @@ footer {
   margin: 18px 0;
 }
 
+.chat-transcript {
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  background: hsl(var(--background));
+}
+
+.chat-message { padding: 10px 12px; border-radius: 10px; overflow-wrap: anywhere; }
+.chat-user { margin-left: 12%; background: hsl(var(--primary) / 12%); }
+.chat-assistant { margin-right: 12%; background: hsl(var(--accent) / 12%); }
+
 .device-card {
   padding: 16px;
   border: 1px solid hsl(var(--border));
@@ -339,6 +353,9 @@ footer {
     align-items: stretch;
     flex-direction: column;
   }
+
+  .chat-user { margin-left: 4%; }
+  .chat-assistant { margin-right: 4%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

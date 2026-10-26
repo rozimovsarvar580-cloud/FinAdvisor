@@ -10,6 +10,7 @@ const state = {
   dashboard: { devices: [], commands: [] },
   loggedIn: false,
   busy: false
+  ,chat: { messages: [], conversationId: null, busy: false }
 };
 
 function invoke(command, args = {}) {
@@ -54,7 +55,7 @@ function render() {
               <span>${escapeHtml(t.connectedAs)} <strong>${escapeHtml(state.email)}</strong></span>
               <button id="logout" class="button button-secondary" type="button">${escapeHtml(t.signOut)}</button>
             </div>
-            ${renderDashboard(state.dashboard, state.locale)}`
+            ${renderDashboard(state.dashboard, state.locale, state.busy, { online: true, queued: 0 }, state.chat)}`
           : `
             <section class="panel login-panel">
               <h2>${escapeHtml(t.loginTitle)}</h2>
@@ -128,6 +129,7 @@ app.addEventListener("click", async (event) => {
       await invoke("logout");
       state.loggedIn = false;
       state.dashboard = { devices: [], commands: [] };
+      state.chat = { messages: [], conversationId: null, busy: false };
       render();
     } catch (error) {
       setStatus(errorMessage(error));
@@ -188,6 +190,23 @@ app.addEventListener("submit", async (event) => {
       setStatus(getMessages(state.locale).deviceRegistered);
     } catch (error) {
       state.busy = false;
+      render();
+      setStatus(errorMessage(error));
+    }
+  } else if (form.id === "chat-form") {
+    const message = String(new FormData(form).get("message") ?? "").trim();
+    if (!message || state.chat.busy) return;
+    state.chat.messages.push({ role: "user", content: message });
+    state.chat.busy = true;
+    render();
+    try {
+      const reply = await invoke("send_owner_chat", { locale: state.locale, message, conversationId: state.chat.conversationId });
+      state.chat.conversationId = reply.conversation_id;
+      state.chat.messages.push({ role: "assistant", content: reply.content });
+      state.chat.busy = false;
+      render();
+    } catch (error) {
+      state.chat.busy = false;
       render();
       setStatus(errorMessage(error));
     }
