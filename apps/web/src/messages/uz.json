@@ -1276,6 +1276,28 @@
       "save": "E?lonni saqlash",
       "remove": "Saqlangan e?lonni olib tashlash",
       "saveSearch": "Qidiruvni saqlash"
+    },
+    "interest": {
+      "title": "Egasi bilan bog‘lanish",
+      "message": "Egaga qiziqishingiz haqida yozing",
+      "submit": "Qiziqish bildirish",
+      "sending": "Yuborilmoqda…",
+      "sent": "Qiziqish bildirishingiz egasiga yuborildi.",
+      "error": "So‘rov yuborilmadi. Qayta urinib ko‘ring."
+    },
+    "inbox": {
+      "title": "Investorlar qiziqishi",
+      "back": "Marketplace’ga qaytish",
+      "error": "So‘rovlarni yuklab yoki yangilab bo‘lmadi.",
+      "empty": "Hozircha investorlar qiziqish bildirmagan.",
+      "investor": "Sarmoyador",
+      "accept": "Qabul qilish",
+      "decline": "Rad etish",
+      "status": {
+        "pending": "Kutilmoqda",
+        "accepted": "Qabul qilindi",
+        "declined": "Rad etildi"
+      }
     }
   },
   "desktopAgent": {

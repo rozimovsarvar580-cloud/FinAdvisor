@@ -1276,6 +1276,28 @@
       "save": "Save listing",
       "remove": "Remove saved listing",
       "saveSearch": "Save search"
+    },
+    "interest": {
+      "title": "Contact the owner",
+      "message": "Tell the owner why you are interested",
+      "submit": "Send interest",
+      "sending": "Sending…",
+      "sent": "Your interest was sent to the owner.",
+      "error": "Could not send your request. Please try again."
+    },
+    "inbox": {
+      "title": "Investor interest",
+      "back": "Back to marketplace",
+      "error": "Interest requests could not be loaded or updated.",
+      "empty": "No investor interest yet.",
+      "investor": "Investor",
+      "accept": "Accept",
+      "decline": "Decline",
+      "status": {
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "declined": "Declined"
+      }
     }
   },
   "desktopAgent": {

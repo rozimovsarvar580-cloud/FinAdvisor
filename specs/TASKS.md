@@ -297,7 +297,7 @@ engine = `packages/finance-engine`.
   - done: investor profile and KYC status flow (submitted, approved, rejected) with admin review; only approved investors see detailed financials
 - [x] 7.5 Moderation
   - done: report listing/message, admin review queue, hide/ban actions, audit log entries
-- [ ] 7.6 Marketplace UI
+- [x] 7.6 Marketplace UI
   - done: investor dashboard, listing page, inbox, owner view of interest; new design system; 3 languages
 
 ## Stage 8 - Desktop agent (Windows and macOS)

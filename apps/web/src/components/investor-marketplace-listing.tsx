@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
 import { Card } from "@/components/ui/card";
@@ -41,6 +42,9 @@ export function InvestorMarketplaceListing({
   const [listing, setListing] = useState<ListingDetailResponse>();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactState, setContactState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const { data: session } = useSession();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -120,6 +124,26 @@ export function InvestorMarketplaceListing({
           </p>
         </div>
       </Card>
+
+      {session?.user.role === "investor" ? (
+        <Card className="p-6 sm:p-8">
+          <h2 className="text-xl font-semibold">{t("interest.title")}</h2>
+          {contactState === "sent" ? <p className="mt-3 text-sm text-primary" role="status">{t("interest.sent")}</p> : (
+            <form className="mt-4 grid gap-3" onSubmit={async (event) => {
+              event.preventDefault(); setContactState("sending");
+              try {
+                const response = await fetch(`/api/marketplace/listings/${encodeURIComponent(listingId)}/contacts`, { method: "POST", headers: { Authorization: `Bearer ${session.accessToken}`, "Content-Type": "application/json" }, body: JSON.stringify({ message: contactMessage }) });
+                if (!response.ok) throw new Error("contact failed");
+                setContactState("sent");
+              } catch { setContactState("error"); }
+            }}>
+              <label className="grid gap-2 text-sm font-medium">{t("interest.message")}<textarea required maxLength={2000} value={contactMessage} onChange={(event) => setContactMessage(event.target.value)} className="min-h-24 rounded-md border border-input bg-background px-3 py-2" /></label>
+              {contactState === "error" ? <p role="alert" className="text-sm text-destructive">{t("interest.error")}</p> : null}
+              <button disabled={contactState === "sending"} className="w-fit rounded-md bg-primary px-4 py-2 text-primary-foreground hover:opacity-90 focus-visible:outline focus-visible:outline-2 disabled:opacity-50">{t(contactState === "sending" ? "interest.sending" : "interest.submit")}</button>
+            </form>
+          )}
+        </Card>
+      ) : null}
 
       <Card className="p-6 sm:p-8">
         <h2 className="text-xl font-semibold">{reports("calculationsTitle")}</h2>
