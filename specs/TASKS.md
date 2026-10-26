@@ -343,7 +343,7 @@ engine = `packages/finance-engine`.
   - done: Sentry-compatible hooks in web, api and desktop, enabled only when `SENTRY_DSN` is set; source maps strategy documented
 - [x] 9.5 Health and readiness
   - done: `/health` (liveness) and `/ready` (db, redis, migrations) endpoints; used by Docker healthchecks
-- [ ] 9.6 Transactional emails
+- [x] 9.6 Transactional emails
   - done: welcome, verify, reset, receipt, payment failed, subscription ended, investor contact request, in uz/ru/en with plain-text fallback
 - [ ] 9.7 Backups and restore
   - done: scripted Postgres backup and restore with documentation in `docs/RUNBOOK.md`; includes incident checklist and rollback steps
