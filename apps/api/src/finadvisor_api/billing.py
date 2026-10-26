@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 from finadvisor_api.auth import get_current_user
 from finadvisor_api.config import get_settings
 from finadvisor_api.database import get_db
+from finadvisor_api.email_sender import EmailDeliveryError, send_transactional_email
 from finadvisor_api.models import (
     Invoice,
     Payment,
@@ -500,6 +501,24 @@ async def receive_webhook(
     except IntegrityError:
         db.rollback()
         return {"received": True, "duplicate": True}
+
+    user = db.get(User, invoice.user_id)
+    if user is not None:
+        try:
+            if event_type == "payment.succeeded":
+                send_transactional_email(
+                    user.email, user.locale, "receipt",
+                    amount=minor_units_to_decimal_string(invoice.amount_minor),
+                    currency=invoice.currency, invoice=invoice.invoice_number,
+                )
+            elif event_type == "payment.failed":
+                send_transactional_email(
+                    user.email, user.locale, "payment_failed",
+                    amount=minor_units_to_decimal_string(invoice.amount_minor),
+                    currency=invoice.currency,
+                )
+        except EmailDeliveryError:
+            pass
 
     return {"received": True, "duplicate": False}
 

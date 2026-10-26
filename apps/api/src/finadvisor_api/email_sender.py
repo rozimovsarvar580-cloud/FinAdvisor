@@ -10,7 +10,10 @@ import httpx
 
 from finadvisor_api.config import Settings, get_settings
 
-EmailTemplate = Literal["verify", "reset", "welcome", "payment_retry"]
+EmailTemplate = Literal[
+    "verify", "reset", "welcome", "payment_retry", "receipt",
+    "payment_failed", "subscription_ended", "investor_contact_request",
+]
 _MESSAGES = json.loads(
     files("finadvisor_api")
     .joinpath("auth_email_messages.json")
@@ -169,6 +172,23 @@ def send_payment_retry_email(
         locale,
         "payment_retry",
         {"amount": amount, "currency": currency},
+    )
+
+
+def send_transactional_email(
+    recipient: str, locale: str, template: Literal[
+        "receipt", "payment_failed", "subscription_ended", "investor_contact_request"
+    ], **context: str,
+) -> None:
+    _send_template_email(recipient, locale, template, context)
+
+
+def send_investor_contact_request_email(
+    recipient: str, locale: str, investor: str, business: str, message: str
+) -> None:
+    send_transactional_email(
+        recipient, locale, "investor_contact_request",
+        investor=investor, business=business, message=message,
     )
 
 

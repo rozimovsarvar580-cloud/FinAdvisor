@@ -111,14 +111,20 @@ def test_console_sender_delivers_welcome_template_in_development(
     assert "Hello, Restaurant Owner." in output
 
 
-def test_localized_templates_cover_all_three_auth_email_types() -> None:
+def test_localized_templates_cover_all_transactional_email_types() -> None:
     for locale in ("uz", "ru", "en"):
-        for template in ("verify", "reset", "welcome", "payment_retry"):
+        for template in email_sender.EmailTemplate.__args__:
             context = (
                 {"name": "Owner"}
                 if template == "welcome"
                 else {"amount": "10.00", "currency": "USD"}
                 if template == "payment_retry"
+                else {"amount": "10.00", "currency": "USD"}
+                if template == "payment_failed"
+                else {"amount": "10.00", "currency": "USD", "invoice": "INV-1"}
+                if template == "receipt"
+                else {"investor": "Investor", "business": "Cafe", "message": "Hello"}
+                if template == "investor_contact_request"
                 else {"link": "https://example.test"}
             )
             message = email_sender._build_message(
@@ -130,6 +136,7 @@ def test_localized_templates_cover_all_three_auth_email_types() -> None:
             )
             assert message["Subject"]
             assert message.get_content().strip()
+            assert "?" not in message["Subject"]
 
 
 def test_payment_retry_email_is_localized_and_includes_exact_amount(

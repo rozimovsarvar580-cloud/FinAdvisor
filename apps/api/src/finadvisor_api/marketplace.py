@@ -9,7 +9,11 @@ from sqlalchemy.orm import Session
 
 from finadvisor_api.auth import _get_current_user, bearer_scheme, get_current_user
 from finadvisor_api.database import get_db
-from finadvisor_api.email_sender import EmailDeliveryError, send_marketplace_email
+from finadvisor_api.email_sender import (
+    EmailDeliveryError,
+    send_investor_contact_request_email,
+    send_marketplace_email,
+)
 from finadvisor_api.models import (
     InvestorVerification,
     MarketplaceContactRequest,
@@ -281,7 +285,14 @@ def request_listing_contact(
     db.refresh(contact)
     owner = db.get(User, listing.owner_id)
     if owner:
-        _notify(owner, "", "")
+        try:
+            send_investor_contact_request_email(
+                owner.email, owner.locale, user.name, listing.business_name,
+                contact.message,
+            )
+        except EmailDeliveryError:
+            # Email delivery must not undo a committed contact request.
+            pass
     return {"id": contact.id, "status": contact.status, "listing_id": contact.listing_id, "message": contact.message, "created_at": contact.created_at}
 
 

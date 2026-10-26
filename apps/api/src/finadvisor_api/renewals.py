@@ -8,7 +8,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from finadvisor_api.database import SessionLocal
-from finadvisor_api.email_sender import send_payment_retry_email
+from finadvisor_api.email_sender import (
+    EmailDeliveryError,
+    send_payment_retry_email,
+    send_transactional_email,
+)
 from finadvisor_api.models import Invoice, Payment, Subscription, User
 from finadvisor_api.payment_provider import (
     PaymentProvider,
@@ -35,7 +39,11 @@ def _as_utc(value: datetime) -> datetime:
     return value.astimezone(_UTC)
 
 
-def _expire_subscription(db: Session, subscription: Subscription) -> None:
+def _expire_subscription(
+    db: Session,
+    subscription: Subscription,
+    send_ended_email: Callable[[str, str], None] | None = None,
+) -> None:
     subscription.status = "expired"
     user = db.get(User, subscription.user_id)
     if user is not None:
@@ -47,6 +55,11 @@ def _expire_subscription(db: Session, subscription: Subscription) -> None:
     ):
         invoice.status = "uncollectible"
     db.commit()
+    if user is not None and send_ended_email is not None:
+        try:
+            send_ended_email(user.email, user.locale)
+        except EmailDeliveryError:
+            pass
 
 
 def _create_due_invoices(db: Session, now: datetime) -> int:
@@ -212,6 +225,7 @@ def run_renewals(
     now: datetime,
     provider: PaymentProvider,
     send_retry_email: Callable[[str, str, str, str], None] = send_payment_retry_email,
+    send_ended_email: Callable[[str, str], None] | None = None,
 ) -> RenewalRunResult:
     if now.tzinfo is None:
         raise ValueError("Renewal job clock must be timezone-aware")
@@ -287,7 +301,11 @@ def run_renewals(
             for attempt in failed_attempts
         )
         if now >= first_failure + timedelta(days=GRACE_DAYS):
-            _expire_subscription(db, subscription)
+            _expire_subscription(
+                db,
+                subscription,
+                send_ended_email or _send_subscription_ended_email,
+            )
             downgraded += 1
             continue
 
@@ -318,6 +336,10 @@ def run_renewals(
         retry_emails_sent=emails_sent,
         subscriptions_downgraded=downgraded,
     )
+
+
+def _send_subscription_ended_email(recipient: str, locale: str) -> None:
+    send_transactional_email(recipient, locale, "subscription_ended")
 
 
 def main() -> None:

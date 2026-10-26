@@ -44,6 +44,7 @@ def test_contact_acceptance_thread_notifications_and_rate_limit(client: TestClie
 
     notified: list[str] = []
     monkeypatch.setattr(marketplace, "send_marketplace_email", lambda recipient, locale, subject, body: notified.append(recipient))
+    monkeypatch.setattr(marketplace, "send_investor_contact_request_email", lambda recipient, locale, investor, business, message: notified.append(recipient))
     owner = register(client, "owner@example.com", "tadbirkor")
     investor = register(client, "investor@example.com", "investor")
     outsider = register(client, "outsider@example.com", "investor")

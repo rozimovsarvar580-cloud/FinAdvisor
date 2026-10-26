@@ -23,6 +23,7 @@ from finadvisor_api.email_sender import (
     EmailDeliveryError,
     ensure_auth_email_delivery_configured,
     send_auth_email,
+    send_welcome_email,
 )
 from finadvisor_api.models import EmailToken, OAuthAccount, RefreshToken, User
 from finadvisor_api.schemas import (
@@ -570,6 +571,10 @@ def verify_email(
         )
     user.email_verified = True
     db.commit()
+    try:
+        send_welcome_email(user.email, user.locale, user.name)
+    except EmailDeliveryError:
+        pass
     return {"message": "auth.email_verified"}
 
 
