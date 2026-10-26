@@ -170,3 +170,13 @@ def send_payment_retry_email(
         "payment_retry",
         {"amount": amount, "currency": currency},
     )
+
+
+def send_marketplace_email(recipient: str, locale: str, subject: str, body: str) -> None:
+    settings = get_settings()
+    message = EmailMessage()
+    message["Subject"] = subject
+    message["From"] = settings.email_from or "FinAdvisor"
+    message["To"] = recipient
+    message.set_content(body)
+    get_email_sender(settings).send(message)

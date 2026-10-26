@@ -289,7 +289,7 @@ engine = `packages/finance-engine`.
   - done: owner publishes a plan as a listing with visibility controls (what financial detail is public, what needs a request); draft/published/archived
 - [x] 7.2 Discovery
   - done: search and filters (city, sector, funding amount, stage), pagination, saved listings, saved searches
-- [ ] 7.3 Contact and messaging
+- [x] 7.3 Contact and messaging
   - done: investor sends a contact request, owner accepts/declines, then threaded messages with email notifications; rate limits
   - exists: apps/api/tests/test_marketplace_messages.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_marketplace_messages.py -q

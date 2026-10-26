@@ -218,6 +218,28 @@ class MarketplaceListing(Base):
     )
 
 
+class MarketplaceContactRequest(Base):
+    __tablename__ = "marketplace_contact_requests"
+    __table_args__ = (UniqueConstraint("listing_id", "investor_id", name="uq_marketplace_contact_listing_investor"),)
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    listing_id: Mapped[str] = mapped_column(ForeignKey("marketplace_listings.id", ondelete="CASCADE"), index=True)
+    investor_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    status: Mapped[str] = mapped_column(String(16), default="pending", server_default="pending")
+    message: Mapped[str] = mapped_column(String(2000))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class MarketplaceMessage(Base):
+    __tablename__ = "marketplace_messages"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    request_id: Mapped[str] = mapped_column(ForeignKey("marketplace_contact_requests.id", ondelete="CASCADE"), index=True)
+    sender_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    content: Mapped[str] = mapped_column(String(4000))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class LedgerEntry(Base):
     __tablename__ = "ledger_entries"
 

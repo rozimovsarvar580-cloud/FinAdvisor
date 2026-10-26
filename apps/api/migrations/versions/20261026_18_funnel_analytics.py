@@ -30,9 +30,37 @@ def upgrade() -> None:
     op.create_index("ix_funnel_events_event_created", "funnel_events", ["event", "created_at"])
     op.create_index("ix_funnel_events_visitor_id", "funnel_events", ["visitor_id"])
     op.create_index("ix_funnel_events_user_id", "funnel_events", ["user_id"])
+    op.create_table(
+        "marketplace_contact_requests",
+        sa.Column("id", sa.String(36), primary_key=True),
+        sa.Column("listing_id", sa.String(64), sa.ForeignKey("marketplace_listings.id", ondelete="CASCADE"), nullable=False),
+        sa.Column("investor_id", sa.String(36), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False),
+        sa.Column("status", sa.String(16), server_default="pending", nullable=False),
+        sa.Column("message", sa.String(2000), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.UniqueConstraint("listing_id", "investor_id", name="uq_marketplace_contact_listing_investor"),
+    )
+    op.create_index("ix_marketplace_contact_requests_listing_id", "marketplace_contact_requests", ["listing_id"])
+    op.create_index("ix_marketplace_contact_requests_investor_id", "marketplace_contact_requests", ["investor_id"])
+    op.create_table(
+        "marketplace_messages",
+        sa.Column("id", sa.String(36), primary_key=True),
+        sa.Column("request_id", sa.String(36), sa.ForeignKey("marketplace_contact_requests.id", ondelete="CASCADE"), nullable=False),
+        sa.Column("sender_id", sa.String(36), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False),
+        sa.Column("content", sa.String(4000), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+    )
+    op.create_index("ix_marketplace_messages_request_id", "marketplace_messages", ["request_id"])
+    op.create_index("ix_marketplace_messages_sender_id", "marketplace_messages", ["sender_id"])
 
 
 def downgrade() -> None:
+    op.drop_index("ix_marketplace_messages_sender_id", table_name="marketplace_messages")
+    op.drop_index("ix_marketplace_messages_request_id", table_name="marketplace_messages")
+    op.drop_table("marketplace_messages")
+    op.drop_index("ix_marketplace_contact_requests_investor_id", table_name="marketplace_contact_requests")
+    op.drop_index("ix_marketplace_contact_requests_listing_id", table_name="marketplace_contact_requests")
+    op.drop_table("marketplace_contact_requests")
     op.drop_index("ix_marketplace_listings_status", table_name="marketplace_listings")
     op.drop_column("marketplace_listings", "request_financial_fields")
     op.drop_column("marketplace_listings", "public_financial_fields")

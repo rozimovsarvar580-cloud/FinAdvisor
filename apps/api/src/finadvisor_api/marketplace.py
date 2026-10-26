@@ -1,13 +1,22 @@
+from time import monotonic
 from typing import Annotated
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from finadvisor_api.auth import get_current_user
 from finadvisor_api.database import get_db
-from finadvisor_api.models import MarketplaceListing, SavedBusinessPlan, User
+from finadvisor_api.email_sender import EmailDeliveryError, send_marketplace_email
+from finadvisor_api.models import (
+    MarketplaceContactRequest,
+    MarketplaceListing,
+    MarketplaceMessage,
+    SavedBusinessPlan,
+    User,
+)
 from finadvisor_api.plan_limits import reserve_lifetime_quota
 from finadvisor_api.plan_schemas import PlanGenerateResponse
 from finadvisor_api.schemas import (
@@ -18,6 +27,42 @@ from finadvisor_api.schemas import (
 )
 
 router = APIRouter(prefix="/marketplace/listings", tags=["marketplace"])
+_contact_hits: dict[str, list[float]] = {}
+
+
+class ContactRequestInput(BaseModel):
+    message: str = Field(min_length=1, max_length=2000)
+
+
+class ContactDecisionInput(BaseModel):
+    status: str = Field(pattern="^(accepted|declined)$")
+
+
+class MarketplaceMessageInput(BaseModel):
+    content: str = Field(min_length=1, max_length=4000)
+
+
+def _check_contact_rate(user_id: str) -> None:
+    now = monotonic()
+    hits = [hit for hit in _contact_hits.get(user_id, []) if now - hit < 3600]
+    if len(hits) >= 10:
+        raise HTTPException(status_code=429, detail="marketplace.rate_limited")
+    hits.append(now)
+    _contact_hits[user_id] = hits
+
+
+def _notify(recipient: User, subject: str, body: str) -> None:
+    messages = {
+        "uz": ("Marketplace xabari", "Sizda yangi investor bilan bog‘liq yangilanish bor."),
+        "ru": ("Сообщение маркетплейса", "У вас есть новое обновление от инвестора."),
+        "en": ("Marketplace update", "You have a new investor related update."),
+    }
+    fallback_subject, fallback_body = messages.get(recipient.locale, messages["uz"])
+    try:
+        send_marketplace_email(recipient.email, recipient.locale, subject or fallback_subject, body or fallback_body)
+    except EmailDeliveryError:
+        # Email delivery must not undo a committed contact or message.
+        return
 FINANCIAL_FIELDS = frozenset({
     "monthly_revenue", "monthly_payroll", "startup_capex", "total_startup_cost",
     "monthly_fixed_costs", "monthly_variable_cost", "monthly_operating_profit",
@@ -197,3 +242,99 @@ def update_listing_visibility(
     db.commit()
     db.refresh(listing)
     return _listing_response(listing)
+
+
+@router.post("/{listing_id}/contacts", status_code=status.HTTP_201_CREATED)
+def request_listing_contact(
+    listing_id: str, data: ContactRequestInput,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> dict[str, object]:
+    _check_contact_rate(user.id)
+    if user.role != "investor":
+        raise HTTPException(status_code=403, detail="marketplace.investor_required")
+    listing = db.scalar(select(MarketplaceListing).where(MarketplaceListing.id == listing_id, MarketplaceListing.status == "published"))
+    if listing is None:
+        raise HTTPException(status_code=404, detail="marketplace.listing_not_found")
+    if listing.owner_id == user.id:
+        raise HTTPException(status_code=400, detail="marketplace.self_contact")
+    existing = db.scalar(select(MarketplaceContactRequest).where(MarketplaceContactRequest.listing_id == listing_id, MarketplaceContactRequest.investor_id == user.id))
+    if existing:
+        raise HTTPException(status_code=409, detail="marketplace.contact_exists")
+    contact = MarketplaceContactRequest(id=str(uuid4()), listing_id=listing_id, investor_id=user.id, message=data.message.strip())
+    db.add(contact)
+    db.commit()
+    db.refresh(contact)
+    owner = db.get(User, listing.owner_id)
+    if owner:
+        _notify(owner, "", "")
+    return {"id": contact.id, "status": contact.status, "listing_id": contact.listing_id, "message": contact.message, "created_at": contact.created_at}
+
+
+@router.patch("/contacts/{contact_id}")
+def decide_listing_contact(
+    contact_id: str, data: ContactDecisionInput,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> dict[str, str]:
+    _check_contact_rate(user.id)
+    contact = db.get(MarketplaceContactRequest, contact_id)
+    listing = db.get(MarketplaceListing, contact.listing_id) if contact else None
+    if not listing or listing.owner_id != user.id:
+        raise HTTPException(status_code=404, detail="marketplace.contact_not_found")
+    if contact.status != "pending":
+        raise HTTPException(status_code=409, detail="marketplace.contact_resolved")
+    contact.status = data.status
+    db.commit()
+    investor = db.get(User, contact.investor_id)
+    if investor:
+        _notify(investor, "", "")
+    return {"id": contact.id, "status": contact.status}
+
+
+@router.get("/{listing_id}/contacts")
+def list_listing_contacts(
+    listing_id: str, user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> dict[str, list[dict[str, object]]]:
+    listing = db.get(MarketplaceListing, listing_id)
+    if not listing or listing.owner_id != user.id:
+        raise HTTPException(status_code=404, detail="marketplace.listing_not_found")
+    rows = db.scalars(select(MarketplaceContactRequest).where(MarketplaceContactRequest.listing_id == listing_id).order_by(MarketplaceContactRequest.created_at)).all()
+    return {"items": [{"id": row.id, "investor_id": row.investor_id, "status": row.status, "message": row.message, "created_at": row.created_at} for row in rows]}
+
+
+@router.get("/contacts/{contact_id}/messages")
+def get_contact_messages(
+    contact_id: str, user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> dict[str, list[dict[str, object]]]:
+    contact = db.get(MarketplaceContactRequest, contact_id)
+    listing = db.get(MarketplaceListing, contact.listing_id) if contact else None
+    if not contact or not listing or user.id not in {contact.investor_id, listing.owner_id}:
+        raise HTTPException(status_code=404, detail="marketplace.contact_not_found")
+    rows = db.scalars(select(MarketplaceMessage).where(MarketplaceMessage.request_id == contact_id).order_by(MarketplaceMessage.created_at)).all()
+    return {"items": [{"id": row.id, "sender_id": row.sender_id, "content": row.content, "created_at": row.created_at} for row in rows]}
+
+
+@router.post("/contacts/{contact_id}/messages", status_code=status.HTTP_201_CREATED)
+def send_contact_message(
+    contact_id: str, data: MarketplaceMessageInput,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> dict[str, object]:
+    _check_contact_rate(user.id)
+    contact = db.get(MarketplaceContactRequest, contact_id)
+    listing = db.get(MarketplaceListing, contact.listing_id) if contact else None
+    if not contact or not listing or user.id not in {contact.investor_id, listing.owner_id}:
+        raise HTTPException(status_code=404, detail="marketplace.contact_not_found")
+    if contact.status != "accepted":
+        raise HTTPException(status_code=409, detail="marketplace.contact_not_accepted")
+    message = MarketplaceMessage(id=str(uuid4()), request_id=contact_id, sender_id=user.id, content=data.content.strip())
+    db.add(message)
+    db.commit()
+    db.refresh(message)
+    recipient = db.get(User, listing.owner_id if user.id == contact.investor_id else contact.investor_id)
+    if recipient:
+        _notify(recipient, "", "")
+    return {"id": message.id, "sender_id": message.sender_id, "content": message.content, "created_at": message.created_at}
