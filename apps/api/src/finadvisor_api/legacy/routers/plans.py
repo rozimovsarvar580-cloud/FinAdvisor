@@ -4,6 +4,7 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from ..auth_dependencies import require_role
 from ..db import get_db
 from ..repositories import create_plan as create_plan_record
 from ..repositories import create_plan_version, list_plan_versions, seed_demo_plans
@@ -15,7 +16,10 @@ router = APIRouter(prefix="/plans", tags=["plans"])
 
 
 @router.get("/")
-async def list_plans(db: Session = Depends(get_db)) -> dict[str, object]:
+async def list_plans(
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+    db: Session = Depends(get_db),
+) -> dict[str, object]:
     seed_demo_plans(db)
     return {"items": [
         {
@@ -31,7 +35,11 @@ async def list_plans(db: Session = Depends(get_db)) -> dict[str, object]:
 
 
 @router.get("/{plan_id}")
-async def get_plan(plan_id: str, db: Session = Depends(get_db)) -> dict[str, object]:
+async def get_plan(
+    plan_id: str,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+    db: Session = Depends(get_db),
+) -> dict[str, object]:
     seed_demo_plans(db)
     plan = get_plan_record(db, plan_id)
     if plan is None:
@@ -51,6 +59,7 @@ async def get_plan(plan_id: str, db: Session = Depends(get_db)) -> dict[str, obj
 async def update_plan(
     plan_id: str,
     data: PlanUpdateRequest,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
     db: Session = Depends(get_db),
 ) -> dict[str, object]:
     plan = get_plan_record(db, plan_id)
@@ -66,7 +75,11 @@ async def update_plan(
 
 
 @router.get("/{plan_id}/versions")
-async def plan_versions(plan_id: str, db: Session = Depends(get_db)) -> dict[str, object]:
+async def plan_versions(
+    plan_id: str,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+    db: Session = Depends(get_db),
+) -> dict[str, object]:
     if get_plan_record(db, plan_id) is None:
         raise HTTPException(status_code=404, detail={"code": "plan_not_found", "message": "Plan not found"})
     return {
@@ -81,6 +94,7 @@ async def plan_versions(plan_id: str, db: Session = Depends(get_db)) -> dict[str
 async def plan_what_if(
     plan_id: str,
     data: WhatIfRequest,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
     db: Session = Depends(get_db),
 ) -> dict[str, object]:
     plan = get_plan_record(db, plan_id)
@@ -101,6 +115,7 @@ async def plan_what_if(
 @router.post("/")
 async def create_plan(
     data: PlanCreateRequest | None = None,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
     db: Session = Depends(get_db),
 ) -> dict[str, object]:
     plan = create_plan_record(db, f"plan-{uuid4().hex[:8]}", data.name if data else "Untitled plan")

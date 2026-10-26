@@ -51,13 +51,17 @@ export default async function middleware(request: NextRequest) {
   }
 
   const [, locale, ...segments] = request.nextUrl.pathname.split("/");
-  const roleOnboarding = segments[0] === "onboarding" && segments[1] === "role";
-  const protectedSection = segments[0] === "app" || segments[0] === "dashboard";
-  if (locale && isSupportedLocale(locale)) {
+  const roleOnboardingRoute =
+    segments[0] === "onboarding" && segments[1] === "role";
+  const protectedSection =
+    segments[0] === "app" ||
+    segments[0] === "dashboard" ||
+    segments[0] === "admin" ||
+    roleOnboardingRoute;
+  if (locale && isSupportedLocale(locale) && protectedSection) {
     const secret = process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET;
     const token = secret ? await getToken({ req: request, secret }) : null;
-    const legacyToken = request.cookies.get("finadvisor_token")?.value;
-    if ((protectedSection || roleOnboarding) && !token && !legacyToken) {
+    if (!token) {
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = `/${locale}/login`;
       loginUrl.search = "";
@@ -67,13 +71,19 @@ export default async function middleware(request: NextRequest) {
       );
       return NextResponse.redirect(loginUrl);
     }
-    if (token?.needsRole === true && !roleOnboarding) {
+    if (token?.needsRole === true && !roleOnboardingRoute) {
       const onboardingUrl = request.nextUrl.clone();
       onboardingUrl.pathname = `/${locale}/onboarding/role`;
       onboardingUrl.search = "";
       return NextResponse.redirect(onboardingUrl);
     }
-    if (token && token.needsRole !== true && roleOnboarding) {
+    if (token && token.needsRole !== true && roleOnboardingRoute) {
+      const appUrl = request.nextUrl.clone();
+      appUrl.pathname = `/${locale}/app`;
+      appUrl.search = "";
+      return NextResponse.redirect(appUrl);
+    }
+    if (segments[0] === "admin" && token.role !== "admin") {
       const appUrl = request.nextUrl.clone();
       appUrl.pathname = `/${locale}/app`;
       appUrl.search = "";

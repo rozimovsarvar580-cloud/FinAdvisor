@@ -52,6 +52,46 @@ class PayrollInput(StrictInput):
     positions: list[StaffPositionInput] = Field(max_length=500)
 
 
+class StartupCostItemInput(StrictInput):
+    category: Literal[
+        "rent_deposit",
+        "renovation",
+        "kitchen_equipment",
+        "furniture",
+        "licenses",
+        "initial_stock",
+        "marketing",
+        "reserve",
+    ]
+    name: str = Field(min_length=1, max_length=200)
+    quantity: NonNegativeDecimal
+    unit_cost: NonNegativeDecimal
+
+
+class StartupCostInput(StrictInput):
+    items: list[StartupCostItemInput] = Field(max_length=500)
+
+
+class LoanAffordabilityInput(StrictInput):
+    method: Literal["annuity", "differential"]
+    monthly_available_cash: SignedDecimal
+    principal: NonNegativeDecimal
+    annual_interest_rate_percent: NonNegativeDecimal
+    term_months: int = Field(gt=0, le=600)
+
+
+class RevenueProjectionInput(StrictInput):
+    daily_revenue: NonNegativeDecimal
+    monthly_fixed_costs: NonNegativeDecimal
+    variable_cost_ratio_percent: PercentDecimal
+    operating_days_per_week: int = Field(ge=1, le=7)
+    operating_days_per_month: int = Field(ge=1, le=31)
+    operating_days_per_year: int = Field(ge=1, le=366)
+    target_monthly_profit: SignedDecimal
+    revenue_sensitivity_percentages: list[SignedDecimal] = Field(max_length=20)
+    variable_cost_sensitivity_points: list[SignedDecimal] = Field(max_length=20)
+
+
 class TaxComparisonInput(StrictInput):
     annual_revenue: NonNegativeDecimal
     annual_expenses: NonNegativeDecimal
@@ -139,10 +179,27 @@ class PayrollPositionResponse(BaseModel):
     monthly_payroll: str
 
 
+class PayrollContributionResponse(BaseModel):
+    key: str
+    rate: str | None
+    monthly_amount: str | None
+    annual_amount: str | None
+    source_url: str
+    effective_date: str
+    verified: bool
+
+
 class PayrollResultResponse(BaseModel):
     employee_count: int
     monthly_payroll: str
     annual_payroll: str
+    employer_contributions: list[PayrollContributionResponse]
+    monthly_employer_contributions: str | None
+    annual_employer_contributions: str | None
+    monthly_total_employer_cost: str | None
+    annual_total_employer_cost: str | None
+    contributions_complete: bool
+    contributions_verified: bool
     positions: list[PayrollPositionResponse]
 
 
@@ -164,6 +221,22 @@ class TaxRegimeResponse(BaseModel):
     effective_from: str
     published_at: str
     eligibility_note: str
+    verified: bool
+    verified_by: str | None
+
+
+class TaxRuleProvenanceResponse(BaseModel):
+    key: str
+    rate: str | None
+    source_url: str
+    effective_date: str
+    verified: bool
+    verified_by: str | None
+
+
+class TaxRulesResponse(BaseModel):
+    source_name: str
+    rules: list[TaxRuleProvenanceResponse]
 
 
 class TaxResultResponse(BaseModel):
@@ -221,6 +294,70 @@ class ReverseRevenueResponse(BaseModel):
     explanation: ExplanationResponse
 
 
+class StartupCostItemResponse(BaseModel):
+    category: str
+    name: str
+    quantity: str
+    unit_cost: str
+    total_cost: str
+
+
+class StartupCostResultResponse(BaseModel):
+    items: list[StartupCostItemResponse]
+    category_totals: dict[str, str]
+    total_cost: str
+
+
+class StartupCostResponse(BaseModel):
+    calculation_type: Literal["startup-cost"]
+    result: StartupCostResultResponse
+    explanation: ExplanationResponse
+
+
+class LoanAffordabilityResultResponse(BaseModel):
+    affordable: bool
+    monthly_available_cash: str
+    maximum_monthly_payment: str
+    minimum_monthly_surplus: str
+    schedule: LoanResultResponse
+
+
+class LoanAffordabilityResponse(BaseModel):
+    calculation_type: Literal["loan-affordability"]
+    result: LoanAffordabilityResultResponse
+    explanation: ExplanationResponse
+
+
+class PeriodProjectionResponse(BaseModel):
+    operating_days: int
+    revenue: str
+    variable_costs: str
+    fixed_costs: str
+    operating_profit: str
+
+
+class SensitivityScenarioResponse(BaseModel):
+    revenue_change_percent: str
+    variable_cost_change_points: str
+    projected_monthly_profit: str
+
+
+class RevenueProjectionResultResponse(BaseModel):
+    daily: PeriodProjectionResponse
+    weekly: PeriodProjectionResponse
+    monthly: PeriodProjectionResponse
+    yearly: PeriodProjectionResponse
+    break_even_revenue_monthly: str
+    target_revenue_monthly: str
+    sensitivity: list[SensitivityScenarioResponse]
+
+
+class RevenueProjectionResponse(BaseModel):
+    calculation_type: Literal["revenue-projection"]
+    result: RevenueProjectionResultResponse
+    explanation: ExplanationResponse
+
+
 CalculationResponse: TypeAlias = Annotated[
     AnnuityResponse
     | DifferentialResponse
@@ -230,6 +367,9 @@ CalculationResponse: TypeAlias = Annotated[
     | BreakEvenResponse
     | PaybackResponse
     | DscrResponse
-    | ReverseRevenueResponse,
+    | ReverseRevenueResponse
+    | StartupCostResponse
+    | LoanAffordabilityResponse
+    | RevenueProjectionResponse,
     Field(discriminator="calculation_type"),
 ]

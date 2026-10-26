@@ -3,6 +3,7 @@ export async function POST(
   context: { params: { type: string } }
 ) {
   const calculationType = context.params.type;
+  const authorization = request.headers.get("Authorization");
   let body: string;
   try {
     body = await request.text();
@@ -15,7 +16,10 @@ export async function POST(
   try {
     response = await fetch(`${apiUrl}/calc/${encodeURIComponent(calculationType)}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(authorization ? { Authorization: authorization } : {})
+      },
       body,
       cache: "no-store"
     });

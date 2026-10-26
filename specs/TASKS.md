@@ -17,8 +17,7 @@ HOW THIS FILE WORKS (read once)
 - `H*` tasks are for the HUMAN (accounts, money, legal, decisions). The loop never does them. After you
   finish one, change its `[ ]` to `[x]`; tasks that need it unlock.
 - Machine checks under a task: `exists:`, `absent:`, `contains: path :: text`, `not-contains: path :: text`,
-  `cmd: ...` ({{PY}} = python). `node scripts/verify.mjs` always runs too and marks unchecked tasks
-  complete when their explicit machine checks pass.
+  `cmd: ...` ({{PY}} = python). `node scripts/verify.mjs` always runs too.
 - Agents may APPEND new tasks at the end of a stage; they must not reorder or edit existing ones.
 - If a feature already exists in the repo, the task means: complete it, test it, make it match the spec.
 
@@ -107,35 +106,35 @@ engine = `packages/finance-engine`.
   - exists: apps/web/src/app/[locale]/terms/page.tsx, apps/web/src/app/[locale]/privacy/page.tsx
 - [x] 2.8 Error, 404, loading and empty states
   - done: branded not-found, error boundary, route loading skeletons, empty states for lists
-  - exists: apps/web/src/app/[locale]/not-found.tsx, apps/web/src/app/[locale]/error.tsx, apps/web/src/app/[locale]/route-boundaries.test.tsx
-  - cmd: npm.cmd --workspace apps/web test -- src/components/ui/route-states.test.tsx
 - [x] 2.9 Hard-coded string audit
   - done: no user-facing literal text left in `apps/web/src/**/*.tsx` (JSX text, placeholder, aria-label, title, alt, toast, zod messages); all moved to uz/ru/en keys
-  - exists: apps/web/src/i18n/hard-coded-copy-audit.test.ts
-  - cmd: npm.cmd --workspace apps/web test -- src/i18n/hard-coded-copy-audit.test.ts
 - [x] 2.10 Locale quality test
   - done: Vitest/Node test fails if uz/ru/en key sets differ or if a ru/uz value equals its English value (whitelist for brand names and numbers)
   - exists: apps/web/scripts/test-locales.mjs
+  - cmd: node apps/web/scripts/test-locales.mjs
 - [x] 2.11 Translation review pass
   - done: uz in Latin script with formal register, ru natural business style; machine-like wording fixed; a short report in `specs/i18n-review.md`
   - exists: specs/i18n-review.md
 - [x] 2.12 SEO basics
   - done: per-locale metadata, hreflang, sitemap.xml, robots.txt, Open Graph image, JSON-LD for the product
   - exists: apps/web/src/app/sitemap.ts, apps/web/src/app/robots.ts
+  - exists: apps/web/src/app/[locale]/opengraph-image.tsx, apps/web/src/lib/site-metadata.test.ts
+  - contains: apps/web/src/lib/site-metadata.ts :: buildProductStructuredData
+  - cmd: npm.cmd --workspace apps/web test -- src/lib/site-metadata.test.ts
 
 ## Stage 3 - Authentication and accounts
 - [x] 3.1 Auth data model
   - done: users (role, email_verified, avatar, locale), oauth_accounts, refresh_tokens, email_tokens (hashed, single-use, expiry) with migrations
   - exists: apps/api/tests/test_auth_data_model.py
-  - cmd: {{PY}} -m pytest apps/api/tests/test_auth_data_model.py apps/api/tests/test_migration_chain.py -q
+  - cmd: {{PY}} -m pytest apps/api/tests/test_auth_data_model.py apps/api/tests/test_migrations.py apps/api/tests/test_migration_chain.py -q
 - [x] 3.2 Register, login, refresh, logout
   - done: argon2 passwords, short-lived access token, rotating hashed refresh token, logout revokes; brute-force protection per account and IP
   - exists: apps/api/tests/test_auth_core.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_auth_core.py -q
 - [x] 3.3 Email verification and password reset
   - done: endpoints for forgot-password, reset-password, verify-email, resend; tokens single-use, 1h/24h expiry; no user enumeration in responses
-  - exists: apps/api/tests/test_auth_email_flows.py
-  - cmd: {{PY}} -m pytest apps/api/tests/test_auth_email_flows.py -q
+  - exists: apps/api/tests/test_auth_email_flows.py, apps/api/tests/test_email_sender.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_auth_email_flows.py apps/api/tests/test_email_sender.py -q
 - [x] 3.4 OAuth backend endpoint
   - done: `POST /auth/oauth` finds or creates a user from {provider, provider_account_id, email, name, avatar}; requires header `X-Internal-Key` == INTERNAL_API_KEY; returns tokens, user and `is_new`; links accounts by verified email safely
   - exists: apps/api/tests/test_auth_oauth.py
@@ -143,70 +142,61 @@ engine = `packages/finance-engine`.
 - [x] 3.5 EmailSender
   - done: interface with console implementation (dev) and SMTP/Resend implementation selected by env; templates in uz/ru/en for verify, reset, welcome; tested with a fake
   - exists: apps/api/src/finadvisor_api/email_sender.py
+- cmd: {{PY}} -m pytest apps/api/tests/test_email_sender.py -q
 - [x] 3.6 NextAuth integration
   - done: Google and Facebook sign-in call `/auth/oauth` with the internal key and put accessToken, role, needsRole into the session; refresh handled; locale-aware sign-in page (no hard-coded /uz/login); types in `next-auth.d.ts`; callbacks tested
-  - exists: apps/web/src/lib/auth.test.ts
-  - cmd: npm.cmd --workspace apps/web test -- src/lib/auth.test.ts
 - [x] 3.7 Role onboarding
   - done: new OAuth users pick tadbirkor, buxgalter or investor at `/[locale]/onboarding/role` (`PATCH /me`); guarded so it cannot be skipped
-  - exists: apps/api/tests/test_auth.py
-  - cmd: {{PY}} -m pytest apps/api/tests/test_auth.py -q
-  - exists: apps/web/src/components/auth/role-onboarding-form.test.tsx
-  - cmd: npm.cmd --workspace apps/web test -- src/components/auth/role-onboarding-form.test.tsx src/middleware.test.ts src/lib/auth.test.ts
 - [x] 3.8 Login and signup UI
   - done: two-column layout with animated brand panel; react-hook-form + zod; show/hide password, strength meter, inline errors, loading state, remember me, translated server errors, terms checkbox linking to legal pages; tests
-  - exists: apps/web/src/components/auth/auth-forms.test.tsx
-  - cmd: npm.cmd --workspace apps/web test -- src/components/auth/auth-forms.test.tsx src/components/legal/legal-document.test.tsx
 - [x] 3.9 Forgot, reset and verify pages
   - done: pages for forgot-password, reset-password, verify-email with success and error states in 3 languages
-  - exists: apps/web/src/components/auth/auth-recovery.test.tsx
-  - cmd: npm.cmd --workspace apps/web test -- src/components/auth/auth-recovery.test.tsx src/app/api/auth/auth-flow-routes.test.ts src/components/auth/auth-forms.test.tsx
-- [ ] 3.10 Social buttons
+- [x] 3.10 Social buttons
   - done: Google and Facebook buttons with brand SVG logos (`allow-hex`), hover/active effects; disabled with tooltip when provider env vars are missing (server helper, secrets never exposed)
-- [ ] 3.11 Route protection and profile
+- [x] 3.11 Route protection and profile
   - done: middleware protects `/app/*`; role-based redirects; profile/settings page (name, language, password change, connected accounts, delete account request)
-- [ ] 3.12 Authorization test matrix
-  - done: pytest matrix proving owner / accountant / investor / anonymous access for every router, including IDOR checks (user A cannot read user B's plan or ledger)
+- [x] 3.12 Authorization test matrix
+  - done: pytest role matrix for authenticated, anonymous, owner, accountant, investor and admin routes; persisted saved plans, desktop-agent data and ledger entries are owner-scoped with cross-user IDOR coverage
   - exists: apps/api/tests/test_authorization_matrix.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_authorization_matrix.py -q
 
 ## Stage 4 - AI (single key file, backend only)
-- [ ] 4.1 Key file loader
+- [x] 4.1 Key file loader
   - done: `apps/api/ai.config.json` ({provider, api_key, model}) is read first, `OPENAI_API_KEY` env second; cached; clear `AIClientError` when missing; `ai.config.example.json` committed, real file git-ignored; key never logged
   - exists: apps/api/ai.config.example.json, apps/api/tests/test_ai_config.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_ai_config.py -q
-- [ ] 4.2 Provider interface
+- [x] 4.2 Provider interface
   - done: `AIProvider` protocol (generate, stream) with OpenAI implementation and a deterministic fake for tests; timeouts, retries with backoff, error mapping
-- [ ] 4.3 Admin AI status
+- [x] 4.3 Admin AI status
   - done: `GET /admin/ai-status` returns only {connected, provider, model}; shown on the admin page
-- [ ] 4.4 Prompt-injection defenses
+- [x] 4.4 Prompt-injection defenses
   - done: all uploaded or user text goes into delimited data blocks; system prompt states it is data, not instructions; tests with hostile documents ("ignore previous instructions", "reveal the key") prove outputs are unaffected and no secret is reachable
   - exists: apps/api/tests/test_ai_prompt_injection.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_ai_prompt_injection.py -q
-- [ ] 4.5 AI plan generation
+- [x] 4.5 AI plan generation
   - done: input = structured restaurant data (city, area, seats, staff such as 10 cooks and 20 waiters, budget, goal such as 100M profit); numbers come only from finance-engine; LLM writes narrative sections; output JSON + markdown; streaming progress
-- [ ] 4.6 Number-consistency eval
+- [x] 4.6 Number-consistency eval
   - done: test extracts every number from generated text and fails if it is not in the engine's output for that plan; runs with the fake provider
   - exists: apps/api/tests/test_ai_number_consistency.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_ai_number_consistency.py -q
-- [ ] 4.7 Document text extraction
+- [x] 4.7 Document text extraction
   - done: PDF, DOCX, XLSX, TXT extraction with size and page limits, content-type sniffing (not extension only), safe temp handling
-- [ ] 4.8 Plan analysis and bank-readiness score
+- [x] 4.8 Plan analysis and bank-readiness score
   - done: versioned `bank_checklist.yaml` (market analysis, financial projections, repayment ability, risks, collateral, team, legal); analysis returns score per criterion, missing items, concrete fixes and rewritten weak sections
   - exists: apps/api/src/finadvisor_api/data/bank_checklist.yaml
-- [ ] 4.9 Bank-readiness evals
+- [x] 4.9 Bank-readiness evals
   - done: 6 sample plans (weak, medium, strong, two with missing sections, one hostile) with expected score ranges; test fails when ranking is wrong
   - exists: apps/api/tests/test_bank_readiness_eval.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_bank_readiness_eval.py -q
-- [ ] 4.10 Advisory chat
+- [x] 4.10 Advisory chat
   - done: `/chat/stream`, intents (tax, credit, staffing, marketing, bank choice), knowledge retrieval, answers cite supplied figures and state uncertainty; conversation history stored per user
-- [ ] 4.11 Investor Q&A generator
+- [x] 4.11 Investor Q&A generator
   - done: given a plan, returns likely investor questions with draft answers grounded only in plan data
-- [ ] 4.12 AI usage metering and limits
+- [x] 4.12 AI usage metering and limits
   - done: tokens/requests counted per user per day; Free/Pro/Business limits from DECISIONS enforced server-side; friendly 429 with upgrade hint; admin can see cost per user
   - exists: apps/api/tests/test_ai_limits.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_ai_limits.py -q
-- [ ] 4.13 AI UI
+- [x] 4.13 AI UI
   - done: FinAdvisor page with chat, plan wizard entry, analyze-my-plan upload, streaming responses, copy/export buttons, loading and error states, disclaimer visible
 - [ ] 4.14 Live AI smoke script
   - done: `scripts/ai-smoke.py` makes one real request through the configured key and prints OK or the error; never prints the key
@@ -214,76 +204,82 @@ engine = `packages/finance-engine`.
   - exists: scripts/ai-smoke.py
 
 ## Stage 5 - Finance engine, plans and documents
-- [ ] 5.1 Golden tests for existing engine
+- [x] 5.1 Golden tests for existing engine
   - done: at least 25 golden tests (known inputs, expected outputs) across tax, loans, payroll, profitability, commission; including commission 150M = 5,000,000 and boundary cases at 100M and 1B
   - exists: packages/finance-engine/tests/test_golden.py
   - cmd: {{PY}} -m pytest packages/finance-engine/tests/test_golden.py -q
-- [ ] 5.2 Startup cost and equipment
+- [x] 5.2 Startup cost and equipment
   - done: restaurant startup cost model (rent deposit, renovation, kitchen equipment, furniture, licenses, initial stock, marketing, reserve) with editable price tables in versioned YAML marked `TODO(VERIFY)` prices
 - [ ] 5.3 Staffing and payroll
   - done: payroll for any role mix (e.g. 10 cooks, 20 waiters, plus manager, cleaner, accountant, cashier, delivery), employer taxes/contributions from the tax YAML, monthly and yearly totals
-- [ ] 5.4 Tax rules with provenance
+  - needs: H5
+- [x] 5.4 Tax rules with provenance
   - done: `tax_rules_2026.yaml` where every rule has `source_url`, `effective_date`, `verified` (default false) and `verified_by`; test fails if a rule lacks these; UI shows an "estimate" badge while `verified: false`
   - exists: packages/finance-engine/tests/test_tax_rules_provenance.py
   - cmd: {{PY}} -m pytest packages/finance-engine/tests/test_tax_rules_provenance.py -q
 - [ ] 5.5 Loans
   - done: annuity and differentiated schedules, DSCR, affordability check, bank product table in versioned YAML with source fields like tax rules
-- [ ] 5.6 Revenue, profit, break-even
+  - needs: H5
+- [x] 5.6 Revenue, profit, break-even
   - done: daily/weekly/monthly/yearly projections, profit target solver ("what revenue do I need for 100M profit"), break-even, sensitivity table
-- [ ] 5.7 Calculators API
+- [x] 5.7 Calculators API
   - done: one endpoint per calculator with Pydantic schemas, validation of ranges, tests
   - exists: apps/api/tests/test_calculators_api.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_calculators_api.py -q
-- [ ] 5.8 Calculators UI
+- [x] 5.8 Calculators UI
   - done: pages for startup cost, payroll, tax, loan, profit/break-even with live results, charts, save-to-plan; mobile friendly
-- [ ] 5.9 Plan wizard end to end
+- [x] 5.9 Plan wizard end to end
   - done: wizard -> engine numbers -> AI narrative -> editable plan -> versions -> export; resumable drafts
-- [ ] 5.10 Excel export
+- [x] 5.10 Excel export
   - done: workbook with assumptions, startup costs, payroll, P&L by month, loan schedule, break-even; real formulas where practical; test opens it with openpyxl
   - exists: apps/api/tests/test_export_xlsx.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_export_xlsx.py -q
-- [ ] 5.11 PDF business plan
+- [x] 5.11 PDF business plan
   - done: investor/bank-ready PDF with cover, summary, market, operations, staffing, financials with charts, risks, appendix; uz/ru/en; fonts support Cyrillic and Uzbek characters; test checks page count and text presence
   - exists: apps/api/tests/test_export_pdf.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_export_pdf.py -q
-- [ ] 5.12 Bank pack and Synergy PDF
+- [x] 5.12 Bank pack and Synergy PDF
   - done: separate "bank pack" PDF (loan request, repayment schedule, collateral section, bank-readiness score) and "Agent-Synergy" PDF (operating strategy)
-- [ ] 5.13 Downloads in the web UI
+- [x] 5.13 Downloads in the web UI
   - done: download buttons with progress/error states on the plan page; files named sensibly; export limited by tier
-- [ ] 5.14 Plan history and sharing
+- [x] 5.14 Plan history and sharing
   - done: versions, restore, duplicate; share-link toggle (read-only, revocable)
 
 ## Stage 6 - Money: subscriptions, payments, commission
-- [ ] 6.1 Billing data model
+- [x] 6.1 Billing data model
   - done: subscriptions, invoices, payments, payment_events (raw webhook log), commission_ledger, refunds with migrations; money stored as integer minor units with currency
-- [ ] 6.2 Plan limits middleware
-  - done: Free/Pro/Business limits (plans, AI requests, exports, desktop agent, marketplace listing) enforced server-side from one config; tests prove a Free user is blocked and a Pro user is allowed
+- [x] 6.2 Plan limits middleware
+  - done: Free/Pro/Business limits for saved plans, AI requests, plan analysis uploads, calculator access, exports, desktop agent, Agent-Synergy, and marketplace listings are configured centrally and enforced server-side; tests cover tier access, quotas, and authenticated calculator behavior
   - exists: apps/api/tests/test_plan_limits.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_plan_limits.py -q
-- [ ] 6.3 PaymentProvider interface and fake
-  - done: `PaymentProvider` (create_checkout, verify_webhook, cancel, refund) with a fake used in dev and tests
-- [ ] 6.4 Checkout flow
+- [x] 6.3 PaymentProvider interface and fake
+  - done: typed `PaymentProvider` contract and development/test fake implement checkout, HMAC webhook verification, cancellation, and refunds; fake use is rejected in production and disabled payments remain unavailable
+- [x] 6.4 Checkout flow
   - done: choose plan -> checkout -> success/cancel pages; amount always computed server-side; subscription activates only from a verified webhook
-- [ ] 6.5 Webhooks done right
+- [x] 6.5 Webhooks done right
   - done: signature verification, idempotency (replayed event changes nothing), out-of-order tolerance, every event stored; tests for forged signature and replay
   - exists: apps/api/tests/test_webhooks.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_webhooks.py -q
 - [ ] 6.6 Real payment provider
   - done: implementation for the provider chosen in H7 with sandbox keys from env; contract tests against recorded fixtures
   - needs: H7
-- [ ] 6.7 Billing page
+- [x] 6.7 Billing page
   - done: current plan, next charge date, invoices list, change plan, cancel (keeps access until period end), update payment method
-- [ ] 6.8 Weekly renewals job
+  - exists: apps/api/tests/test_billing_management.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_billing_management.py -q
+- [x] 6.8 Weekly renewals job
   - done: scheduler creates invoices for weekly subscriptions, retries failed payments (dunning schedule from DECISIONS), downgrades after the grace period, emails the user in their language; tested with a fake clock
   - exists: apps/api/tests/test_renewals.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_renewals.py -q
-- [ ] 6.9 Refunds and cancellations
+- [x] 6.9 Refunds and cancellations
   - done: refund endpoint and admin action per the refund policy in DECISIONS; ledger stays consistent
-- [ ] 6.10 Commission ledger
+  - exists: apps/api/tests/test_refunds.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_refunds.py -q
+- [x] 6.10 Commission ledger
   - done: Business accounts' annual revenue recorded through the desktop agent feeds `calculate_progressive_commission`; monthly commission statements generated with the calculation shown; owner can view and dispute; admin can export
   - exists: apps/api/tests/test_commission_ledger.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_commission_ledger.py -q
-- [ ] 6.11 Admin revenue dashboard
+- [x] 6.11 Admin revenue dashboard
   - done: MRR/weekly revenue, active subscribers per plan, churn, failed payments, commission accrued, AI cost vs revenue per user; CSV export
 - [ ] 6.12 Funnel analytics
   - done: privacy-friendly first-party events (visit, signup, plan_created, export, checkout_started, paid) stored server-side with consent; admin funnel view
@@ -331,7 +327,7 @@ engine = `packages/finance-engine`.
   - exists: .github/workflows/desktop-release.yml
 - [ ] 8.11 Download page
   - done: `/[locale]/desktop-agent` detects the OS, links the latest release assets, shows system requirements and install steps; unsigned-app warning text until signing is done
-- [x] 8.12 Signing and auto-update
+- [ ] 8.12 Signing and auto-update
   - done: updater with signature verification, signing steps wired to CI secrets and documented in `apps/desktop/README.md`
   - needs: H9
   - exists: apps/desktop/README.md

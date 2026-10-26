@@ -1,12 +1,13 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from finadvisor_api.calc_schemas import NonNegativeDecimal, StrictInput
+from finadvisor_api.calc_schemas import NonNegativeDecimal, SignedDecimal, StrictInput
 from finadvisor_api.plan_schemas import PlanGenerateResponse
 
 UserRole = Literal["tadbirkor", "buxgalter", "investor"]
+AuthenticatedUserRole = Literal["tadbirkor", "buxgalter", "investor", "admin"]
 
 
 class RegisterRequest(BaseModel):
@@ -24,42 +25,55 @@ class LoginRequest(BaseModel):
 
 
 class RefreshTokenRequest(BaseModel):
-    refresh_token: str = Field(min_length=32, max_length=128)
+    refresh_token: str = Field(min_length=1, max_length=128)
 
 
 class EmailRequest(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True)
-
     email: EmailStr
 
 
 class EmailTokenRequest(BaseModel):
-    token: str = Field(min_length=32, max_length=128)
+    token: str = Field(min_length=1, max_length=128)
 
 
-class ResetPasswordRequest(BaseModel):
-    token: str = Field(min_length=32, max_length=128)
+class PasswordResetRequest(EmailTokenRequest):
     password: str = Field(min_length=8, max_length=128)
 
 
-class AuthActionResponse(BaseModel):
-    message: str
-
-
 class OAuthExchangeRequest(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+    model_config = ConfigDict(str_strip_whitespace=True)
 
     provider: Literal["google", "facebook"]
     provider_account_id: str = Field(min_length=1, max_length=255)
     email: EmailStr
     name: str = Field(min_length=1, max_length=200)
     avatar_url: str | None = Field(default=None, max_length=2048)
-    email_verified: bool
+    email_verified: bool = False
     role: UserRole = "tadbirkor"
 
 
-class RoleUpdateRequest(BaseModel):
-    role: UserRole
+class OAuthProviderTokenRequest(BaseModel):
+    provider: Literal["google", "facebook"]
+    access_token: str = Field(min_length=1, max_length=4096)
+    role: UserRole = "tadbirkor"
+
+
+class UpdateRoleRequest(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    role: UserRole | None = None
+    name: str | None = Field(default=None, min_length=1, max_length=200)
+    locale: Literal["uz", "ru", "en"] | None = None
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(min_length=1, max_length=128)
+    new_password: str = Field(min_length=8, max_length=128)
+
+
+class OAuthAccountSummary(BaseModel):
+    provider: Literal["google", "facebook"]
+    connected_at: datetime
 
 
 class UserResponse(BaseModel):
@@ -69,15 +83,19 @@ class UserResponse(BaseModel):
     email: EmailStr
     name: str
     avatar_url: str | None
-    role: UserRole
+    role: AuthenticatedUserRole
+    needs_role: bool
+    locale: Literal["uz", "ru", "en"]
     auth_provider: str
     email_verified: bool
     created_at: datetime
+    deletion_requested_at: datetime | None
 
 
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
+    expires_in: int
     token_type: Literal["bearer"] = "bearer"
     user: UserResponse
 
@@ -140,3 +158,19 @@ class MarketplaceListingResponse(BaseModel):
 
 class MarketplaceListingDetailResponse(MarketplaceListingResponse):
     plan: PlanGenerateResponse
+
+
+class LedgerEntryCreateRequest(StrictInput):
+    entry_date: date = Field(strict=False)
+    category: str = Field(min_length=1, max_length=64)
+    amount: Annotated[SignedDecimal, Field(max_digits=20, decimal_places=2)]
+    description: str | None = Field(default=None, max_length=500)
+
+
+class LedgerEntryResponse(BaseModel):
+    id: str
+    entry_date: date
+    category: str
+    amount: str
+    currency: Literal["UZS"]
+    description: str | None

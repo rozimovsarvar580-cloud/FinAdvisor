@@ -35,15 +35,114 @@ const restaurantFormatSchema = z.enum([
   "fine_dining"
 ]);
 
-const planResultSchema = z.object({
-  plan_id: z.string().min(1),
-  summary: z.string(),
-  sections: z.array(z.object({ title: z.string(), content: z.string() })),
-  calculations: planCalculationsSchema
+const planAssumptionsSchema = z.object({
+  locale: z.enum(["uz", "ru", "en"]),
+  business_name: z.string(),
+  restaurant_format: restaurantFormatSchema,
+  location: z.string(),
+  seats: z.number().int(),
+  menu_summary: z.string(),
+  average_check: z.string(),
+  daily_customers: z.number().int(),
+  operating_days_per_month: z.number().int(),
+  monthly_rent: z.string(),
+  monthly_utilities: z.string(),
+  variable_cost_ratio_percent: z.string(),
+  staff: z.array(
+    z.object({
+      role: z.string(),
+      employee_count: z.number().int(),
+      monthly_salary: z.string()
+    })
+  ),
+  equipment: z.array(
+    z.object({
+      name: z.string(),
+      quantity: z.string(),
+      unit_cost: z.string()
+    })
+  ),
+  other_startup_cost: z.string(),
+  loan_amount: z.string(),
+  annual_interest_rate_percent: z.string(),
+  loan_term_months: z.number().int(),
+  target_monthly_profit: z.string()
 });
 
+export const planResultSchema = z.object({
+  plan_id: z.string().min(1),
+  version: z.number().int().positive(),
+  summary: z.string(),
+  sections: z.array(z.object({ title: z.string(), content: z.string() })),
+  markdown: z.string(),
+  calculations: planCalculationsSchema,
+  assumptions: planAssumptionsSchema
+});
+const planProgressSchema = z.object({
+  phase: z.enum(["calculating", "writing"]),
+  chunks: z.number().int().nonnegative()
+});
+const planStreamErrorSchema = z.object({
+  detail: z.string(),
+  status_code: z.number().int()
+});
+type PlanProgress = z.infer<typeof planProgressSchema>;
+
 export type PlanCalculations = z.infer<typeof planCalculationsSchema>;
+export type PlanAssumptions = z.infer<typeof planAssumptionsSchema>;
 export type PlanResult = z.infer<typeof planResultSchema>;
+
+async function readPlanStream(
+  response: Response,
+  onProgress: (progress: PlanProgress) => void
+): Promise<{ result?: PlanResult; errorStatus?: number }> {
+  if (!response.body) return {};
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let result: PlanResult | undefined;
+  let errorStatus: number | undefined;
+  const processEvent = (block: string) => {
+    const lines = block.split("\n");
+    const event = lines.find((line) => line.startsWith("event:"))?.slice(6).trim();
+    const data = lines
+      .filter((line) => line.startsWith("data:"))
+      .map((line) => line.slice(5).trimStart())
+      .join("\n");
+    if (!event || !data) return;
+
+    const parsed: unknown = JSON.parse(data);
+    if (event === "progress") {
+      onProgress(planProgressSchema.parse(parsed));
+    } else if (event === "complete") {
+      result = planResultSchema.parse(parsed);
+    } else if (event === "error") {
+      errorStatus = planStreamErrorSchema.parse(parsed).status_code;
+    }
+  };
+
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      buffer += decoder.decode(value, { stream: !done }).replace(/\r\n/g, "\n");
+      let boundary = buffer.indexOf("\n\n");
+      while (boundary >= 0) {
+        processEvent(buffer.slice(0, boundary));
+        buffer = buffer.slice(boundary + 2);
+        boundary = buffer.indexOf("\n\n");
+      }
+      if (done) {
+        if (buffer.trim()) processEvent(buffer);
+        break;
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
+
+  return { result, errorStatus };
+}
 
 type WizardValues = {
   businessName: string;
@@ -139,6 +238,7 @@ export function PlanWizard({
   const [draftError, setDraftError] = useState<string>();
   const [requestError, setRequestError] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState<PlanProgress>();
 
   useEffect(() => {
     try {
@@ -210,6 +310,7 @@ export function PlanWizard({
   async function submitPlan(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setRequestError(undefined);
+    setGenerationProgress(undefined);
     if (!session?.accessToken) {
       setRequestError("planSessionRequired");
       return;
@@ -255,7 +356,7 @@ export function PlanWizard({
     };
 
     try {
-      const response = await fetch("/api/plans/generate-and-save", {
+      const response = await fetch("/api/plans/generate-and-save/stream", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${session.accessToken}`,
@@ -263,27 +364,39 @@ export function PlanWizard({
         },
         body: JSON.stringify(payload)
       });
-      const body: unknown = await response.json();
       if (!response.ok) {
         setRequestError(
           response.status === 503 ? "planAIUnavailable" : "planGenerationFailed"
         );
         return;
       }
-      const result = planResultSchema.parse(body);
+      const { result, errorStatus } = await readPlanStream(response, (progress) =>
+        setGenerationProgress(progress)
+      );
+      if (errorStatus !== undefined) {
+        setRequestError(
+          errorStatus === 503 ? "planAIUnavailable" : "planGenerationFailed"
+        );
+        return;
+      }
+      if (!result) {
+        setRequestError("planGenerationFailed");
+        return;
+      }
       onGenerated(result);
     } catch (error) {
       if (error instanceof TypeError) {
         setRequestError("planServiceUnavailable");
         return;
       }
-      if (error instanceof z.ZodError) {
+      if (error instanceof z.ZodError || error instanceof SyntaxError) {
         setRequestError("planGenerationFailed");
         return;
       }
       throw error;
     } finally {
       setIsSubmitting(false);
+      setGenerationProgress(undefined);
     }
   }
 
@@ -516,6 +629,15 @@ export function PlanWizard({
             {errors(requestError)}
           </p>
         ) : null}
+        {isSubmitting && generationProgress ? (
+          <p className="mt-5 text-sm text-muted-foreground" role="status">
+            {generationProgress.phase === "calculating"
+              ? t("generationProgressCalculating")
+              : t("generationProgressWriting", {
+                  chunks: generationProgress.chunks
+                })}
+          </p>
+        ) : null}
 
         <div className="mt-8 flex items-center justify-between border-t border-border pt-5">
           <Button
@@ -531,7 +653,7 @@ export function PlanWizard({
               {t("next")}
             </Button>
           ) : (
-            <Button disabled={isSubmitting} type="submit">
+            <Button disabled={isSubmitting} loading={isSubmitting} type="submit">
               {isSubmitting ? t("generating") : t("generate")}
             </Button>
           )}

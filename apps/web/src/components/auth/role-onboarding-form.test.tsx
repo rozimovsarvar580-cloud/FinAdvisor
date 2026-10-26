@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import type { AbstractIntlMessages } from "use-intl";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   session: {
@@ -39,6 +39,10 @@ function renderForm() {
 }
 
 describe("role onboarding", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   beforeEach(() => {
     mocks.session.data = {
       accessToken: "active-access-token",
@@ -47,12 +51,13 @@ describe("role onboarding", () => {
     };
     mocks.update.mockReset();
     mocks.replace.mockReset();
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 200 })));
   });
 
   it("offers the three supported roles and persists the selected role", async () => {
     mocks.update.mockResolvedValue({
       needsRole: false,
-      roleUpdateError: undefined
+      user: { role: "investor" }
     });
     renderForm();
 
@@ -63,7 +68,14 @@ describe("role onboarding", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save and continue" }));
 
     await waitFor(() => {
-      expect(mocks.update).toHaveBeenCalledWith({ role: "investor" });
+      expect(fetch).toHaveBeenCalledWith(
+        "/api/auth/role",
+        expect.objectContaining({
+          method: "PATCH",
+          body: JSON.stringify({ role: "investor" })
+        })
+      );
+      expect(mocks.update).toHaveBeenCalledWith();
       expect(mocks.replace).toHaveBeenCalledWith("/app");
     });
   });

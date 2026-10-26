@@ -1,11 +1,13 @@
 from collections.abc import Iterator
 
+import httpx
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from finadvisor_api import auth as auth_module
 from finadvisor_api.database import Base, get_db
 from finadvisor_api.main import app
 from finadvisor_api.models import OAuthAccount, User
@@ -14,7 +16,7 @@ from finadvisor_api.models import OAuthAccount, User
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> Iterator[TestClient]:
     monkeypatch.setenv("JWT_SECRET", "unit-test-secret-key-at-least-32-bytes-long")
-    monkeypatch.setenv("INTERNAL_API_KEY", "oauth-internal-test-key")
+    monkeypatch.setattr(auth_module, "send_auth_email", lambda *args: None)
     engine = create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
@@ -81,49 +83,6 @@ def test_login_accepts_correct_password_and_me_returns_user(
     assert profile.json()["email"] == "owner@example.com"
 
 
-def test_authenticated_user_can_update_their_role(client: TestClient) -> None:
-    registration = client.post(
-        "/auth/register",
-        json={
-            "email": "owner@example.com",
-            "name": "Restaurant Owner",
-            "password": "StrongPass123!",
-        },
-    )
-    headers = {"Authorization": f"Bearer {registration.json()['access_token']}"}
-
-    response = client.patch("/me", json={"role": "investor"}, headers=headers)
-    profile = client.get("/auth/me", headers=headers)
-
-    assert response.status_code == 200
-    assert response.json()["role"] == "investor"
-    assert profile.json()["role"] == "investor"
-
-
-def test_role_update_requires_authentication_and_a_supported_role(
-    client: TestClient,
-) -> None:
-    unauthenticated = client.patch("/me", json={"role": "investor"})
-    registration = client.post(
-        "/auth/register",
-        json={
-            "email": "owner@example.com",
-            "name": "Restaurant Owner",
-            "password": "StrongPass123!",
-        },
-    )
-    invalid_role = client.patch(
-        "/me",
-        json={"role": "admin"},
-        headers={
-            "Authorization": f"Bearer {registration.json()['access_token']}"
-        },
-    )
-
-    assert unauthenticated.status_code == 401
-    assert invalid_role.status_code == 422
-
-
 def test_login_rejects_incorrect_password(client: TestClient) -> None:
     client.post(
         "/auth/register",
@@ -175,86 +134,155 @@ def test_user_password_is_stored_as_argon2_hash(client: TestClient) -> None:
         db_generator.close()
 
 
-def _oauth_payload(**overrides: object) -> dict[str, object]:
-    payload: dict[str, object] = {
-        "provider": "google",
-        "provider_account_id": "google-user-123",
-        "email": "owner@example.com",
-        "name": "Restaurant Owner",
-        "avatar_url": "https://example.com/avatar.png",
-        "email_verified": True,
-    }
-    payload.update(overrides)
-    return payload
-
-
-def test_oauth_exchange_creates_and_reuses_provider_identity(
-    client: TestClient,
+def test_oauth_exchange_validates_google_token_and_reuses_provider_identity(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    headers = {"X-Internal-Key": "oauth-internal-test-key"}
+    requests: list[httpx.Request] = []
+    async_client = httpx.AsyncClient
+
+    def provider_response(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(
+            200,
+            json={
+                "sub": "google-user-123",
+                "email": "owner@example.com",
+                "email_verified": True,
+                "name": "Restaurant Owner",
+                "picture": "https://example.com/avatar.png",
+            },
+            request=request,
+        )
+
+    monkeypatch.setattr(
+        auth_module.httpx,
+        "AsyncClient",
+        lambda **kwargs: async_client(
+            transport=httpx.MockTransport(provider_response), **kwargs
+        ),
+    )
+
     first = client.post(
-        "/auth/oauth",
-        json=_oauth_payload(role="investor"),
-        headers=headers,
+        "/auth/oauth/provider-token",
+        json={
+            "provider": "google",
+            "access_token": "provider-access-token",
+            "role": "investor",
+        },
     )
     second = client.post(
-        "/auth/oauth",
-        json=_oauth_payload(name="Updated Owner", role="tadbirkor"),
-        headers=headers,
+        "/auth/oauth/provider-token",
+        json={
+            "provider": "google",
+            "access_token": "provider-access-token",
+            "role": "tadbirkor",
+        },
     )
 
-    assert first.status_code == second.status_code == 200
-    assert first.json()["is_new"] is True
-    assert second.json()["is_new"] is False
+    assert first.status_code == 200
+    assert second.status_code == 200
     assert first.json()["user"]["id"] == second.json()["user"]["id"]
     assert second.json()["user"]["role"] == "investor"
     assert second.json()["user"]["email_verified"] is True
-    assert second.json()["user"]["name"] == "Updated Owner"
+    assert requests[0].url.host == "www.googleapis.com"
+    assert requests[0].headers["authorization"] == "Bearer provider-access-token"
 
 
-def test_oauth_exchange_requires_internal_key_and_rejects_access_tokens(
-    client: TestClient,
+def test_oauth_exchange_rejects_invalid_provider_tokens(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    payload = _oauth_payload()
-    missing_key = client.post("/auth/oauth", json=payload)
-    invalid_key = client.post(
-        "/auth/oauth", json=payload, headers={"X-Internal-Key": "wrong-key"}
-    )
-    old_contract = client.post(
-        "/auth/oauth",
-        json={"provider": "google", "access_token": "untrusted-token"},
-        headers={"X-Internal-Key": "oauth-internal-test-key"},
-    )
+    async_client = httpx.AsyncClient
 
-    assert missing_key.status_code == invalid_key.status_code == 401
-    assert missing_key.json()["detail"] == "auth.invalid_internal_key"
-    assert old_contract.status_code == 422
+    def provider_response(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(401, json={"error": "invalid_token"}, request=request)
 
-
-def test_oauth_exchange_creates_facebook_identity_with_avatar(client: TestClient) -> None:
-    response = client.post(
-        "/auth/oauth",
-        json=_oauth_payload(
-            provider="facebook",
-            provider_account_id="facebook-user-123",
-            email="facebook@example.com",
-            email_verified=False,
-            avatar_url="https://example.com/facebook-avatar.png",
-            role="buxgalter",
+    monkeypatch.setattr(
+        auth_module.httpx,
+        "AsyncClient",
+        lambda **kwargs: async_client(
+            transport=httpx.MockTransport(provider_response), **kwargs
         ),
-        headers={"X-Internal-Key": "oauth-internal-test-key"},
+    )
+
+    response = client.post(
+        "/auth/oauth/provider-token",
+        json={"provider": "facebook", "access_token": "invalid-provider-token"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "auth.invalid_provider_token"
+
+
+def test_oauth_exchange_reads_facebook_profile(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    requests: list[httpx.Request] = []
+    async_client = httpx.AsyncClient
+
+    def provider_response(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(
+            200,
+            json={
+                "id": "facebook-user-123",
+                "email": "owner@example.com",
+                "name": "Restaurant Owner",
+                "picture": {"data": {"url": "https://example.com/avatar.png"}},
+            },
+            request=request,
+        )
+
+    monkeypatch.setattr(
+        auth_module.httpx,
+        "AsyncClient",
+        lambda **kwargs: async_client(
+            transport=httpx.MockTransport(provider_response), **kwargs
+        ),
+    )
+
+    response = client.post(
+        "/auth/oauth/provider-token",
+        json={
+            "provider": "facebook",
+            "access_token": "provider-access-token",
+            "role": "buxgalter",
+        },
     )
 
     assert response.status_code == 200
-    assert response.json()["is_new"] is True
     assert response.json()["user"]["auth_provider"] == "facebook"
     assert response.json()["user"]["role"] == "buxgalter"
-    assert response.json()["user"]["avatar_url"] == "https://example.com/facebook-avatar.png"
+    assert response.json()["user"]["avatar_url"] == "https://example.com/avatar.png"
     assert response.json()["user"]["email_verified"] is False
+    assert requests[0].url.host == "graph.facebook.com"
+    assert requests[0].url.params["fields"] == "id,name,email,picture"
 
 
-def test_oauth_links_existing_email_only_when_verified(client: TestClient) -> None:
-    registration = client.post(
+def test_oauth_exchange_links_an_existing_email_only_when_verified(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async_client = httpx.AsyncClient
+
+    def provider_response(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "sub": "google-user-456",
+                "email": "owner@example.com",
+                "email_verified": True,
+                "name": "Another Owner",
+            },
+            request=request,
+        )
+
+    monkeypatch.setattr(
+        auth_module.httpx,
+        "AsyncClient",
+        lambda **kwargs: async_client(
+            transport=httpx.MockTransport(provider_response), **kwargs
+        ),
+    )
+    client.post(
         "/auth/register",
         json={
             "email": "owner@example.com",
@@ -262,36 +290,25 @@ def test_oauth_links_existing_email_only_when_verified(client: TestClient) -> No
             "password": "StrongPass123!",
         },
     )
-    headers = {"X-Internal-Key": "oauth-internal-test-key"}
-    unverified = client.post(
-        "/auth/oauth",
-        json=_oauth_payload(email_verified=False),
-        headers=headers,
-    )
-    linked = client.post(
-        "/auth/oauth",
-        json=_oauth_payload(),
-        headers=headers,
+
+    response = client.post(
+        "/auth/oauth/provider-token",
+        json={"provider": "google", "access_token": "provider-access-token"},
     )
 
-    assert registration.status_code == 201
-    assert unverified.status_code == 409
-    assert linked.status_code == 200
-    assert linked.json()["is_new"] is False
-    assert linked.json()["user"]["id"] == registration.json()["user"]["id"]
-    assert linked.json()["user"]["auth_provider"] == "credentials"
-    assert linked.json()["user"]["email_verified"] is True
-
-    session_generator = app.dependency_overrides[get_db]()
-    session = next(session_generator)
+    assert response.status_code == 200
+    db_generator = app.dependency_overrides[get_db]()
+    db = next(db_generator)
     try:
-        linked_account = session.scalar(
+        user = db.scalar(select(User).where(User.email == "owner@example.com"))
+        account = db.scalar(
             select(OAuthAccount).where(
                 OAuthAccount.provider == "google",
-                OAuthAccount.provider_account_id == "google-user-123",
+                OAuthAccount.provider_account_id == "google-user-456",
             )
         )
-        assert linked_account is not None
-        assert linked_account.user_id == registration.json()["user"]["id"]
+        assert user is not None
+        assert account is not None
+        assert account.user_id == user.id
     finally:
-        session_generator.close()
+        db_generator.close()

@@ -1,106 +1,94 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
 
-const emailSchema = z.object({
-  email: z.string().trim().email("emailRequired")
+const forgotPasswordSchema = z.object({
+  email: z.string().min(1, "emailRequired").email("emailRequired")
 });
 
-type RequestState = "idle" | "loading" | "success" | "error";
+type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
 
 export function ForgotPasswordForm() {
-  const t = useTranslations("authFlows");
-  const auth = useTranslations("auth");
+  const t = useTranslations("routeCopy.forgotPassword");
   const errors = useTranslations("errors");
-  const [requestState, setRequestState] = useState<RequestState>("idle");
-  const [emailError, setEmailError] = useState<string>();
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors: formErrors, isSubmitting }
+  } = useForm<ForgotPasswordValues>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: { email: "" }
+  });
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setRequestState("idle");
-    setEmailError(undefined);
-    const formData = new FormData(event.currentTarget);
-    const parsed = emailSchema.safeParse({
-      email: String(formData.get("email") ?? "")
-    });
-    if (!parsed.success) {
-      setEmailError(parsed.error.issues[0]?.message ?? "emailRequired");
-      return;
-    }
-
-    setRequestState("loading");
+  const onSubmit = async ({ email }: ForgotPasswordValues) => {
+    setStatus("idle");
     try {
       const response = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
-        cache: "no-store"
+        body: JSON.stringify({ email })
       });
-      setRequestState(response.ok ? "success" : "error");
+      setStatus(response.ok ? "success" : "error");
     } catch (error) {
       if (error instanceof TypeError) {
-        setRequestState("error");
+        setStatus("error");
         return;
       }
       throw error;
     }
-  }
+  };
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold tracking-tight">
-        {t("forgotTitle")}
-      </h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        {t("forgotDescription")}
-      </p>
-      <form className="mt-8 space-y-5" noValidate onSubmit={submit}>
+      <div className="mb-8">
+        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{t("description")}</p>
+      </div>
+      <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className="space-y-2">
-          <label className="text-sm font-medium" htmlFor="forgot-email">
-            {auth("email")}
+          <label className="text-sm font-medium" htmlFor="forgot-password-email">
+            {t("email")}
           </label>
           <Input
-            aria-describedby={emailError ? "forgot-email-error" : undefined}
-            aria-invalid={Boolean(emailError)}
             autoComplete="email"
-            id="forgot-email"
-            name="email"
-            required
+            id="forgot-password-email"
             type="email"
+            {...register("email")}
           />
-          {emailError ? (
-            <p className="text-sm text-red-600" id="forgot-email-error" role="alert">
-              {errors(emailError)}
+          {formErrors.email?.message ? (
+            <p className="text-sm text-destructive" role="alert">
+              {errors(formErrors.email.message)}
             </p>
           ) : null}
         </div>
-        {requestState === "success" ? (
+        {status === "success" ? (
           <p className="text-sm text-muted-foreground" role="status">
-            {t("forgotSuccess")}
+            {t("sent")}
           </p>
         ) : null}
-        {requestState === "error" ? (
-          <p className="text-sm text-red-600" role="alert">
-            {t("forgotError")}
+        {status === "error" ? (
+          <p className="text-sm text-destructive" role="alert">
+            {t("error")}
           </p>
         ) : null}
-        <Button
-          className="w-full"
-          disabled={requestState === "loading"}
-          loading={requestState === "loading"}
-          type="submit"
-        >
-          {requestState === "loading" ? t("sending") : t("forgotSubmit")}
+        <Button className="w-full" disabled={isSubmitting} type="submit">
+          {isSubmitting ? t("submitting") : t("submit")}
         </Button>
       </form>
-      <p className="mt-6 text-center text-sm">
-        <Link className="font-medium text-primary hover:underline" href="/login">
+      <p className="mt-6 text-sm">
+        <Link
+          className="font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          href="/login"
+        >
           {t("backToLogin")}
         </Link>
       </p>

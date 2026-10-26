@@ -1,0 +1,92 @@
+version: 1
+criteria:
+  - key: market_analysis
+    weight: 20
+    keywords:
+      - market
+      - customer
+      - demand
+      - competitor
+      - bozor
+      - mijoz
+      - talab
+      - рынок
+      - клиент
+      - спрос
+      - конкурент
+  - key: financial_projections
+    weight: 20
+    keywords:
+      - financial
+      - revenue
+      - profit
+      - cost
+      - budget
+      - moliyaviy
+      - tushum
+      - foyda
+      - xarajat
+      - бюджет
+      - доход
+      - прибыль
+      - расходы
+  - key: repayment_ability
+    weight: 15
+    keywords:
+      - repayment
+      - loan
+      - credit
+      - debt
+      - qarz
+      - kredit
+      - погашение
+      - кредит
+      - долг
+  - key: risks
+    weight: 15
+    keywords:
+      - risk
+      - risks
+      - mitigation
+      - xatar
+      - xavf
+      - риск
+      - риски
+      - снижение
+  - key: collateral
+    weight: 10
+    keywords:
+      - collateral
+      - security
+      - asset
+      - garov
+      - ta'minot
+      - залог
+      - обеспечение
+      - актив
+  - key: team
+    weight: 10
+    keywords:
+      - team
+      - staff
+      - employee
+      - experience
+      - jamoa
+      - xodim
+      - tajriba
+      - команда
+      - персонал
+      - опыт
+  - key: legal
+    weight: 10
+    keywords:
+      - legal
+      - license
+      - permit
+      - registration
+      - qonun
+      - litsenziya
+      - ruxsat
+      - лицензия
+      - разрешение
+      - регистрация
