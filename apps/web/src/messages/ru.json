@@ -1346,6 +1346,9 @@
       "aiStatusUnavailable": "Не удалось получить статус ИИ.",
       "aiProvider": "Провайдер",
       "aiModel": "Модель",
+      "funnelTitle": "Аналитика воронки (последние 30 дней)",
+      "funnelUnavailable": "Аналитика воронки недоступна",
+      "funnel": { "visit": "Посещения", "signup": "Регистрации", "plan_created": "Созданные планы", "export": "Экспорты", "checkout_started": "Начатые оплаты", "paid": "Оплаты" },
 
       "revenueTitle": "\u041e\u0431\u0437\u043e\u0440 \u0434\u043e\u0445\u043e\u0434\u043e\u0432",
       "exportRevenueCsv": "\u042d\u043a\u0441\u043f\u043e\u0440\u0442 CSV",

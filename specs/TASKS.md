@@ -281,7 +281,7 @@ engine = `packages/finance-engine`.
   - cmd: {{PY}} -m pytest apps/api/tests/test_commission_ledger.py -q
 - [x] 6.11 Admin revenue dashboard
   - done: MRR/weekly revenue, active subscribers per plan, churn, failed payments, commission accrued, AI cost vs revenue per user; CSV export
-- [ ] 6.12 Funnel analytics
+- [x] 6.12 Funnel analytics
   - done: privacy-friendly first-party events (visit, signup, plan_created, export, checkout_started, paid) stored server-side with consent; admin funnel view
 
 ## Stage 7 - Investor marketplace

@@ -21,7 +21,7 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
 
     assert sum(revision.down_revision is None for revision in revisions) == 1
     assert all(not isinstance(revision.down_revision, tuple) for revision in revisions)
-    assert script.get_heads() == ["20261024_17"]
+    assert script.get_heads() == ["20261026_18"]
 
     engine = create_engine(f"sqlite:///{database_path.as_posix()}")
     try:
@@ -68,6 +68,12 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
                     "commission_statements"
                 )
             }
+            funnel_columns = {
+                column["name"] for column in inspect(connection).get_columns("funnel_events")
+            }
+            funnel_indexes = {
+                index["name"] for index in inspect(connection).get_indexes("funnel_events")
+            }
             assert "provider_checkout_id" in invoice_columns
             assert "uq_invoices_provider_checkout_id" in invoice_constraints
             assert "pending_plan" in subscription_columns
@@ -79,5 +85,7 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
             assert {"revenue_date", "device_id"} <= commission_columns
             assert "ix_commission_ledger_user_date" in commission_indexes
             assert "uq_commission_statement_user_period" in statement_constraints
+            assert {"event", "visitor_id", "user_id", "consented", "created_at"} <= funnel_columns
+            assert "ix_funnel_events_event_created" in funnel_indexes
     finally:
         engine.dispose()

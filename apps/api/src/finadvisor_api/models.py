@@ -130,6 +130,21 @@ class EmailToken(Base):
     )
 
 
+class FunnelEvent(Base):
+    __tablename__ = "funnel_events"
+    __table_args__ = (
+        CheckConstraint("event IN ('visit', 'signup', 'plan_created', 'export', 'checkout_started', 'paid')", name="ck_funnel_events_event"),
+        Index("ix_funnel_events_event_created", "event", "created_at"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    event: Mapped[str] = mapped_column(String(32), nullable=False)
+    visitor_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    user_id: Mapped[str | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    consented: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, server_default="true")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class AgentDevice(Base):
     __tablename__ = "agent_devices"
 

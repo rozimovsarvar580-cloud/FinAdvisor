@@ -58,6 +58,11 @@ const revenueSchema = z.object({
   )
 }).strict();
 
+const funnelSchema = z.object({
+  period_days: z.number().int(),
+  counts: z.record(z.string(), z.number().int().nonnegative())
+}).strict();
+
 export default async function AdminPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!locales.includes(locale as (typeof locales)[number])) notFound();
@@ -65,6 +70,7 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
   const session = await getServerSession(authOptions);
   let aiStatus: z.infer<typeof aiStatusSchema> | null = null;
   let revenue: z.infer<typeof revenueSchema> | null = null;
+  let funnel: z.infer<typeof funnelSchema> | null = null;
 
   if (session?.user.role === "admin" && session.accessToken) {
     const apiUrl = process.env.FINADVISOR_API_URL ?? "http://127.0.0.1:8000";
@@ -84,6 +90,14 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
       if (revenueResponse.ok) {
         const result = revenueSchema.safeParse(await revenueResponse.json());
         if (result.success) revenue = result.data;
+      }
+      const funnelResponse = await fetch(`${apiUrl}/analytics/funnel`, {
+        headers: { Authorization: `Bearer ${session.accessToken}` },
+        cache: "no-store"
+      });
+      if (funnelResponse.ok) {
+        const result = funnelSchema.safeParse(await funnelResponse.json());
+        if (result.success) funnel = result.data;
       }
     } catch (error) {
       if (!(error instanceof TypeError || error instanceof SyntaxError)) throw error;
@@ -112,6 +126,19 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
           <p role="status">{t("admin.aiStatusUnavailable")}</p>
         )}
       </section>
+      {session?.user.role === "admin" ? (
+        <section aria-labelledby="funnel-title" className="mt-10 space-y-3">
+          <h2 id="funnel-title" className="text-xl font-semibold">{t("admin.funnelTitle")}</h2>
+          {funnel ? <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {(["visit", "signup", "plan_created", "export", "checkout_started", "paid"] as const).map((event) => (
+              <div key={event} className="rounded-lg border border-border bg-card p-4">
+                <dt className="text-sm text-muted-foreground">{t(`admin.funnel.${event}`)}</dt>
+                <dd className="text-2xl font-semibold">{funnel.counts[event] ?? 0}</dd>
+              </div>
+            ))}
+          </dl> : <p role="status">{t("admin.funnelUnavailable")}</p>}
+        </section>
+      ) : null}
       {session?.user.role === "admin" ? (
         <section aria-labelledby="revenue-title" className="mt-10 space-y-5">
           <div className="flex flex-wrap items-center justify-between gap-3">

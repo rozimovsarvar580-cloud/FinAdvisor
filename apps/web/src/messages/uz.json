@@ -1346,6 +1346,9 @@
       "aiStatusUnavailable": "Sun’iy intellekt holatini olib bo‘lmadi.",
       "aiProvider": "Provayder",
       "aiModel": "AI modeli",
+      "funnelTitle": "Konversiya tahlili (oxirgi 30 kun)",
+      "funnelUnavailable": "Konversiya tahlili mavjud emas",
+      "funnel": { "visit": "Tashriflar", "signup": "Ro‘yxatdan o‘tish", "plan_created": "Yaratilgan rejalar", "export": "Eksportlar", "checkout_started": "Boshlangan to‘lovlar", "paid": "To‘langanlar" },
 
       "revenueTitle": "Daromadlar ko\u2018rinishi",
       "exportRevenueCsv": "CSV eksport qilish",
