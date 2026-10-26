@@ -339,7 +339,7 @@ engine = `packages/finance-engine`.
   - done: security-relevant actions (login, role change, refund, export, admin actions) recorded with actor, IP, time; viewable by admins
 - [x] 9.3 Structured logging and request ids
   - done: JSON logs with request id and user id, secrets and PII redacted, tests for redaction
-- [ ] 9.4 Error monitoring
+- [x] 9.4 Error monitoring
   - done: Sentry-compatible hooks in web, api and desktop, enabled only when `SENTRY_DSN` is set; source maps strategy documented
 - [ ] 9.5 Health and readiness
   - done: `/health` (liveness) and `/ready` (db, redis, migrations) endpoints; used by Docker healthchecks

@@ -434,6 +434,10 @@ fn restore_session(state: State<'_, AgentState>, api_base_url: String) -> Result
 }
 
 pub fn run() {
+    let _sentry = std::env::var("SENTRY_DSN")
+        .ok()
+        .filter(|dsn| !dsn.trim().is_empty())
+        .map(|dsn| sentry::init((dsn, sentry::ClientOptions::default())));
     let client = Client::builder()
         .timeout(Duration::from_secs(15))
         .redirect(reqwest::redirect::Policy::none())

@@ -21,6 +21,7 @@ from finadvisor_api.billing import router as billing_router
 from finadvisor_api.calculations import router as calculations_router
 from finadvisor_api.chat import router as chat_router
 from finadvisor_api.commission import router as commission_router
+from finadvisor_api.config import settings
 from finadvisor_api.documents import router as documents_router
 from finadvisor_api.investor_verification import router as investor_verification_router
 from finadvisor_api.legacy.audit import audit_middleware
@@ -42,6 +43,17 @@ from finadvisor_api.legacy.routers.wizard import router as wizard_router
 from finadvisor_api.marketplace import router as marketplace_router
 from finadvisor_api.plans import router as plans_router
 from finadvisor_api.pricing import router as pricing_router
+
+if settings.sentry_dsn:
+    import sentry_sdk
+    from sentry_sdk.integrations.fastapi import FastApiIntegration
+
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn,
+        integrations=[FastApiIntegration()],
+        send_default_pii=False,
+        traces_sample_rate=0.0,
+    )
 
 app = FastAPI(title="FinAdvisor API", version="0.1.0")
 
@@ -107,6 +119,10 @@ async def request_id_middleware(request: Request, call_next):
 
 @app.exception_handler(Exception)
 async def unhandled_exception(request: Request, exc: Exception):
+    if settings.sentry_dsn:
+        import sentry_sdk
+
+        sentry_sdk.capture_exception(exc)
     if not request.url.path.startswith("/api/v1/"):
         raise exc
     request_id = getattr(request.state, "request_id", "unknown")
