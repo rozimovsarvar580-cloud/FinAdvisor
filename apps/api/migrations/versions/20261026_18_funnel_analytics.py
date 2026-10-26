@@ -12,6 +12,8 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
+    op.add_column("agent_commands", sa.Column("input_data", sa.JSON(), server_default="{}", nullable=False))
+    op.add_column("agent_commands", sa.Column("result", sa.Text(), nullable=True))
     op.add_column("users", sa.Column("is_suspended", sa.Boolean(), server_default=sa.false(), nullable=False))
     op.create_table(
         "investor_verifications",
@@ -118,6 +120,8 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    op.drop_column("agent_commands", "result")
+    op.drop_column("agent_commands", "input_data")
     op.drop_index("ix_accounting_records_owner_resource", table_name="accounting_records")
     op.drop_index("ix_accounting_records_owner_id", table_name="accounting_records")
     op.drop_table("accounting_records")

@@ -307,7 +307,7 @@ engine = `packages/finance-engine`.
   - cmd: {{PY}} -m pytest apps/api/tests/test_accounting_rbac.py -q
 - [x] 8.2 Reports API
   - done: `GET /reports/{day|week|month|year}`: revenue, expenses, profit, taxes, stock in/sold/remaining; Excel and PDF export
-- [ ] 8.3 Agent commands
+- [x] 8.3 Agent commands
   - done: owner issues commands (generate growth plan, generate report, explain this month); stored, executed by backend/AI, results delivered to owner and agent
 - [ ] 8.4 App shell and login
   - done: Tauri app shell with login against the API, language and theme, same design tokens; session token stored in the OS keychain, never in plain files

@@ -123,6 +123,35 @@ def test_only_business_owners_and_accountants_can_register_devices(
     assert response.status_code == 403
 
 
+def test_owner_commands_execute_and_return_persisted_results(client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    from finadvisor_api import agent
+
+    seen: dict[str, object] = {}
+
+    async def fake_generate(prompt: str, context: dict[str, object]) -> str:
+        seen["prompt"] = prompt
+        seen["context"] = context
+        return "Based on the supplied report, review monthly expenses."
+
+    monkeypatch.setattr(agent, "generate", fake_generate)
+    owner_headers = register_user(client, "commands@example.com")
+    response = client.post("/agent/commands", headers=owner_headers, json={"name": "explain_this_month"})
+    assert response.status_code == 201
+    result = response.json()
+    assert result["status"] == "completed"
+    assert result["result"] == "Based on the supplied report, review monthly expenses."
+    history = client.get("/agent/commands", headers=owner_headers).json()["items"]
+    assert history[0]["id"] == result["id"]
+    assert history[0]["result"] == result["result"]
+    assert "accounting_report" in seen["context"]
+
+
+def test_accountant_cannot_issue_owner_commands(client: TestClient) -> None:
+    headers = register_user(client, "accountant-command@example.com", role="buxgalter")
+    response = client.post("/agent/commands", headers=headers, json={"name": "generate_report"})
+    assert response.status_code == 403
+
+
 def test_device_name_must_contain_non_whitespace_text(client: TestClient) -> None:
     headers = register_user(client, "blank@example.com")
 

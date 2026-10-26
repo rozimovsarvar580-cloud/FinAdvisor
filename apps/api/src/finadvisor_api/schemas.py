@@ -122,10 +122,17 @@ class AgentCommandResponse(BaseModel):
     status: str
     device_id: str | None
     created_at: datetime
+    result: str | None = None
 
 
 class AgentSyncStatementRequest(BaseModel):
     device_id: str = Field(min_length=1, max_length=64)
+
+
+class AgentCommandRequest(BaseModel):
+    name: Literal["generate_growth_plan", "generate_report", "explain_this_month"]
+    period: Literal["day", "week", "month", "year"] = "month"
+    device_id: str | None = Field(default=None, min_length=1, max_length=64)
 
 
 class MarketplaceListingCreateRequest(StrictInput):
