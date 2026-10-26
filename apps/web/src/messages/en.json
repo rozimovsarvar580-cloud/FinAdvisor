@@ -1761,5 +1761,27 @@
       "start": "Start wizard",
       "stepsTitle": "Wizard steps"
     }
+  },
+  "accountant": {
+    "title": "Accountant workspace",
+    "inventory": "Inventory in and out",
+    "sales": "Sales entry",
+    "expenses": "Expense entry",
+    "catalog": "Product catalog",
+    "product": "Product",
+    "quantity": "Quantity",
+    "direction": "Movement",
+    "in": "Stock in",
+    "out": "Stock out",
+    "date": "Date",
+    "amount": "Amount (UZS)",
+    "category": "Category",
+    "description": "Description",
+    "name": "Product name",
+    "unit": "Unit",
+    "save": "Save entry",
+    "saving": "Saving?",
+    "saved": "Entry saved.",
+    "saveError": "Could not save entry. Please try again."
   }
 }

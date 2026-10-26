@@ -313,7 +313,7 @@ engine = `packages/finance-engine`.
   - done: Tauri app shell with login against the API, language and theme, same design tokens; session token stored in the OS keychain, never in plain files
 - [x] 8.5 Dashboard
   - done: day/week/month/year revenue, profit, taxes, stock overview with charts, offline-friendly
-- [ ] 8.6 Accountant screens
+- [x] 8.6 Accountant screens
   - done: inventory in/out, sales entry, expense entry, product catalog; validation and keyboard-friendly forms
 - [ ] 8.7 Offline and sync
   - done: local SQLite, offline queue, sync with idempotent ids, conflict rule documented (server timestamp wins), sync status indicator; tests for the sync logic

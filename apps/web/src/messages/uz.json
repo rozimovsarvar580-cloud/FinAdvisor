@@ -1761,5 +1761,27 @@
       "start": "Boshlash",
       "stepsTitle": "Usta bosqichlari"
     }
+  },
+  "accountant": {
+    "title": "Hisobchi ish joyi",
+    "inventory": "Kirim va chiqim",
+    "sales": "Savdo kiritish",
+    "expenses": "Xarajat kiritish",
+    "catalog": "Mahsulotlar katalogi",
+    "product": "Mahsulot",
+    "quantity": "Miqdor",
+    "direction": "Harakat",
+    "in": "Kirim",
+    "out": "Chiqim",
+    "date": "Sana",
+    "amount": "Summa (UZS)",
+    "category": "Turkum",
+    "description": "Tavsif",
+    "name": "Mahsulot nomi",
+    "unit": "O?lchov birligi",
+    "save": "Yozuvni saqlash",
+    "saving": "Saqlanmoqda?",
+    "saved": "Yozuv saqlandi.",
+    "saveError": "Yozuvni saqlab bo?lmadi. Qayta urinib ko?ring."
   }
 }
