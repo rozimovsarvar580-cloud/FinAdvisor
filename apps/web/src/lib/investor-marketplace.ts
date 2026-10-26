@@ -10,6 +10,9 @@ export type MarketplaceListing = {
   currency: "UZS";
   summary: string;
   is_published: boolean;
+  status: "draft" | "published" | "archived";
+  public_financial_fields: string[];
+  request_financial_fields: string[];
   created_at: string;
 };
 

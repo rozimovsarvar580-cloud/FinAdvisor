@@ -142,6 +142,9 @@ export function InvestorMarketplaceListing({
             );
           })}
         </dl>
+        {listing.request_financial_fields.length > 0 ? (
+          <p className="mt-5 text-sm text-muted-foreground">{t("detail.requestFields")}: {listing.request_financial_fields.map((key) => reports(`calculations.${key}`)).join(", ")}</p>
+        ) : null}
       </Card>
 
       <Card className="p-6 sm:p-8">

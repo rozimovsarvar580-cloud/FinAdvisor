@@ -18,6 +18,13 @@ from finadvisor_api.schemas import (
 )
 
 router = APIRouter(prefix="/marketplace/listings", tags=["marketplace"])
+FINANCIAL_FIELDS = frozenset({
+    "monthly_revenue", "monthly_payroll", "startup_capex", "total_startup_cost",
+    "monthly_fixed_costs", "monthly_variable_cost", "monthly_operating_profit",
+    "annual_operating_profit", "break_even_revenue", "target_monthly_revenue",
+    "loan_first_payment", "loan_total_payment", "loan_total_interest",
+    "annual_debt_service", "dscr",
+})
 
 
 def _listing_response(listing: MarketplaceListing) -> MarketplaceListingResponse:
@@ -31,6 +38,9 @@ def _listing_response(listing: MarketplaceListing) -> MarketplaceListingResponse
         currency="UZS",
         summary=listing.summary,
         is_published=listing.is_published,
+        status=listing.status,
+        public_financial_fields=listing.public_financial_fields or [],
+        request_financial_fields=listing.request_financial_fields or [],
         created_at=listing.created_at,
     )
 
@@ -57,7 +67,7 @@ def discover_listings(
 ) -> dict[str, list[MarketplaceListingResponse]]:
     listings = db.scalars(
         select(MarketplaceListing)
-        .where(MarketplaceListing.is_published.is_(True))
+        .where(MarketplaceListing.status == "published")
         .order_by(MarketplaceListing.created_at.desc())
     ).all()
     return {"items": [_listing_response(item) for item in listings]}
@@ -81,7 +91,7 @@ def public_listing_details(
     listing = db.scalar(
         select(MarketplaceListing).where(
             MarketplaceListing.id == listing_id,
-            MarketplaceListing.is_published.is_(True),
+            MarketplaceListing.status == "published",
             MarketplaceListing.saved_plan_id.is_not(None),
         )
     )
@@ -96,9 +106,18 @@ def public_listing_details(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="marketplace.listing_not_found",
         )
+    plan = PlanGenerateResponse.model_validate(saved_plan.generated_plan)
     return MarketplaceListingDetailResponse(
         **_listing_response(listing).model_dump(),
-        plan=PlanGenerateResponse.model_validate(saved_plan.generated_plan),
+        plan={
+            "summary": plan.summary,
+            "sections": [section.model_dump() for section in plan.sections],
+            "calculations": {
+                key: value
+                for key, value in plan.calculations.model_dump().items()
+                if key in (listing.public_financial_fields or [])
+            },
+        },
     )
 
 
@@ -135,7 +154,10 @@ def publish_listing(
         funding_target=data.funding_target,
         currency="UZS",
         summary=data.summary,
-        is_published=True,
+        is_published=data.status == "published",
+        status=data.status,
+        public_financial_fields=data.public_financial_fields,
+        request_financial_fields=data.request_financial_fields,
     )
     db.add(listing)
     db.commit()
@@ -163,7 +185,15 @@ def update_listing_visibility(
             detail="marketplace.listing_not_found",
         )
 
-    listing.is_published = data.is_published
+    public_fields = data.public_financial_fields if data.public_financial_fields is not None else listing.public_financial_fields
+    request_fields = data.request_financial_fields if data.request_financial_fields is not None else listing.request_financial_fields
+    if (set(public_fields) | set(request_fields)) - FINANCIAL_FIELDS or set(public_fields) & set(request_fields):
+        raise HTTPException(status_code=422, detail="marketplace.invalid_financial_visibility")
+    next_status = data.status or ("published" if data.is_published else "draft")
+    listing.status = next_status
+    listing.is_published = next_status == "published"
+    listing.public_financial_fields = public_fields
+    listing.request_financial_fields = request_fields
     db.commit()
     db.refresh(listing)
     return _listing_response(listing)

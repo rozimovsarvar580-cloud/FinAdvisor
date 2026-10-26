@@ -1221,6 +1221,25 @@
       "visibility": {
         "published": "Public",
         "unpublished": "Not public"
+      },
+      "status": "Listing status",
+      "financialVisibility": "Financial details visibility",
+      "public": "Public",
+      "byRequest": "Available by request",
+      "archive": "Archive",
+      "archived": "Listing archived.",
+      "draft": "Listing saved as draft.",
+      "statuses": {
+        "draft": "Draft",
+        "published": "Published",
+        "archived": "Archived"
+      },
+      "financialFields": {
+        "monthly_revenue": "Monthly revenue",
+        "monthly_operating_profit": "Monthly operating profit",
+        "total_startup_cost": "Startup costs",
+        "break_even_revenue": "Break-even revenue",
+        "dscr": "Debt service coverage"
       }
     },
     "errors": {
@@ -1233,7 +1252,8 @@
     },
     "detail": {
       "unavailableTitle": "Plan unavailable",
-      "backToMarketplace": "Back to marketplace"
+      "backToMarketplace": "Back to marketplace",
+      "requestFields": "Financial details available by request"
     },
     "empty": {
       "title": "No published projects yet",
@@ -1382,7 +1402,14 @@
       "aiModel": "Model",
       "funnelTitle": "Funnel analytics (last 30 days)",
       "funnelUnavailable": "Funnel analytics are unavailable",
-      "funnel": { "visit": "Visits", "signup": "Signups", "plan_created": "Plans created", "export": "Exports", "checkout_started": "Checkouts started", "paid": "Paid" },
+      "funnel": {
+        "visit": "Visits",
+        "signup": "Signups",
+        "plan_created": "Plans created",
+        "export": "Exports",
+        "checkout_started": "Checkouts started",
+        "paid": "Paid"
+      },
       "revenueTitle": "Revenue overview",
       "exportRevenueCsv": "Export CSV",
       "revenuePeriod": "Monthly reporting period (UTC)",

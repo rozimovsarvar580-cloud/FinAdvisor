@@ -18,6 +18,7 @@ import {
 } from "@/lib/investor-marketplace";
 
 const stages = ["all", "idea", "pilot", "scale"] as const;
+const financialFields = ["monthly_revenue", "monthly_operating_profit", "total_startup_cost", "break_even_revenue", "dscr"] as const;
 
 type ListingResponse = { items: MarketplaceListing[] };
 type SavedPlan = {
@@ -119,7 +120,10 @@ export function InvestorMarketplaceSection() {
       plan_id: String(formData.get("planId") ?? ""),
       stage: String(formData.get("stage") ?? "idea"),
       funding_target: String(formData.get("fundingTarget") ?? "").replace(",", "."),
-      summary: String(formData.get("summary") ?? "")
+      summary: String(formData.get("summary") ?? ""),
+      status: String(formData.get("status") ?? "draft"),
+      public_financial_fields: financialFields.filter((field) => formData.getAll("publicFinancialFields").includes(field)),
+      request_financial_fields: financialFields.filter((field) => formData.getAll("requestFinancialFields").includes(field))
     };
 
     try {
@@ -148,7 +152,7 @@ export function InvestorMarketplaceSection() {
     }
   }
 
-  async function setVisibility(listing: MarketplaceListing, isPublished: boolean) {
+  async function setVisibility(listing: MarketplaceListing, status: MarketplaceListing["status"]) {
     if (!ownerToken) {
       setError(t("errors.signInRequired"));
       return;
@@ -164,14 +168,14 @@ export function InvestorMarketplaceSection() {
             Authorization: `Bearer ${ownerToken}`,
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ is_published: isPublished })
+          body: JSON.stringify({ status })
         }
       );
       if (!response.ok) {
         throw new Error("visibilityFailed");
       }
       await loadListings();
-      setNotice(t(isPublished ? "form.published" : "form.unpublished"));
+      setNotice(t(status === "published" ? "form.published" : status === "archived" ? "form.archived" : "form.draft"));
     } catch {
       setError(t("errors.visibilityFailed"));
     }
@@ -255,6 +259,20 @@ export function InvestorMarketplaceSection() {
                 ) : null}
               </label>
               <label className="grid gap-2 text-sm font-medium">
+                {t("form.status")}
+                <select className="h-11 rounded-md border border-input bg-background px-3 font-normal" name="status" defaultValue="draft">
+                  {(["draft", "published", "archived"] as const).map((value) => <option key={value} value={value}>{t(`form.statuses.${value}`)}</option>)}
+                </select>
+              </label>
+              <fieldset className="grid gap-2 text-sm md:col-span-2">
+                <legend className="font-medium">{t("form.financialVisibility")}</legend>
+                {financialFields.map((field) => <div className="flex flex-wrap gap-5" key={field}>
+                  <span className="min-w-48">{t(`form.financialFields.${field}`)}</span>
+                  <label className="flex items-center gap-2"><input type="checkbox" name="publicFinancialFields" value={field} />{t("form.public")}</label>
+                  <label className="flex items-center gap-2"><input type="checkbox" name="requestFinancialFields" value={field} />{t("form.byRequest")}</label>
+                </div>)}
+              </fieldset>
+              <label className="grid gap-2 text-sm font-medium">
                 {t("form.stage")}
                 <select
                   className="h-11 rounded-md border border-input bg-background px-3 font-normal"
@@ -318,16 +336,17 @@ export function InvestorMarketplaceSection() {
                     <div>
                       <p className="font-semibold">{listing.business_name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {t(`form.visibility.${listing.is_published ? "published" : "unpublished"}`)}
+                        {t(`form.statuses.${listing.status}`)}
                       </p>
                     </div>
                     <Button
-                      onClick={() => void setVisibility(listing, !listing.is_published)}
+                      onClick={() => void setVisibility(listing, listing.status === "published" ? "draft" : "published")}
                       size="sm"
                       variant="outline"
                     >
-                      {t(listing.is_published ? "form.unpublish" : "form.republish")}
+                      {t(listing.status === "published" ? "form.unpublish" : "form.republish")}
                     </Button>
+                    {listing.status !== "archived" ? <Button onClick={() => void setVisibility(listing, "archived")} size="sm" variant="outline">{t("form.archive")}</Button> : null}
                   </Card>
                 ))
               ) : !error ? (

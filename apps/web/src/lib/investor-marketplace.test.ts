@@ -18,6 +18,9 @@ const listings: MarketplaceListing[] = [
     currency: "UZS",
     summary: "Owner provided restaurant project summary.",
     is_published: true,
+    status: "published",
+    public_financial_fields: [],
+    request_financial_fields: [],
     created_at: "2026-10-04T08:00:00Z"
   },
   {
@@ -30,6 +33,9 @@ const listings: MarketplaceListing[] = [
     currency: "UZS",
     summary: "Owner provided restaurant project summary.",
     is_published: true,
+    status: "published",
+    public_financial_fields: [],
+    request_financial_fields: [],
     created_at: "2026-10-03T08:00:00Z"
   }
 ];

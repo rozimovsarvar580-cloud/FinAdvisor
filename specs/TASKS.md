@@ -285,7 +285,7 @@ engine = `packages/finance-engine`.
   - done: privacy-friendly first-party events (visit, signup, plan_created, export, checkout_started, paid) stored server-side with consent; admin funnel view
 
 ## Stage 7 - Investor marketplace
-- [ ] 7.1 Listings
+- [x] 7.1 Listings
   - done: owner publishes a plan as a listing with visibility controls (what financial detail is public, what needs a request); draft/published/archived
 - [ ] 7.2 Discovery
   - done: search and filters (city, sector, funding amount, stage), pagination, saved listings, saved searches

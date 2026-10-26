@@ -364,7 +364,7 @@ def test_marketplace_never_invents_return_or_risk_claims(
     )
     response = client.post(
         "/marketplace/listings",
-        json=listing_payload(plan_id),
+        json={**listing_payload(plan_id), "public_financial_fields": ["monthly_revenue"], "request_financial_fields": ["dscr"]},
         headers=headers,
     )
 
@@ -383,7 +383,7 @@ def test_public_listing_detail_shows_linked_plan_but_not_original_inputs(
     )
     response = client.post(
         "/marketplace/listings",
-        json=listing_payload(plan_id),
+        json={**listing_payload(plan_id), "public_financial_fields": ["monthly_revenue"], "request_financial_fields": ["dscr"]},
         headers=headers,
     )
     listing_id = response.json()["id"]
@@ -394,6 +394,8 @@ def test_public_listing_detail_shows_linked_plan_but_not_original_inputs(
     assert body["plan_id"] == plan_id
     assert body["plan"]["summary"] == "Owner-reviewed plan summary."
     assert body["plan"]["calculations"]["monthly_revenue"] == "150000000.00"
+    assert set(body["plan"]["calculations"]) == {"monthly_revenue"}
+    assert body["request_financial_fields"] == ["dscr"]
     assert "request_payload" not in body
 
     client.patch(

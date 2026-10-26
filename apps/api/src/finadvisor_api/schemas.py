@@ -1,10 +1,9 @@
 from datetime import date, datetime
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
 
 from finadvisor_api.calc_schemas import NonNegativeDecimal, SignedDecimal, StrictInput
-from finadvisor_api.plan_schemas import PlanGenerateResponse
 
 UserRole = Literal["tadbirkor", "buxgalter", "investor"]
 AuthenticatedUserRole = Literal["tadbirkor", "buxgalter", "investor", "admin"]
@@ -137,10 +136,22 @@ class MarketplaceListingCreateRequest(StrictInput):
         Field(gt=0, max_digits=20, decimal_places=2),
     ]
     summary: str = Field(min_length=1, max_length=2000)
+    status: Literal["draft", "published", "archived"] = "published"
+    public_financial_fields: list[str] = Field(default_factory=list, max_length=32)
+    request_financial_fields: list[str] = Field(default_factory=list, max_length=32)
 
 
 class MarketplaceListingVisibilityRequest(StrictInput):
-    is_published: bool
+    status: Literal["draft", "published", "archived"] | None = None
+    is_published: bool | None = None
+    public_financial_fields: list[str] | None = Field(default=None, max_length=32)
+    request_financial_fields: list[str] | None = Field(default=None, max_length=32)
+
+    @model_validator(mode="after")
+    def require_status(self):
+        if self.status is None and self.is_published is None:
+            raise ValueError("status is required")
+        return self
 
 
 class MarketplaceListingResponse(BaseModel):
@@ -153,11 +164,20 @@ class MarketplaceListingResponse(BaseModel):
     currency: Literal["UZS"]
     summary: str
     is_published: bool
+    status: Literal["draft", "published", "archived"]
+    public_financial_fields: list[str]
+    request_financial_fields: list[str]
     created_at: datetime
 
 
+class MarketplacePublicPlan(BaseModel):
+    summary: str
+    sections: list[dict[str, str]]
+    calculations: dict[str, str | int | None]
+
+
 class MarketplaceListingDetailResponse(MarketplaceListingResponse):
-    plan: PlanGenerateResponse
+    plan: MarketplacePublicPlan
 
 
 class LedgerEntryCreateRequest(StrictInput):

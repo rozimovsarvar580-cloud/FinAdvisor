@@ -210,6 +210,9 @@ class MarketplaceListing(Base):
     currency: Mapped[str] = mapped_column(String(3), default="UZS")
     summary: Mapped[str] = mapped_column(String(2000))
     is_published: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
+    status: Mapped[str] = mapped_column(String(16), default="published", index=True)
+    public_financial_fields: Mapped[list[str]] = mapped_column(JSON, default=list)
+    request_financial_fields: Mapped[list[str]] = mapped_column(JSON, default=list)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )

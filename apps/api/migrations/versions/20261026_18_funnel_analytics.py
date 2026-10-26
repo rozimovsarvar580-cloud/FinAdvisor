@@ -12,6 +12,10 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
+    op.add_column("marketplace_listings", sa.Column("status", sa.String(16), server_default="published", nullable=False))
+    op.add_column("marketplace_listings", sa.Column("public_financial_fields", sa.JSON(), server_default="[]", nullable=False))
+    op.add_column("marketplace_listings", sa.Column("request_financial_fields", sa.JSON(), server_default="[]", nullable=False))
+    op.create_index("ix_marketplace_listings_status", "marketplace_listings", ["status"])
     op.create_table(
         "funnel_events",
         sa.Column("id", sa.String(36), primary_key=True, nullable=False),
@@ -29,6 +33,10 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    op.drop_index("ix_marketplace_listings_status", table_name="marketplace_listings")
+    op.drop_column("marketplace_listings", "request_financial_fields")
+    op.drop_column("marketplace_listings", "public_financial_fields")
+    op.drop_column("marketplace_listings", "status")
     op.drop_index("ix_funnel_events_user_id", table_name="funnel_events")
     op.drop_index("ix_funnel_events_visitor_id", table_name="funnel_events")
     op.drop_index("ix_funnel_events_event_created", table_name="funnel_events")
