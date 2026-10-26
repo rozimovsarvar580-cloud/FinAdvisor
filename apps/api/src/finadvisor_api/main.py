@@ -1,5 +1,10 @@
+from pathlib import Path
 from uuid import uuid4
 
+from alembic.config import Config
+from alembic.runtime.migration import MigrationContext
+from alembic.script import ScriptDirectory
+from alembic.util import CommandError
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exception_handlers import (
     http_exception_handler as default_http_exception_handler,
@@ -9,6 +14,10 @@ from fastapi.exception_handlers import (
 )
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
+from redis import Redis
+from redis.exceptions import RedisError
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 from finadvisor_api.accounting import reports_router
 from finadvisor_api.accounting import router as accounting_api_router
@@ -22,6 +31,7 @@ from finadvisor_api.calculations import router as calculations_router
 from finadvisor_api.chat import router as chat_router
 from finadvisor_api.commission import router as commission_router
 from finadvisor_api.config import settings
+from finadvisor_api.database import engine
 from finadvisor_api.documents import router as documents_router
 from finadvisor_api.investor_verification import router as investor_verification_router
 from finadvisor_api.legacy.audit import audit_middleware
@@ -140,6 +150,37 @@ async def unhandled_exception(request: Request, exc: Exception):
 @app.get("/health")
 def health_check() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/ready")
+def readiness_check() -> JSONResponse:
+    checks = {"database": "ok", "redis": "ok", "migrations": "ok"}
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except SQLAlchemyError:
+        checks["database"] = "error"
+
+    try:
+        Redis.from_url(settings.redis_url, socket_connect_timeout=1).ping()
+    except RedisError:
+        checks["redis"] = "error"
+
+    try:
+        migration_config = Config(str(Path(__file__).resolve().parents[2] / "alembic.ini"))
+        script = ScriptDirectory.from_config(migration_config)
+        with engine.connect() as connection:
+            current = MigrationContext.configure(connection).get_current_revision()
+        if current != script.get_current_head():
+            checks["migrations"] = "pending"
+    except (CommandError, SQLAlchemyError, OSError, ValueError):
+        checks["migrations"] = "error"
+
+    ready = all(status == "ok" for status in checks.values())
+    return JSONResponse(
+        status_code=200 if ready else 503,
+        content={"status": "ok" if ready else "not_ready", "checks": checks},
+    )
 
 
 @app.get("/api/v1/health")

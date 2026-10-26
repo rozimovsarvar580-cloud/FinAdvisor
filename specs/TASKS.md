@@ -341,7 +341,7 @@ engine = `packages/finance-engine`.
   - done: JSON logs with request id and user id, secrets and PII redacted, tests for redaction
 - [x] 9.4 Error monitoring
   - done: Sentry-compatible hooks in web, api and desktop, enabled only when `SENTRY_DSN` is set; source maps strategy documented
-- [ ] 9.5 Health and readiness
+- [x] 9.5 Health and readiness
   - done: `/health` (liveness) and `/ready` (db, redis, migrations) endpoints; used by Docker healthchecks
 - [ ] 9.6 Transactional emails
   - done: welcome, verify, reset, receipt, payment failed, subscription ended, investor contact request, in uz/ru/en with plain-text fallback
