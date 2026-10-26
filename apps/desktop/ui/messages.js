@@ -41,7 +41,8 @@ export const messages = {
     appUnavailable: "Bu ilovani Tauri desktop oynasida oching.",
     networkError: "Tarmoq xatosi yuz berdi.",
     internalError: "Ilova xatosi yuz berdi.",
-    apiRequestFailed: "API so‘rovni rad etdi."
+    apiRequestFailed: "API so‘rovni rad etdi.",
+    syncOnline: "Sinxronlangan", syncOffline: "Oflayn", queuedRecords: "Navbatdagi yozuvlar"
   },
   ru: {
     appTitle: "FinAdvisor Desktop Agent",
@@ -85,7 +86,8 @@ export const messages = {
     appUnavailable: "Откройте это приложение в окне Tauri.",
     networkError: "Произошла ошибка сети.",
     internalError: "Произошла ошибка приложения.",
-    apiRequestFailed: "API отклонил запрос."
+    apiRequestFailed: "API отклонил запрос.",
+    syncOnline: "Синхронизировано", syncOffline: "Нет подключения", queuedRecords: "Записей в очереди"
   },
   en: {
     appTitle: "FinAdvisor Desktop Agent",
@@ -129,7 +131,8 @@ export const messages = {
     appUnavailable: "Open this app in the Tauri desktop window.",
     networkError: "A network error occurred.",
     internalError: "An application error occurred.",
-    apiRequestFailed: "The API rejected the request."
+    apiRequestFailed: "The API rejected the request.",
+    syncOnline: "Synced", syncOffline: "Offline", queuedRecords: "Queued records"
   }
 };
 

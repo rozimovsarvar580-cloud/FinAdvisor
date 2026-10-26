@@ -13,7 +13,7 @@ export function escapeHtml(value) {
   });
 }
 
-export function renderDashboard(dashboard, locale = "uz", busy = false) {
+export function renderDashboard(dashboard, locale = "uz", busy = false, syncStatus = { online: true, queued: 0 }) {
   const t = getMessages(locale);
   const translateStatus = (status) =>
     ({ registered: t.registered, queued: t.queued })[status] ?? status;
@@ -49,6 +49,7 @@ export function renderDashboard(dashboard, locale = "uz", busy = false) {
     : `<tr><td colspan="3" class="empty-state">${escapeHtml(t.noCommands)}</td></tr>`;
 
   return `
+    <p class="sync-status" role="status">${escapeHtml(syncStatus.online ? t.syncOnline : t.syncOffline)} · ${escapeHtml(t.queuedRecords)}: ${Number(syncStatus.queued) || 0}</p>
     <section class="panel">
       <div class="section-heading"><h2>${escapeHtml(t.devices)}</h2></div>
       <div class="device-list">${devices}</div>

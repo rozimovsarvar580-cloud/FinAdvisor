@@ -315,7 +315,7 @@ engine = `packages/finance-engine`.
   - done: day/week/month/year revenue, profit, taxes, stock overview with charts, offline-friendly
 - [x] 8.6 Accountant screens
   - done: inventory in/out, sales entry, expense entry, product catalog; validation and keyboard-friendly forms
-- [ ] 8.7 Offline and sync
+- [x] 8.7 Offline and sync
   - done: local SQLite, offline queue, sync with idempotent ids, conflict rule documented (server timestamp wins), sync status indicator; tests for the sync logic
 - [ ] 8.8 Agent chat and commands UI
   - done: owner chat and command box; AI requests only via the API (the desktop app contains no AI key; test greps the bundle sources)

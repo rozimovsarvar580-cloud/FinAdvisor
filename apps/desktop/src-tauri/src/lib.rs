@@ -3,11 +3,76 @@ use std::{sync::Mutex, time::Duration};
 use keyring::Entry;
 use reqwest::{Client, RequestBuilder, Url};
 use serde::{Deserialize, Serialize};
-use tauri::State;
+use tauri::{Manager, State};
 
 #[derive(Default)]
 struct AgentState {
     session: Mutex<Option<AgentSession>>,
+    local: Mutex<rusqlite::Connection>,
+}
+
+impl AgentState {
+    fn new(path: &std::path::Path) -> Result<Self, String> {
+        let connection = rusqlite::Connection::open(path).map_err(|_| "local_database_error".to_string())?;
+        connection.execute_batch("CREATE TABLE IF NOT EXISTS offline_queue (client_id TEXT PRIMARY KEY, resource TEXT NOT NULL, payload TEXT NOT NULL, created_at TEXT NOT NULL); CREATE TABLE IF NOT EXISTS local_records (client_id TEXT PRIMARY KEY, payload TEXT NOT NULL, updated_at TEXT NOT NULL);")
+            .map_err(|_| "local_database_error".to_string())?;
+        Ok(Self { session: Mutex::new(None), local: Mutex::new(connection) })
+    }
+}
+
+#[derive(Serialize)]
+struct SyncStatus { online: bool, queued: usize }
+
+#[derive(Serialize, Deserialize)]
+struct QueueItem { client_id: String, resource: String, payload: String }
+
+fn pending_items(connection: &rusqlite::Connection) -> Result<Vec<QueueItem>, String> {
+    let mut statement = connection.prepare("SELECT client_id, resource, payload FROM offline_queue ORDER BY created_at")
+        .map_err(|_| "local_database_error".to_string())?;
+    let rows = statement.query_map([], |row| Ok(QueueItem { client_id: row.get(0)?, resource: row.get(1)?, payload: row.get(2)? }))
+        .map_err(|_| "local_database_error".to_string())?;
+    rows.collect::<Result<Vec<_>, _>>().map_err(|_| "local_database_error".to_string())
+}
+
+fn queue_item(connection: &rusqlite::Connection, item: &QueueItem) -> Result<(), String> {
+    connection.execute("INSERT OR IGNORE INTO offline_queue(client_id, resource, payload, created_at) VALUES (?1, ?2, ?3, ?4)",
+        rusqlite::params![item.client_id, item.resource, item.payload, chrono_placeholder_now()])
+        .map_err(|_| "local_database_error".to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+fn queue_offline_record(state: State<'_, AgentState>, client_id: String, resource: String, data: serde_json::Value) -> Result<SyncStatus, String> {
+    if client_id.trim().is_empty() || client_id.len() > 128 || !["inventory", "stock-movements", "sales", "expenses", "employees"].contains(&resource.as_str()) {
+        return Err("invalid_input".to_string());
+    }
+    let payload = serde_json::to_string(&data).map_err(|_| "invalid_input".to_string())?;
+    let db = state.local.lock().map_err(|_| "local_database_error".to_string())?;
+    queue_item(&db, &QueueItem { client_id, resource, payload })?;
+    let queued = pending_items(&db)?.len();
+    Ok(SyncStatus { online: false, queued })
+}
+
+#[tauri::command]
+async fn sync_offline_queue(state: State<'_, AgentState>, client: State<'_, Client>) -> Result<SyncStatus, String> {
+    let session = active_session(&state)?;
+    let items = { let db = state.local.lock().map_err(|_| "local_database_error".to_string())?; pending_items(&db)? };
+    let mut online = true;
+    for item in items {
+        let data: serde_json::Value = serde_json::from_str(&item.payload).map_err(|_| "local_database_error".to_string())?;
+        let response = client.post(api_v1_url(&session, &format!("/accounting/sync/{}", item.resource)))
+            .bearer_auth(&session.token).json(&serde_json::json!({"client_id": item.client_id, "data": data})).send().await;
+        let response = match response { Ok(response) if response.status().is_success() => response, Ok(response) if response.status().as_u16() == 409 => return Err("sync_conflict_server_wins".to_string()), _ => { online = false; break; } };
+        let _ = response;
+        let db = state.local.lock().map_err(|_| "local_database_error".to_string())?;
+        db.execute("DELETE FROM offline_queue WHERE client_id = ?1", [&item.client_id]).map_err(|_| "local_database_error".to_string())?;
+    }
+    let queued = { let db = state.local.lock().map_err(|_| "local_database_error".to_string())?; pending_items(&db)?.len() };
+    Ok(SyncStatus { online, queued })
+}
+
+fn chrono_placeholder_now() -> String {
+    std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_millis().to_string()
 }
 
 #[derive(Clone)]
@@ -329,7 +394,12 @@ pub fn run() {
         .expect("could not initialize the HTTP client");
 
     tauri::Builder::default()
-        .manage(AgentState::default())
+        .setup(|app| {
+            let path = app.path().app_data_dir()?.join("finadvisor.sqlite3");
+            std::fs::create_dir_all(path.parent().expect("database parent"))?;
+            app.manage(AgentState::new(&path).map_err(std::io::Error::other)?);
+            Ok(())
+        })
         .manage(client)
         .invoke_handler(tauri::generate_handler![
             login,
@@ -338,6 +408,7 @@ pub fn run() {
             queue_statement_sync,
             logout,
             restore_session
+            ,queue_offline_record, sync_offline_queue
         ])
         .run(tauri::generate_context!())
         .expect("error while running FinAdvisor Agent");
@@ -345,7 +416,7 @@ pub fn run() {
 
 #[cfg(test)]
 mod tests {
-    use super::normalize_api_base_url;
+    use super::{normalize_api_base_url, pending_items, queue_item, QueueItem};
 
     #[test]
     fn accepts_https_and_local_development_urls() {
@@ -379,5 +450,18 @@ mod tests {
     fn rejects_insecure_remote_urls_and_embedded_credentials() {
         assert!(normalize_api_base_url("http://api.finadvisor.uz").is_err());
         assert!(normalize_api_base_url("https://user:password@example.com").is_err());
+    }
+
+    #[test]
+    fn sqlite_queue_persists_items_and_deduplicates_client_ids() {
+        let db = rusqlite::Connection::open_in_memory().unwrap();
+        db.execute_batch("CREATE TABLE offline_queue (client_id TEXT PRIMARY KEY, resource TEXT NOT NULL, payload TEXT NOT NULL, created_at TEXT NOT NULL);").unwrap();
+        let item = QueueItem { client_id: "stable-sale-1".into(), resource: "sales".into(), payload: r#"{"amount":"12"}"#.into() };
+        queue_item(&db, &item).unwrap();
+        queue_item(&db, &item).unwrap();
+        let pending = pending_items(&db).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].client_id, "stable-sale-1");
+        assert_eq!(pending[0].payload, item.payload);
     }
 }

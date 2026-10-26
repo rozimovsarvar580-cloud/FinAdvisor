@@ -25,7 +25,10 @@ bank files or import statement data.
 The Tauri CLI starts the static UI server on `127.0.0.1:1420`. The desktop UI
 defaults to the local API at `http://127.0.0.1:8000`; use an HTTPS URL for a
 remote API. API passwords are not persisted, and session tokens are never
-written to ordinary files.
+written to ordinary files. Offline accounting submissions are stored in the
+application data directory's SQLite database and retried with the same client ID.
+The API is authoritative on conflicts; server timestamps win. Queue records are
+removed only after the API acknowledges the idempotent submission.
 
 ## Checks
 

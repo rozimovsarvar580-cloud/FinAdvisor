@@ -55,6 +55,12 @@ test("dashboard rendering escapes API-controlled content", () => {
   assert.match(html, /Queued/);
 });
 
+test("dashboard shows translated offline queue status", () => {
+  const html = renderDashboard({ devices: [], commands: [] }, "en", false, { online: false, queued: 2 });
+  assert.match(html, /Offline/);
+  assert.match(html, /Queued records: 2/);
+});
+
 test("HTML text escaping covers markup and attribute delimiters", () => {
   assert.equal(escapeHtml(`<tag attr="a"> & 'b'`), "&lt;tag attr=&quot;a&quot;&gt; &amp; &#39;b&#39;");
 });
