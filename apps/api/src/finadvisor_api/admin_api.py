@@ -44,6 +44,44 @@ class ModerationAction(BaseModel):
     action: Literal["hide", "ban", "dismiss"]
 
 
+class UserAdminUpdate(BaseModel):
+    role: Literal["tadbirkor", "buxgalter", "investor"] | None = None
+    is_suspended: bool | None = None
+
+
+@router.get("/users")
+def admin_users(user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)], q: str = "") -> dict[str, list[dict[str, object]]]:
+    _require_admin(user)
+    query = select(User).order_by(User.created_at.desc()).limit(100)
+    if q.strip():
+        query = query.where(User.email.ilike(f"%{q.strip()}%"))
+    rows = db.scalars(query).all()
+    return {"items": [{"id": row.id, "email": row.email, "role": row.role, "is_suspended": row.is_suspended, "subscription_plan": row.subscription_plan} for row in rows]}
+
+
+@router.patch("/users/{user_id}")
+def update_admin_user(user_id: str, data: UserAdminUpdate, user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)]) -> dict[str, object]:
+    _require_admin(user)
+    target = db.get(User, user_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="admin.user_not_found")
+    if target.id == user.id and data.is_suspended is True:
+        raise HTTPException(status_code=400, detail="admin.cannot_suspend_self")
+    if data.role is not None:
+        target.role = data.role
+    if data.is_suspended is not None:
+        target.is_suspended = data.is_suspended
+    db.commit()
+    return {"id": target.id, "role": target.role, "is_suspended": target.is_suspended}
+
+
+@router.get("/subscriptions")
+def admin_subscriptions(user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)]) -> dict[str, list[dict[str, object]]]:
+    _require_admin(user)
+    rows = db.execute(select(Subscription, User.email).join(User, User.id == Subscription.user_id).order_by(Subscription.updated_at.desc()).limit(200)).all()
+    return {"items": [{"id": sub.id, "email": email, "plan": sub.plan, "status": sub.status, "billing_period": sub.billing_period, "currency": sub.currency, "amount_minor": sub.amount_minor} for sub, email in rows]}
+
+
 @router.get("/moderation")
 def moderation_queue(user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)]) -> dict[str, list[dict[str, object]]]:
     _require_admin(user)

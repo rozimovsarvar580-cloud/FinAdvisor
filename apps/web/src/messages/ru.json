@@ -1504,7 +1504,20 @@
       "kyc_adminTitle": "Заявки инвесторов на проверку",
       "kyc_approve": "Одобрить",
       "kyc_reject": "Отклонить",
-      "kyc_noRequests": "Нет заявок на проверку."
+      "kyc_noRequests": "Нет заявок на проверку.",
+      "searchUsers": "Поиск по email",
+      "search": "Найти",
+      "suspended": "Приостановлен",
+      "active": "Активен",
+      "subscriptions": "Подписки",
+      "listingModeration": "Очередь модерации объявлений",
+      "systemHealth": "Состояние системы",
+      "healthy": "API работает",
+      "healthUnavailable": "Не удалось получить состояние API.",
+      "role": "Роль",
+      "suspend": "Приостановить",
+      "unsuspend": "Восстановить доступ",
+      "saving": "Сохранение…"
     },
     "agent": {
       "title": "Десктопный агент",

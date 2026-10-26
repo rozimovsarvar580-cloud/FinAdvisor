@@ -1504,7 +1504,20 @@
       "kyc_adminTitle": "Investor verification requests",
       "kyc_approve": "Approve",
       "kyc_reject": "Reject",
-      "kyc_noRequests": "No verification requests."
+      "kyc_noRequests": "No verification requests.",
+      "searchUsers": "Search email",
+      "search": "Search",
+      "suspended": "Suspended",
+      "active": "Active",
+      "subscriptions": "Subscriptions",
+      "listingModeration": "Listing moderation queue",
+      "systemHealth": "System health",
+      "healthy": "API is healthy",
+      "healthUnavailable": "API health could not be retrieved.",
+      "role": "Role",
+      "suspend": "Suspend",
+      "unsuspend": "Restore access",
+      "saving": "Saving…"
     },
     "agent": {
       "title": "Desktop agent",

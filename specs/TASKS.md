@@ -333,7 +333,7 @@ engine = `packages/finance-engine`.
   - exists: apps/desktop/README.md
 
 ## Stage 9 - Admin and operations
-- [ ] 9.1 Admin panel
+- [x] 9.1 Admin panel
   - done: users (search, role, suspend), subscriptions, listings moderation, AI status, system health; admin-only
 - [ ] 9.2 Audit log
   - done: security-relevant actions (login, role change, refund, export, admin actions) recorded with actor, IP, time; viewable by admins

@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { authOptions } from "../../../lib/auth";
 import InvestorVerificationQueue from "./InvestorVerificationQueue";
+import AdminUserControls from "./AdminUserControls";
 
 const locales = ["uz", "ru", "en"] as const;
 export function generateStaticParams() { return locales.map((locale) => ({ locale })); }
@@ -64,8 +65,9 @@ const funnelSchema = z.object({
   counts: z.record(z.string(), z.number().int().nonnegative())
 }).strict();
 
-export default async function AdminPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function AdminPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams?: Promise<{ q?: string }> }) {
   const { locale } = await params;
+  const query = (await searchParams)?.q?.slice(0, 100) ?? "";
   if (!locales.includes(locale as (typeof locales)[number])) notFound();
   const t = await getTranslations({ locale, namespace: "routeCopy" });
   const session = await getServerSession(authOptions);
@@ -73,6 +75,10 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
   let revenue: z.infer<typeof revenueSchema> | null = null;
   let funnel: z.infer<typeof funnelSchema> | null = null;
   let investorVerifications: Array<{ id: string; user_id: string; email: string; full_name: string; organization: string | null; country: string; investment_thesis: string; source_of_funds: string; status: "submitted" | "approved" | "rejected"; review_note: string | null }> = [];
+  let adminUsers: Array<{ id: string; email: string; role: string; is_suspended: boolean; subscription_plan: string }> = [];
+  let subscriptions: Array<{ id: string; email: string; plan: string; status: string; billing_period: string; currency: string; amount_minor: number }> = [];
+  let moderationItems: Array<{ id: string; reason: string; target_type: string; target_id: string }> = [];
+  let systemHealth = false;
 
   if (session?.user.role === "admin" && session.accessToken) {
     const apiUrl = process.env.FINADVISOR_API_URL ?? "http://127.0.0.1:8000";
@@ -108,6 +114,16 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
         const result = z.object({ items: z.array(z.object({ id: z.string(), user_id: z.string(), email: z.string(), full_name: z.string(), organization: z.string().nullable(), country: z.string(), investment_thesis: z.string(), source_of_funds: z.string(), status: z.enum(["submitted", "approved", "rejected"]), review_note: z.string().nullable() })) }).safeParse(await verificationResponse.json());
         if (result.success) investorVerifications = result.data.items;
       }
+      const [usersResponse, subsResponse, moderationResponse, healthResponse] = await Promise.all([
+        fetch(`${apiUrl}/admin/users?q=${encodeURIComponent(query)}`, { headers: { Authorization: `Bearer ${session.accessToken}` }, cache: "no-store" }),
+        fetch(`${apiUrl}/admin/subscriptions`, { headers: { Authorization: `Bearer ${session.accessToken}` }, cache: "no-store" }),
+        fetch(`${apiUrl}/admin/moderation`, { headers: { Authorization: `Bearer ${session.accessToken}` }, cache: "no-store" }),
+        fetch(`${apiUrl}/health`, { cache: "no-store" })
+      ]);
+      if (usersResponse.ok) { const parsed = z.object({ items: z.array(z.object({ id: z.string(), email: z.string(), role: z.string(), is_suspended: z.boolean(), subscription_plan: z.string() })) }).safeParse(await usersResponse.json()); if (parsed.success) adminUsers = parsed.data.items; }
+      if (subsResponse.ok) { const parsed = z.object({ items: z.array(z.object({ id: z.string(), email: z.string(), plan: z.string(), status: z.string(), billing_period: z.string(), currency: z.string(), amount_minor: z.number() })) }).safeParse(await subsResponse.json()); if (parsed.success) subscriptions = parsed.data.items; }
+      if (moderationResponse.ok) { const parsed = z.object({ items: z.array(z.object({ id: z.string(), reason: z.string(), target_type: z.string(), target_id: z.string() })) }).safeParse(await moderationResponse.json()); if (parsed.success) moderationItems = parsed.data.items; }
+      if (healthResponse.ok) { const parsed = z.object({ status: z.string() }).safeParse(await healthResponse.json()); systemHealth = parsed.success && parsed.data.status === "ok"; }
     } catch (error) {
       if (!(error instanceof TypeError || error instanceof SyntaxError)) throw error;
     }
@@ -116,7 +132,12 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
   return (
     <main>
       <h1>{t("admin.title")}</h1>
-      <ul><li>{t("admin.users")}</li><li>{t("admin.planModeration")}</li><li>{t("admin.kycReview")}</li><li>{t("admin.auditLog")}</li><li>{t("admin.featureFlags")}</li></ul>
+      {session?.user.role === "admin" && <>
+        <section aria-labelledby="users-title"><h2 id="users-title">{t("admin.users")}</h2><form method="get"><label>{t("admin.searchUsers")} <input name="q" type="search" defaultValue={query} className="rounded border border-border bg-background px-2 py-1" /></label><button className="ml-2 rounded border border-border px-3 py-1 focus-visible:ring-2" type="submit">{t("admin.search")}</button></form>{session.accessToken && <AdminUserControls rows={adminUsers} token={session.accessToken} apiUrl={process.env.FINADVISOR_API_URL ?? "http://127.0.0.1:8000"} labels={{ role: t("admin.role"), suspend: t("admin.suspend"), unsuspend: t("admin.unsuspend"), saved: t("admin.saving"), roles: { tadbirkor: t("roles.tadbirkor"), buxgalter: t("roles.buxgalter"), investor: t("roles.investor") } }} />}</section>
+        <section aria-labelledby="subscriptions-title"><h2 id="subscriptions-title">{t("admin.subscriptions")}</h2><ul>{subscriptions.map((row) => <li key={row.id}>{row.email} · {row.plan} · {row.status} · {row.billing_period}</li>)}</ul></section>
+        <section aria-labelledby="moderation-title"><h2 id="moderation-title">{t("admin.listingModeration")}</h2><ul>{moderationItems.map((row) => <li key={row.id}>{row.target_type}: {row.target_id} · {row.reason}</li>)}</ul></section>
+        <section aria-labelledby="health-title"><h2 id="health-title">{t("admin.systemHealth")}</h2><p role="status">{t(systemHealth ? "admin.healthy" : "admin.healthUnavailable")}</p></section>
+      </>}
       {session?.user.role === "admin" && session.accessToken && <InvestorVerificationQueue initialItems={investorVerifications} accessToken={session.accessToken} labels={{ title: t("admin.kyc_adminTitle"), empty: t("admin.kyc_noRequests"), status: t("investors.status"), approve: t("admin.kyc_approve"), reject: t("admin.kyc_reject"), submitted: t("investors.kyc_submitted"), approved: t("investors.kyc_approved"), rejected: t("investors.kyc_rejected") }} />}
       <section aria-labelledby="ai-status-title">
         <h2 id="ai-status-title">{t("admin.aiStatusTitle")}</h2>

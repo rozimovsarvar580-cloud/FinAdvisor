@@ -248,3 +248,18 @@ def test_admin_revenue_csv_is_exported_and_non_admin_is_forbidden(
     )
     forbidden = client.get("/admin/revenue")
     assert forbidden.status_code == 403
+
+
+def test_admin_user_search_update_and_subscriptions_are_admin_only(admin_revenue_context) -> None:
+    client = TestClient(app)
+    users = client.get("/admin/users", params={"q": "weekly@example.com"})
+    assert users.status_code == 200
+    assert [row["email"] for row in users.json()["items"]] == ["weekly@example.com"]
+    user_id = users.json()["items"][0]["id"]
+    updated = client.patch(f"/admin/users/{user_id}", json={"role": "buxgalter", "is_suspended": True})
+    assert updated.status_code == 200
+    assert updated.json()["role"] == "buxgalter"
+    assert updated.json()["is_suspended"] is True
+    assert client.get("/admin/subscriptions").status_code == 200
+    admin_revenue_context["user"] = User(id="non-admin", email="user@example.com", name="User", role="tadbirkor")
+    assert client.get("/admin/users").status_code == 403

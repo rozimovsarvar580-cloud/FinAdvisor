@@ -1504,7 +1504,20 @@
       "kyc_adminTitle": "Investor tekshiruv so‘rovlari",
       "kyc_approve": "Tasdiqlash",
       "kyc_reject": "Rad etish",
-      "kyc_noRequests": "Tekshiruv so‘rovlari yo‘q."
+      "kyc_noRequests": "Tekshiruv so‘rovlari yo‘q.",
+      "searchUsers": "Email bo‘yicha qidirish",
+      "search": "Qidirish",
+      "suspended": "To‘xtatilgan",
+      "active": "Faol",
+      "subscriptions": "Obunalar",
+      "listingModeration": "E’lonlarni moderatsiya navbati",
+      "systemHealth": "Tizim holati",
+      "healthy": "API ishlayapti",
+      "healthUnavailable": "API holatini olib bo‘lmadi.",
+      "role": "Rol",
+      "suspend": "To‘xtatish",
+      "unsuspend": "Kirishni tiklash",
+      "saving": "Saqlanmoqda…"
     },
     "agent": {
       "title": "Kompyuter agenti",
