@@ -61,6 +61,19 @@ def sum_decimal_amounts(amounts: Iterable[Decimal]) -> Decimal:
     return total
 
 
+def accounting_totals(revenues: Iterable[Decimal], expenses: Iterable[Decimal], taxes: Iterable[Decimal]) -> dict[str, Decimal]:
+    """Aggregate accounting report totals using finite Decimal amounts."""
+    revenue = sum_decimal_amounts(revenues)
+    expense_total = sum_decimal_amounts(expenses)
+    tax_total = sum_decimal_amounts(taxes)
+    return {
+        "revenue": quantize_money(revenue),
+        "expenses": quantize_money(expense_total),
+        "profit": quantize_money(revenue - expense_total),
+        "taxes": quantize_money(tax_total),
+    }
+
+
 def monthly_recurring_minor_units(amount_minor: int, billing_period: str) -> int:
     if isinstance(amount_minor, bool) or not isinstance(amount_minor, int):
         raise TypeError("Money minor units must be an integer")

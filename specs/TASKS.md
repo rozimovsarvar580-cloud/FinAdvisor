@@ -305,7 +305,7 @@ engine = `packages/finance-engine`.
   - done: endpoints for inventory, stock movements, sales, expenses, employees with RBAC (accountant writes, owner reads and issues commands, investor denied); idempotent sync endpoints with client ids
   - exists: apps/api/tests/test_accounting_rbac.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_accounting_rbac.py -q
-- [ ] 8.2 Reports API
+- [x] 8.2 Reports API
   - done: `GET /reports/{day|week|month|year}`: revenue, expenses, profit, taxes, stock in/sold/remaining; Excel and PDF export
 - [ ] 8.3 Agent commands
   - done: owner issues commands (generate growth plan, generate report, explain this month); stored, executed by backend/AI, results delivered to owner and agent

@@ -10,6 +10,7 @@ from fastapi.exception_handlers import (
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 
+from finadvisor_api.accounting import reports_router
 from finadvisor_api.accounting import router as accounting_api_router
 from finadvisor_api.admin_api import router as admin_api_router
 from finadvisor_api.agent import router as agent_router
@@ -66,6 +67,7 @@ app.include_router(billing_router)
 app.include_router(admin_api_router)
 app.include_router(analytics_router)
 app.include_router(accounting_api_router)
+app.include_router(reports_router)
 app.include_router(agent_router)
 app.include_router(analysis_router)
 app.include_router(chat_router)

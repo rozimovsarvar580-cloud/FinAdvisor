@@ -65,3 +65,33 @@ def test_accounting_resource_rbac_and_idempotent_sync(client: TestClient) -> Non
 def test_accounting_resources_are_exposed(client: TestClient, resource: str) -> None:
     owner = headers(client, f"{resource}@example.com", "tadbirkor")
     assert client.get(f"/accounting/{resource}", headers=owner).status_code == 200
+
+
+def test_reports_aggregate_period_and_exports(client: TestClient) -> None:
+    accountant = headers(client, "reports-accountant@example.com", "buxgalter")
+    today = __import__("datetime").date.today().isoformat()
+    for resource, client_id, data in [
+        ("sales", "sale-report", {"date": today, "amount": "12500", "tax_amount": "1000"}),
+        ("expenses", "expense-report", {"date": today, "amount": "2500", "tax_amount": "200"}),
+        ("stock-movements", "stock-in-report", {"date": today, "quantity": "8", "direction": "in"}),
+        ("stock-movements", "stock-out-report", {"date": today, "quantity": "3", "direction": "sold"}),
+        ("inventory", "inventory-report", {"date": today, "quantity": "5"}),
+    ]:
+        assert client.post(f"/accounting/sync/{resource}", headers=accountant,
+                           json={"client_id": client_id, "data": data}).status_code == 200
+    report = client.get("/reports/day", headers=accountant)
+    assert report.status_code == 200
+    assert report.json()["revenue"] == "12500.00"
+    assert report.json()["expenses"] == "2500.00"
+    assert report.json()["profit"] == "10000.00"
+    assert report.json()["taxes"] == "1200.00"
+    assert report.json()["stock"] == {"in": "8.00", "sold": "3.00", "remaining": "5.00"}
+    assert client.get("/reports/week/export.xlsx", headers=accountant).content.startswith(b"PK")
+    assert client.get("/reports/month/export.pdf", headers=accountant).content.startswith(b"%PDF-")
+
+
+def test_reports_are_owner_scoped_and_investor_denied(client: TestClient) -> None:
+    owner = headers(client, "reports-owner@example.com", "tadbirkor")
+    investor = headers(client, "reports-investor@example.com", "investor")
+    assert client.get("/reports/year", headers=owner).json()["revenue"] == "0.00"
+    assert client.get("/reports/year", headers=investor).status_code == 403
