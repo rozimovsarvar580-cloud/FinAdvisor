@@ -117,7 +117,7 @@ app.addEventListener("change", (event) => {
 
 app.addEventListener("click", async (event) => {
   if (event.target.closest("#toggle-theme")) {
-    state.theme = state.theme === "dark" ? "light" : "dark";
+    state.theme = ({ system: "light", light: "dark", dark: "system" })[state.theme] ?? "system";
     localStorage.setItem("finadvisor-agent-theme", state.theme);
     render();
     return;

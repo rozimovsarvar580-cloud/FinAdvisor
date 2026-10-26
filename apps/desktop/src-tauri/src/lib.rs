@@ -85,9 +85,13 @@ fn normalize_api_base_url(value: &str) -> Result<String, String> {
         return Err("invalid_api_url".to_string());
     }
 
-    let path = url.path().trim_end_matches('/').to_string();
+    let path = url.path().trim_end_matches('/').trim_end_matches("/api/v1").to_string();
     url.set_path(&path);
     Ok(url.as_str().trim_end_matches('/').to_string())
+}
+
+fn api_v1_url(session: &AgentSession, path: &str) -> String {
+    format!("{}/api/v1{path}", session.api_base_url)
 }
 
 fn session_entry() -> Result<Entry, String> {
@@ -168,7 +172,7 @@ async fn login(
 ) -> Result<LoginInfo, String> {
     let api_base_url = normalize_api_base_url(&api_base_url)?;
     let response = client
-        .post(format!("{api_base_url}/auth/login"))
+        .post(format!("{api_base_url}/api/v1/auth/login"))
         .json(&serde_json::json!({ "email": email, "password": password }))
         .send()
         .await
@@ -218,12 +222,12 @@ async fn load_dashboard(
     let session = active_session(&state)?;
     let devices_response = send_authenticated(
         &session,
-        client.get(format!("{}/agent/devices", session.api_base_url)),
+        client.get(api_v1_url(&session, "/agent/devices")),
     )
     .await?;
     let commands_response = send_authenticated(
         &session,
-        client.get(format!("{}/agent/commands", session.api_base_url)),
+        client.get(api_v1_url(&session, "/agent/commands")),
     )
     .await?;
 
@@ -256,7 +260,7 @@ async fn register_device(
     send_authenticated(
         &session,
         client
-            .post(format!("{}/agent/devices", session.api_base_url))
+            .post(api_v1_url(&session, "/agent/devices"))
             .json(&RegisterDeviceRequest { name }),
     )
     .await?
@@ -276,8 +280,8 @@ async fn queue_statement_sync(
         &session,
         client
             .post(format!(
-                "{}/agent/commands/sync-statement",
-                session.api_base_url
+                "{}",
+                api_v1_url(&session, "/agent/commands/sync-statement")
             ))
             .json(&SyncStatementRequest {
                 device_id: &device_id,
@@ -352,6 +356,22 @@ mod tests {
         assert_eq!(
             normalize_api_base_url("http://127.0.0.1:8000/").unwrap(),
             "http://127.0.0.1:8000"
+        );
+        assert_eq!(
+            normalize_api_base_url("https://api.finadvisor.uz/api/v1/").unwrap(),
+            "https://api.finadvisor.uz"
+        );
+    }
+
+    #[test]
+    fn builds_versioned_api_urls() {
+        let session = super::AgentSession {
+            api_base_url: "https://api.finadvisor.uz".to_string(),
+            token: "test-token".to_string(),
+        };
+        assert_eq!(
+            super::api_v1_url(&session, "/agent/devices"),
+            "https://api.finadvisor.uz/api/v1/agent/devices"
         );
     }
 

@@ -10,7 +10,8 @@ The supported agent capabilities are intentionally narrow:
 
 The web API remains the source of truth. The desktop process must not perform
 financial calculations; it only collects and synchronizes data. Session tokens
-are held in memory and discarded when the app closes or the user signs out.
+are held in memory while running and stored in the operating system keychain
+for the signed-in session. Signing out removes the keychain entry.
 The API URL accepts HTTPS, plus HTTP on loopback for local development.
 The statement action currently queues an API command; it does not read local
 bank files or import statement data.
@@ -23,7 +24,8 @@ bank files or import statement data.
 
 The Tauri CLI starts the static UI server on `127.0.0.1:1420`. The desktop UI
 defaults to the local API at `http://127.0.0.1:8000`; use an HTTPS URL for a
-remote API. No API password or token is written to disk.
+remote API. API passwords are not persisted, and session tokens are never
+written to ordinary files.
 
 ## Checks
 

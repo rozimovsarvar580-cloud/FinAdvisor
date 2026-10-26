@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import { escapeHtml, renderDashboard } from "./view.js";
 import { getMessages } from "./messages.js";
+import { readFile } from "node:fs/promises";
 
 test("desktop agent translations cover all supported locales", () => {
   for (const locale of ["uz", "ru", "en"]) {
@@ -11,7 +12,18 @@ test("desktop agent translations cover all supported locales", () => {
     assert.ok(translated.syncStatement);
     assert.ok(translated.apiUnreachable);
     assert.ok(translated.invalidInput);
+    assert.doesNotMatch(Object.values(translated).join(" "), /Рџ|РЎ|Р°|Рё|Рµ|Рѕ|РЅ|Р»|Рї|СЃ|С‚|вЂ/);
   }
+});
+
+test("desktop styles use the shared indigo and amber light/dark design tokens", async () => {
+  const styles = await readFile(new URL("./styles.css", import.meta.url), "utf8");
+  assert.match(styles, /--primary:\s*243 75% 59%/);
+  assert.match(styles, /--primary:\s*243 100% 76%/);
+  assert.match(styles, /--accent:\s*38 92% 50%/);
+  assert.match(styles, /--accent:\s*43 96% 56%/);
+  assert.doesNotMatch(styles, /#[0-9a-f]{3,8}\b/i);
+  assert.match(styles, /prefers-reduced-motion/);
 });
 
 test("dashboard rendering escapes API-controlled content", () => {

@@ -1,13 +1,14 @@
 :root {
   color-scheme: light;
-  --background: #f4f7fb;
-  --surface: #ffffff;
-  --foreground: #132238;
-  --muted: #627187;
-  --border: #dce4ee;
-  --primary: #176b55;
-  --primary-hover: #105944;
-  --ring: #81c8b2;
+  --background: 240 100% 99%;
+  --surface: 0 0% 100%;
+  --foreground: 240 41% 12%;
+  --muted: 240 18% 44%;
+  --border: 240 35% 92%;
+  --primary: 243 75% 59%;
+  --primary-hover: 262 83% 58%;
+  --ring: 243 75% 59%;
+  --accent: 38 92% 50%;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,27 +16,29 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --background: #0e171a;
-  --surface: #162327;
-  --foreground: #edf5f4;
-  --muted: #a6b8b7;
-  --border: #2a3a3d;
-  --primary: #5bc8a4;
-  --primary-hover: #84d9bd;
-  --ring: #5bc8a4;
+  --background: 240 41% 7%;
+  --surface: 240 37% 12%;
+  --foreground: 240 100% 97%;
+  --muted: 240 20% 70%;
+  --border: 240 32% 22%;
+  --primary: 243 100% 76%;
+  --primary-hover: 262 83% 70%;
+  --ring: 243 100% 76%;
+  --accent: 43 96% 56%;
 }
 
 @media (prefers-color-scheme: dark) {
   :root[data-theme="system"] {
     color-scheme: dark;
-    --background: #0e171a;
-    --surface: #162327;
-    --foreground: #edf5f4;
-    --muted: #a6b8b7;
-    --border: #2a3a3d;
-    --primary: #5bc8a4;
-    --primary-hover: #84d9bd;
-    --ring: #5bc8a4;
+    --background: 240 41% 7%;
+    --surface: 240 37% 12%;
+    --foreground: 240 100% 97%;
+    --muted: 240 20% 70%;
+    --border: 240 32% 22%;
+    --primary: 243 100% 76%;
+    --primary-hover: 262 83% 70%;
+    --ring: 243 100% 76%;
+    --accent: 43 96% 56%;
   }
 }
 
@@ -48,9 +51,9 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
-    radial-gradient(ellipse at top left, color-mix(in srgb, var(--primary) 9%, transparent), transparent 38rem),
-    var(--background);
-  color: var(--foreground);
+    radial-gradient(ellipse at top left, hsl(var(--primary) / 9%), transparent 38rem),
+    hsl(var(--background));
+  color: hsl(var(--foreground));
 }
 
 button,
@@ -67,7 +70,7 @@ select {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 3px solid var(--ring);
+  outline: 3px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 
@@ -92,7 +95,7 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--foreground);
+  color: hsl(var(--foreground));
   font-size: 1.05rem;
   font-weight: 750;
   text-decoration: none;
@@ -104,8 +107,8 @@ select:focus-visible {
   height: 36px;
   place-items: center;
   border-radius: 12px;
-  background: var(--primary);
-  color: #fff;
+  background: hsl(var(--primary));
+  color: hsl(0 0% 100%);
   font-size: 1.15rem;
 }
 
@@ -113,19 +116,19 @@ select:focus-visible {
 input {
   min-height: 44px;
   padding: 9px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid hsl(var(--border));
   border-radius: 10px;
-  background: var(--surface);
-  color: var(--foreground);
+  background: hsl(var(--surface));
+  color: hsl(var(--foreground));
 }
 
 .icon-button {
   width: 44px;
   height: 44px;
-  border: 1px solid var(--border);
+  border: 1px solid hsl(var(--border));
   border-radius: 10px;
-  background: var(--surface);
-  color: var(--foreground);
+  background: hsl(var(--surface));
+  color: hsl(var(--foreground));
   font-size: 1.3rem;
 }
 
@@ -135,7 +138,7 @@ input {
 }
 
 .eyebrow {
-  color: var(--primary);
+  color: hsl(var(--primary));
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -143,23 +146,26 @@ input {
 }
 
 h1 {
+  font-family: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, sans-serif;
   margin: 10px 0;
   font-size: clamp(2rem, 5vw, 3.25rem);
   letter-spacing: -0.04em;
 }
 
 h2 {
+  font-family: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, sans-serif;
   margin: 0;
   font-size: 1.25rem;
 }
 
 h3 {
+  font-family: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, sans-serif;
   margin: 0;
 }
 
 .muted,
 footer {
-  color: var(--muted);
+  color: hsl(var(--muted));
 }
 
 .hero .muted {
@@ -170,7 +176,7 @@ footer {
 
 .status {
   min-height: 24px;
-  color: var(--primary);
+  color: hsl(var(--primary));
 }
 
 .status:empty {
@@ -180,10 +186,10 @@ footer {
 .panel {
   margin: 16px 0;
   padding: 24px;
-  border: 1px solid var(--border);
+  border: 1px solid hsl(var(--border));
   border-radius: 18px;
-  background: var(--surface);
-  box-shadow: 0 16px 40px rgb(15 35 45 / 5%);
+  background: hsl(var(--surface));
+  box-shadow: 0 16px 40px hsl(var(--foreground) / 5%);
 }
 
 .login-panel {
@@ -207,14 +213,14 @@ footer {
   padding: 10px 16px;
   border: 1px solid transparent;
   border-radius: 10px;
-  background: var(--primary);
-  color: #fff;
+  background: hsl(var(--primary));
+  color: hsl(0 0% 100%);
   font-weight: 700;
   transition: background-color 120ms ease, transform 120ms ease;
 }
 
 .button:hover:not(:disabled) {
-  background: var(--primary-hover);
+  background: hsl(var(--primary-hover));
   transform: translateY(-1px);
 }
 
@@ -224,14 +230,14 @@ footer {
 }
 
 .button-secondary {
-  border-color: var(--border);
+  border-color: hsl(var(--border));
   background: transparent;
-  color: var(--foreground);
+  color: hsl(var(--foreground));
 }
 
 .button-secondary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--primary) 10%, var(--surface));
-  color: var(--foreground);
+  background: hsl(var(--primary) / 10%);
+  color: hsl(var(--foreground));
 }
 
 .account-bar {
@@ -247,7 +253,7 @@ footer {
 
 .device-card {
   padding: 16px;
-  border: 1px solid var(--border);
+  border: 1px solid hsl(var(--border));
   border-radius: 12px;
 }
 
@@ -280,18 +286,18 @@ table {
 th,
 td {
   padding: 12px 10px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid hsl(var(--border));
   font-size: 0.9rem;
 }
 
 th {
-  color: var(--muted);
+  color: hsl(var(--muted));
   font-weight: 650;
 }
 
 .empty-state {
   padding: 18px 10px;
-  color: var(--muted);
+  color: hsl(var(--muted));
   text-align: center;
 }
 
@@ -332,5 +338,15 @@ footer {
   .inline-form {
     align-items: stretch;
     flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
