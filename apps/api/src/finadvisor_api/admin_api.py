@@ -3,6 +3,7 @@ import io
 from collections import defaultdict
 from datetime import UTC, date, datetime, timedelta
 from typing import Annotated, Literal
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import StreamingResponse
@@ -27,12 +28,75 @@ from finadvisor_api.models import (
     CommissionLedger,
     CommissionStatement,
     Invoice,
+    MarketplaceListing,
+    MarketplaceMessage,
+    MarketplaceReport,
+    ModerationAuditEntry,
     Payment,
     Subscription,
     User,
 )
 
 router = APIRouter(prefix="/admin", tags=["admin"])
+
+
+class ModerationAction(BaseModel):
+    action: Literal["hide", "ban", "dismiss"]
+
+
+@router.get("/moderation")
+def moderation_queue(user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)]) -> dict[str, list[dict[str, object]]]:
+    _require_admin(user)
+    reports = db.scalars(select(MarketplaceReport).where(MarketplaceReport.status == "open").order_by(MarketplaceReport.created_at)).all()
+    items = []
+    for report in reports:
+        target = db.get(MarketplaceListing if report.target_type == "listing" else MarketplaceMessage, report.target_id)
+        reporter = db.get(User, report.reporter_id)
+        items.append({"id": report.id, "target_type": report.target_type, "target_id": report.target_id, "reason": report.reason, "reporter_id": report.reporter_id, "reporter_email": reporter.email if reporter else None, "created_at": report.created_at, "target_exists": target is not None})
+    return {"items": items}
+
+
+@router.patch("/moderation/{report_id}")
+def review_moderation_report(report_id: str, data: ModerationAction, user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)]) -> dict[str, str]:
+    _require_admin(user)
+    report = db.get(MarketplaceReport, report_id)
+    if report is None:
+        raise HTTPException(status_code=404, detail="moderation.report_not_found")
+    if report.status != "open":
+        raise HTTPException(status_code=409, detail="moderation.report_resolved")
+    action_target_type = report.target_type
+    if data.action == "hide":
+        if report.target_type == "listing":
+            target = db.get(MarketplaceListing, report.target_id)
+            if target:
+                target.status = "archived"
+                target.is_published = False
+        else:
+            target = db.get(MarketplaceMessage, report.target_id)
+            if target:
+                target.is_hidden = True
+    elif data.action == "ban":
+        if report.target_type == "listing":
+            target = db.get(MarketplaceListing, report.target_id)
+            target_user_id = target.owner_id if target else None
+        else:
+            target = db.get(MarketplaceMessage, report.target_id)
+            target_user_id = target.sender_id if target else None
+        banned = db.get(User, target_user_id) if target_user_id else None
+        if banned:
+            banned.is_suspended = True
+    report.status = "resolved"
+    report.resolved_at = datetime.now(UTC)
+    db.add(ModerationAuditEntry(id=str(uuid4()), actor_id=user.id, action=data.action, target_type=action_target_type, target_id=report.target_id, report_id=report.id))
+    db.commit()
+    return {"id": report.id, "status": report.status, "action": data.action}
+
+
+@router.get("/moderation/audit")
+def moderation_audit(user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)]) -> dict[str, list[dict[str, object]]]:
+    _require_admin(user)
+    rows = db.scalars(select(ModerationAuditEntry).order_by(ModerationAuditEntry.created_at.desc()).limit(200)).all()
+    return {"items": [{"id": row.id, "actor_id": row.actor_id, "action": row.action, "target_type": row.target_type, "target_id": row.target_id, "report_id": row.report_id, "created_at": row.created_at} for row in rows]}
 
 
 class AIStatusResponse(BaseModel):

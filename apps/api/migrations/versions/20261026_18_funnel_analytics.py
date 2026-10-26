@@ -12,6 +12,7 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
+    op.add_column("users", sa.Column("is_suspended", sa.Boolean(), server_default=sa.false(), nullable=False))
     op.create_table(
         "investor_verifications",
         sa.Column("id", sa.String(36), primary_key=True, nullable=False),
@@ -71,9 +72,46 @@ def upgrade() -> None:
     )
     op.create_index("ix_marketplace_messages_request_id", "marketplace_messages", ["request_id"])
     op.create_index("ix_marketplace_messages_sender_id", "marketplace_messages", ["sender_id"])
+    op.add_column("marketplace_messages", sa.Column("is_hidden", sa.Boolean(), server_default=sa.false(), nullable=False))
+    op.create_table(
+        "marketplace_reports",
+        sa.Column("id", sa.String(36), primary_key=True, nullable=False),
+        sa.Column("reporter_id", sa.String(36), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False),
+        sa.Column("target_type", sa.String(16), nullable=False),
+        sa.Column("target_id", sa.String(64), nullable=False),
+        sa.Column("reason", sa.String(1000), nullable=False),
+        sa.Column("status", sa.String(16), server_default="open", nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column("resolved_at", sa.DateTime(timezone=True), nullable=True),
+        sa.CheckConstraint("target_type IN ('listing', 'message')", name="ck_marketplace_reports_target_type"),
+        sa.CheckConstraint("status IN ('open', 'resolved')", name="ck_marketplace_reports_status"),
+    )
+    op.create_index("ix_marketplace_reports_reporter_id", "marketplace_reports", ["reporter_id"])
+    op.create_index("ix_marketplace_reports_target_id", "marketplace_reports", ["target_id"])
+    op.create_index("ix_marketplace_reports_status_created", "marketplace_reports", ["status", "created_at"])
+    op.create_table(
+        "moderation_audit_entries",
+        sa.Column("id", sa.String(36), primary_key=True, nullable=False),
+        sa.Column("actor_id", sa.String(36), sa.ForeignKey("users.id", ondelete="RESTRICT"), nullable=False),
+        sa.Column("action", sa.String(32), nullable=False),
+        sa.Column("target_type", sa.String(16), nullable=False),
+        sa.Column("target_id", sa.String(64), nullable=False),
+        sa.Column("report_id", sa.String(36), sa.ForeignKey("marketplace_reports.id", ondelete="SET NULL"), nullable=True),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+    )
+    op.create_index("ix_moderation_audit_entries_actor_id", "moderation_audit_entries", ["actor_id"])
+    op.create_index("ix_moderation_audit_entries_target_id", "moderation_audit_entries", ["target_id"])
 
 
 def downgrade() -> None:
+    op.drop_index("ix_moderation_audit_entries_target_id", table_name="moderation_audit_entries")
+    op.drop_index("ix_moderation_audit_entries_actor_id", table_name="moderation_audit_entries")
+    op.drop_table("moderation_audit_entries")
+    op.drop_index("ix_marketplace_reports_status_created", table_name="marketplace_reports")
+    op.drop_index("ix_marketplace_reports_target_id", table_name="marketplace_reports")
+    op.drop_index("ix_marketplace_reports_reporter_id", table_name="marketplace_reports")
+    op.drop_table("marketplace_reports")
+    op.drop_column("marketplace_messages", "is_hidden")
     op.drop_index("ix_investor_verifications_status_created", table_name="investor_verifications")
     op.drop_index("ix_investor_verifications_user_id", table_name="investor_verifications")
     op.drop_table("investor_verifications")
@@ -91,3 +129,4 @@ def downgrade() -> None:
     op.drop_index("ix_funnel_events_visitor_id", table_name="funnel_events")
     op.drop_index("ix_funnel_events_event_created", table_name="funnel_events")
     op.drop_table("funnel_events")
+    op.drop_column("users", "is_suspended")

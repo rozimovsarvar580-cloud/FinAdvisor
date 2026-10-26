@@ -84,3 +84,39 @@ def test_only_investors_can_contact_and_owners_cannot_message_declined_requests(
     contact = client.post("/marketplace/listings/listing-2/contacts", json={"message": "Hi"}, headers=investor).json()
     assert client.patch(f"/marketplace/listings/contacts/{contact['id']}", json={"status": "declined"}, headers=owner).status_code == 200
     assert client.post(f"/marketplace/listings/contacts/{contact['id']}/messages", json={"content": "Hello"}, headers=owner).status_code == 409
+
+
+def test_listing_and_message_reports_admin_review_hide_ban_and_audit(client: TestClient) -> None:
+    owner = register(client, "owner@example.com", "tadbirkor")
+    investor = register(client, "investor@example.com", "investor")
+    admin = register(client, "admin@example.com", "tadbirkor")
+    with client.app.state.test_session_factory() as db:
+        admin_user = db.scalar(select(User).where(User.email == "admin@example.com"))
+        assert admin_user is not None
+        admin_user.role = "admin"
+        db.commit()
+    with client.app.state.test_session_factory() as db:
+        owner_user = db.scalar(select(User).where(User.email == "owner@example.com"))
+        assert owner_user is not None
+        db.add(MarketplaceListing(id="listing-mod", owner_id=owner_user.id, business_name="Cafe", city="Tashkent", stage="pilot", funding_target="1000", currency="UZS", summary="A cafe", status="published", is_published=True, public_financial_fields=[], request_financial_fields=[]))
+        db.commit()
+    listing_report = client.post("/marketplace/listings/listing-mod/reports", json={"reason": "Misleading information"}, headers=investor)
+    assert listing_report.status_code == 201
+    assert client.get("/admin/moderation", headers=admin).json()["items"][0]["target_type"] == "listing"
+    reviewed = client.patch(f"/admin/moderation/{listing_report.json()['id']}", json={"action": "hide"}, headers=admin)
+    assert reviewed.status_code == 200
+    assert client.get("/marketplace/listings/listing-mod").status_code == 404
+    assert client.get("/admin/moderation/audit", headers=admin).json()["items"][0]["action"] == "hide"
+
+    with client.app.state.test_session_factory() as db:
+        owner_user = db.scalar(select(User).where(User.email == "owner@example.com"))
+        assert owner_user is not None
+        db.add(MarketplaceListing(id="listing-ban", owner_id=owner_user.id, business_name="Cafe", city="Tashkent", stage="pilot", funding_target="1000", currency="UZS", summary="A cafe", status="published", is_published=True, public_financial_fields=[], request_financial_fields=[]))
+        db.commit()
+    contact = client.post("/marketplace/listings/listing-ban/contacts", json={"message": "Interested"}, headers=investor).json()
+    assert client.patch(f"/marketplace/listings/contacts/{contact['id']}", json={"status": "accepted"}, headers=owner).status_code == 200
+    message = client.post(f"/marketplace/listings/contacts/{contact['id']}/messages", json={"content": "Please invest"}, headers=owner).json()
+    message_report = client.post(f"/marketplace/listings/contacts/messages/{message['id']}/reports", json={"reason": "Harassment"}, headers=investor)
+    assert message_report.status_code == 201
+    assert client.patch(f"/admin/moderation/{message_report.json()['id']}", json={"action": "ban"}, headers=admin).status_code == 200
+    assert client.get("/auth/me", headers=owner).status_code == 403

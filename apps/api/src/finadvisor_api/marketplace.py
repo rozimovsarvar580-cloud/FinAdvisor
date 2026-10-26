@@ -15,6 +15,7 @@ from finadvisor_api.models import (
     MarketplaceContactRequest,
     MarketplaceListing,
     MarketplaceMessage,
+    MarketplaceReport,
     SavedBusinessPlan,
     User,
 )
@@ -41,6 +42,10 @@ class ContactDecisionInput(BaseModel):
 
 class MarketplaceMessageInput(BaseModel):
     content: str = Field(min_length=1, max_length=4000)
+
+
+class ReportInput(BaseModel):
+    reason: str = Field(min_length=3, max_length=1000)
 
 
 def _check_contact_rate(user_id: str) -> None:
@@ -323,7 +328,31 @@ def get_contact_messages(
     if not contact or not listing or user.id not in {contact.investor_id, listing.owner_id}:
         raise HTTPException(status_code=404, detail="marketplace.contact_not_found")
     rows = db.scalars(select(MarketplaceMessage).where(MarketplaceMessage.request_id == contact_id).order_by(MarketplaceMessage.created_at)).all()
-    return {"items": [{"id": row.id, "sender_id": row.sender_id, "content": row.content, "created_at": row.created_at} for row in rows]}
+    return {"items": [{"id": row.id, "sender_id": row.sender_id, "content": row.content if not row.is_hidden else "", "is_hidden": row.is_hidden, "created_at": row.created_at} for row in rows]}
+
+
+@router.post("/{listing_id}/reports", status_code=status.HTTP_201_CREATED)
+def report_listing(listing_id: str, data: ReportInput, user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)]) -> dict[str, object]:
+    listing = db.get(MarketplaceListing, listing_id)
+    if listing is None or listing.owner_id == user.id:
+        raise HTTPException(status_code=404, detail="marketplace.listing_not_found")
+    report = MarketplaceReport(id=str(uuid4()), reporter_id=user.id, target_type="listing", target_id=listing_id, reason=data.reason.strip())
+    db.add(report)
+    db.commit()
+    return {"id": report.id, "status": report.status}
+
+
+@router.post("/contacts/messages/{message_id}/reports", status_code=status.HTTP_201_CREATED)
+def report_message(message_id: str, data: ReportInput, user: Annotated[User, Depends(get_current_user)], db: Annotated[Session, Depends(get_db)]) -> dict[str, object]:
+    message = db.get(MarketplaceMessage, message_id)
+    contact = db.get(MarketplaceContactRequest, message.request_id) if message else None
+    listing = db.get(MarketplaceListing, contact.listing_id) if contact else None
+    if not message or not contact or not listing or user.id not in {contact.investor_id, listing.owner_id} or message.sender_id == user.id:
+        raise HTTPException(status_code=404, detail="marketplace.message_not_found")
+    report = MarketplaceReport(id=str(uuid4()), reporter_id=user.id, target_type="message", target_id=message_id, reason=data.reason.strip())
+    db.add(report)
+    db.commit()
+    return {"id": report.id, "status": report.status}
 
 
 @router.post("/contacts/{contact_id}/messages", status_code=status.HTTP_201_CREATED)

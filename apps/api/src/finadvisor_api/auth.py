@@ -627,6 +627,8 @@ def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="auth.role_selection_required",
         )
+    if user.is_suspended:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.account_suspended")
     return user
 
 
@@ -676,6 +678,8 @@ def _get_current_user(
             detail="auth.user_not_found",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    if user.is_suspended:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.account_suspended")
     return user
 
 

@@ -295,7 +295,7 @@ engine = `packages/finance-engine`.
   - cmd: {{PY}} -m pytest apps/api/tests/test_marketplace_messages.py -q
 - [x] 7.4 Investor verification
   - done: investor profile and KYC status flow (submitted, approved, rejected) with admin review; only approved investors see detailed financials
-- [ ] 7.5 Moderation
+- [x] 7.5 Moderation
   - done: report listing/message, admin review queue, hide/ban actions, audit log entries
 - [ ] 7.6 Marketplace UI
   - done: investor dashboard, listing page, inbox, owner view of interest; new design system; 3 languages

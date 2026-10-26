@@ -42,6 +42,7 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(200))
     avatar_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     role: Mapped[str] = mapped_column(String(24), default="tadbirkor")
+    is_suspended: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
     subscription_plan: Mapped[str] = mapped_column(
         String(16), default="free", server_default="free"
     )
@@ -237,6 +238,37 @@ class MarketplaceMessage(Base):
     request_id: Mapped[str] = mapped_column(ForeignKey("marketplace_contact_requests.id", ondelete="CASCADE"), index=True)
     sender_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     content: Mapped[str] = mapped_column(String(4000))
+    is_hidden: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class MarketplaceReport(Base):
+    __tablename__ = "marketplace_reports"
+    __table_args__ = (
+        CheckConstraint("target_type IN ('listing', 'message')", name="ck_marketplace_reports_target_type"),
+        CheckConstraint("status IN ('open', 'resolved')", name="ck_marketplace_reports_status"),
+        Index("ix_marketplace_reports_status_created", "status", "created_at"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    reporter_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    target_type: Mapped[str] = mapped_column(String(16), nullable=False)
+    target_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    reason: Mapped[str] = mapped_column(String(1000), nullable=False)
+    status: Mapped[str] = mapped_column(String(16), default="open", server_default="open")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class ModerationAuditEntry(Base):
+    __tablename__ = "moderation_audit_entries"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    actor_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"), index=True)
+    action: Mapped[str] = mapped_column(String(32), nullable=False)
+    target_type: Mapped[str] = mapped_column(String(16), nullable=False)
+    target_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    report_id: Mapped[str | None] = mapped_column(ForeignKey("marketplace_reports.id", ondelete="SET NULL"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
