@@ -1440,7 +1440,11 @@
       "aiCostUsd": "Estimated AI cost (USD)",
       "costUnavailable": "Incomplete estimate",
       "noAIUsage": "No AI usage or subscription revenue was recorded this month.",
-      "revenueUnavailable": "Revenue metrics could not be retrieved."
+      "revenueUnavailable": "Revenue metrics could not be retrieved.",
+      "kyc_adminTitle": "Investor verification requests",
+      "kyc_approve": "Approve",
+      "kyc_reject": "Reject",
+      "kyc_noRequests": "No verification requests."
     },
     "agent": {
       "title": "Desktop agent",
@@ -1613,7 +1617,21 @@
       "kycTitle": "KYC profile",
       "status": "Status",
       "identitySourceAgreement": "Identity, source of funds, agreement",
-      "savedTitle": "Saved plans"
+      "savedTitle": "Saved plans",
+      "kyc_fullName": "Full name",
+      "kyc_organization": "Organization (optional)",
+      "kyc_country": "Country",
+      "kyc_investmentThesis": "Investment thesis",
+      "kyc_sourceOfFunds": "Source of funds",
+      "kyc_agreement": "I confirm the information is accurate and agree to verification.",
+      "kyc_submit": "Submit for review",
+      "kyc_submitted": "Verification submitted",
+      "kyc_approved": "Approved",
+      "kyc_rejected": "Rejected",
+      "kyc_notSubmitted": "Not submitted",
+      "kyc_reviewNote": "Review note",
+      "kyc_loading": "Loading verification profile...",
+      "kyc_saveFailed": "Could not save verification profile."
     },
     "plans": {
       "title": "Business plans",

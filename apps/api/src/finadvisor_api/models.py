@@ -240,6 +240,28 @@ class MarketplaceMessage(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class InvestorVerification(Base):
+    __tablename__ = "investor_verifications"
+    __table_args__ = (
+        CheckConstraint("status IN ('submitted', 'approved', 'rejected')", name="ck_investor_verifications_status"),
+        UniqueConstraint("user_id", name="uq_investor_verifications_user"),
+        Index("ix_investor_verifications_status_created", "status", "created_at"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    full_name: Mapped[str] = mapped_column(String(200))
+    organization: Mapped[str | None] = mapped_column(String(200), nullable=True)
+    country: Mapped[str] = mapped_column(String(100))
+    investment_thesis: Mapped[str] = mapped_column(String(2000))
+    source_of_funds: Mapped[str] = mapped_column(String(1000))
+    agreement_accepted: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    status: Mapped[str] = mapped_column(String(16), default="submitted", server_default="submitted")
+    review_note: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
 class LedgerEntry(Base):
     __tablename__ = "ledger_entries"
 

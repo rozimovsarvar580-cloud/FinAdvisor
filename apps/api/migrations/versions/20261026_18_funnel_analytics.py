@@ -12,6 +12,25 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
+    op.create_table(
+        "investor_verifications",
+        sa.Column("id", sa.String(36), primary_key=True, nullable=False),
+        sa.Column("user_id", sa.String(36), sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False),
+        sa.Column("full_name", sa.String(200), nullable=False),
+        sa.Column("organization", sa.String(200), nullable=True),
+        sa.Column("country", sa.String(100), nullable=False),
+        sa.Column("investment_thesis", sa.String(2000), nullable=False),
+        sa.Column("source_of_funds", sa.String(1000), nullable=False),
+        sa.Column("agreement_accepted", sa.Boolean(), nullable=False),
+        sa.Column("status", sa.String(16), server_default="submitted", nullable=False),
+        sa.Column("review_note", sa.String(1000), nullable=True),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column("reviewed_at", sa.DateTime(timezone=True), nullable=True),
+        sa.CheckConstraint("status IN ('submitted', 'approved', 'rejected')", name="ck_investor_verifications_status"),
+        sa.UniqueConstraint("user_id", name="uq_investor_verifications_user"),
+    )
+    op.create_index("ix_investor_verifications_user_id", "investor_verifications", ["user_id"])
+    op.create_index("ix_investor_verifications_status_created", "investor_verifications", ["status", "created_at"])
     op.add_column("marketplace_listings", sa.Column("status", sa.String(16), server_default="published", nullable=False))
     op.add_column("marketplace_listings", sa.Column("public_financial_fields", sa.JSON(), server_default="[]", nullable=False))
     op.add_column("marketplace_listings", sa.Column("request_financial_fields", sa.JSON(), server_default="[]", nullable=False))
@@ -55,6 +74,9 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    op.drop_index("ix_investor_verifications_status_created", table_name="investor_verifications")
+    op.drop_index("ix_investor_verifications_user_id", table_name="investor_verifications")
+    op.drop_table("investor_verifications")
     op.drop_index("ix_marketplace_messages_sender_id", table_name="marketplace_messages")
     op.drop_index("ix_marketplace_messages_request_id", table_name="marketplace_messages")
     op.drop_table("marketplace_messages")

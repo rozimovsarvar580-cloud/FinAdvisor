@@ -1440,7 +1440,11 @@
       "aiCostUsd": "Taxminiy AI xarajati (USD)",
       "costUnavailable": "Taxmin to‘liq emas",
       "noAIUsage": "Bu oyda AI sarfi yoki obuna daromadi qayd etilmagan.",
-      "revenueUnavailable": "Daromad ma’lumotlarini olib bo‘lmadi."
+      "revenueUnavailable": "Daromad ma’lumotlarini olib bo‘lmadi.",
+      "kyc_adminTitle": "Investor tekshiruv so‘rovlari",
+      "kyc_approve": "Tasdiqlash",
+      "kyc_reject": "Rad etish",
+      "kyc_noRequests": "Tekshiruv so‘rovlari yo‘q."
     },
     "agent": {
       "title": "Kompyuter agenti",
@@ -1613,7 +1617,21 @@
       "kycTitle": "KYC profili",
       "status": "Holat",
       "identitySourceAgreement": "Shaxsni tasdiqlash, mablag‘ manbasi, kelishuv",
-      "savedTitle": "Saqlangan biznes-rejalar"
+      "savedTitle": "Saqlangan biznes-rejalar",
+      "kyc_fullName": "To‘liq ism",
+      "kyc_organization": "Tashkilot (ixtiyoriy)",
+      "kyc_country": "Mamlakat",
+      "kyc_investmentThesis": "Investitsiya strategiyasi",
+      "kyc_sourceOfFunds": "Mablag‘ manbasi",
+      "kyc_agreement": "Ma’lumotlar to‘g‘riligini tasdiqlayman va tekshiruvga roziman.",
+      "kyc_submit": "Tekshiruvga yuborish",
+      "kyc_submitted": "Tekshiruv uchun yuborildi",
+      "kyc_approved": "Tasdiqlandi",
+      "kyc_rejected": "Rad etildi",
+      "kyc_notSubmitted": "Yuborilmagan",
+      "kyc_reviewNote": "Tekshiruv izohi",
+      "kyc_loading": "Tekshiruv profili yuklanmoqda...",
+      "kyc_saveFailed": "Tekshiruv profilini saqlab bo‘lmadi."
     },
     "plans": {
       "title": "Biznes-rejalar",

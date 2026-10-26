@@ -393,8 +393,7 @@ def test_public_listing_detail_shows_linked_plan_but_not_original_inputs(
     body = detail.json()
     assert body["plan_id"] == plan_id
     assert body["plan"]["summary"] == "Owner-reviewed plan summary."
-    assert body["plan"]["calculations"]["monthly_revenue"] == "150000000.00"
-    assert set(body["plan"]["calculations"]) == {"monthly_revenue"}
+    assert body["plan"]["calculations"] == {}
     assert body["request_financial_fields"] == ["dscr"]
     assert "request_payload" not in body
 
@@ -404,6 +403,48 @@ def test_public_listing_detail_shows_linked_plan_but_not_original_inputs(
         headers=headers,
     )
     assert client.get(f"/marketplace/listings/{listing_id}").status_code == 404
+
+
+def test_investor_verification_controls_detailed_financial_access(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    owner = register_user(client, "kyc-owner@example.com")
+    investor = register_user(client, "kyc-investor@example.com", role="investor")
+    plan_id = generate_saved_plan(client, owner, monkeypatch, "Verified Investor Cafe")
+    listing = client.post(
+        "/marketplace/listings",
+        json={**listing_payload(plan_id), "public_financial_fields": ["monthly_revenue"]},
+        headers=owner,
+    ).json()
+    url = f"/marketplace/listings/{listing['id']}"
+    assert client.get(url, headers=investor).json()["plan"]["calculations"] == {}
+    submitted = client.put(
+        "/investors/kyc",
+        json={
+            "full_name": "Investor Person", "organization": "Fund One", "country": "Uzbekistan",
+            "investment_thesis": "We support growing local restaurants.",
+            "source_of_funds": "Regulated investment fund capital.", "agreement_accepted": True,
+        },
+        headers=investor,
+    )
+    assert submitted.status_code == 200
+    assert submitted.json()["status"] == "submitted"
+    assert client.get(url, headers=investor).json()["plan"]["calculations"] == {}
+
+    admin = register_user(client, "kyc-admin@example.com")
+    with client.app.state.test_session_factory() as db:
+        admin_id = db.scalar(select(User).where(User.email == "kyc-admin@example.com")).id
+        db.get(User, admin_id).role = "admin"
+        db.commit()
+    queue = client.get("/admin/investor-verifications", headers=admin)
+    assert queue.status_code == 200
+    verification_id = queue.json()["items"][0]["id"]
+    reviewed = client.patch(
+        f"/admin/investor-verifications/{verification_id}",
+        json={"status": "approved", "review_note": "Profile reviewed"}, headers=admin,
+    )
+    assert reviewed.status_code == 200
+    assert client.get(url, headers=investor).json()["plan"]["calculations"]["monthly_revenue"] == "150000000.00"
 
 
 def test_listing_cannot_reference_another_owners_saved_plan(

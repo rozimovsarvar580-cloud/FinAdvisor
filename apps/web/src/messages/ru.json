@@ -1440,7 +1440,11 @@
       "aiCostUsd": "Расчётные расходы на ИИ (USD)",
       "costUnavailable": "Неполная оценка",
       "noAIUsage": "Нет данных об ИИ или доходе за месяц.",
-      "revenueUnavailable": "Не удалось загрузить данные."
+      "revenueUnavailable": "Не удалось загрузить данные.",
+      "kyc_adminTitle": "Заявки инвесторов на проверку",
+      "kyc_approve": "Одобрить",
+      "kyc_reject": "Отклонить",
+      "kyc_noRequests": "Нет заявок на проверку."
     },
     "agent": {
       "title": "Десктопный агент",
@@ -1613,7 +1617,21 @@
       "kycTitle": "Профиль KYC",
       "status": "Статус",
       "identitySourceAgreement": "Личность, источник средств, соглашение",
-      "savedTitle": "Сохранённые бизнес-планы"
+      "savedTitle": "Сохранённые бизнес-планы",
+      "kyc_fullName": "Полное имя",
+      "kyc_organization": "Организация (необязательно)",
+      "kyc_country": "Страна",
+      "kyc_investmentThesis": "Инвестиционная стратегия",
+      "kyc_sourceOfFunds": "Источник средств",
+      "kyc_agreement": "Подтверждаю точность сведений и согласен на проверку.",
+      "kyc_submit": "Отправить на проверку",
+      "kyc_submitted": "Данные отправлены на проверку",
+      "kyc_approved": "Одобрено",
+      "kyc_rejected": "Отклонено",
+      "kyc_notSubmitted": "Не отправлено",
+      "kyc_reviewNote": "Комментарий проверки",
+      "kyc_loading": "Загрузка профиля проверки...",
+      "kyc_saveFailed": "Не удалось сохранить профиль проверки."
     },
     "plans": {
       "title": "Бизнес-планы",

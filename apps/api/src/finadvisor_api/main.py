@@ -21,6 +21,7 @@ from finadvisor_api.calculations import router as calculations_router
 from finadvisor_api.chat import router as chat_router
 from finadvisor_api.commission import router as commission_router
 from finadvisor_api.documents import router as documents_router
+from finadvisor_api.investor_verification import router as investor_verification_router
 from finadvisor_api.legacy.audit import audit_middleware
 from finadvisor_api.legacy.errors import http_exception_handler, validation_exception_handler
 from finadvisor_api.legacy.rate_limit import rate_limit_middleware
@@ -71,6 +72,7 @@ app.include_router(chat_router)
 app.include_router(commission_router)
 app.include_router(documents_router)
 app.include_router(marketplace_router)
+app.include_router(investor_verification_router)
 app.include_router(calculations_router)
 app.include_router(plans_router)
 app.include_router(pricing_router)

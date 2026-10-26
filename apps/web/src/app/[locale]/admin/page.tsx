@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { authOptions } from "../../../lib/auth";
+import InvestorVerificationQueue from "./InvestorVerificationQueue";
 
 const locales = ["uz", "ru", "en"] as const;
 export function generateStaticParams() { return locales.map((locale) => ({ locale })); }
@@ -71,6 +72,7 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
   let aiStatus: z.infer<typeof aiStatusSchema> | null = null;
   let revenue: z.infer<typeof revenueSchema> | null = null;
   let funnel: z.infer<typeof funnelSchema> | null = null;
+  let investorVerifications: Array<{ id: string; user_id: string; email: string; full_name: string; organization: string | null; country: string; investment_thesis: string; source_of_funds: string; status: "submitted" | "approved" | "rejected"; review_note: string | null }> = [];
 
   if (session?.user.role === "admin" && session.accessToken) {
     const apiUrl = process.env.FINADVISOR_API_URL ?? "http://127.0.0.1:8000";
@@ -99,6 +101,13 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
         const result = funnelSchema.safeParse(await funnelResponse.json());
         if (result.success) funnel = result.data;
       }
+      const verificationResponse = await fetch(`${apiUrl}/admin/investor-verifications`, {
+        headers: { Authorization: `Bearer ${session.accessToken}` }, cache: "no-store"
+      });
+      if (verificationResponse.ok) {
+        const result = z.object({ items: z.array(z.object({ id: z.string(), user_id: z.string(), email: z.string(), full_name: z.string(), organization: z.string().nullable(), country: z.string(), investment_thesis: z.string(), source_of_funds: z.string(), status: z.enum(["submitted", "approved", "rejected"]), review_note: z.string().nullable() })) }).safeParse(await verificationResponse.json());
+        if (result.success) investorVerifications = result.data.items;
+      }
     } catch (error) {
       if (!(error instanceof TypeError || error instanceof SyntaxError)) throw error;
     }
@@ -108,6 +117,7 @@ export default async function AdminPage({ params }: { params: Promise<{ locale: 
     <main>
       <h1>{t("admin.title")}</h1>
       <ul><li>{t("admin.users")}</li><li>{t("admin.planModeration")}</li><li>{t("admin.kycReview")}</li><li>{t("admin.auditLog")}</li><li>{t("admin.featureFlags")}</li></ul>
+      {session?.user.role === "admin" && session.accessToken && <InvestorVerificationQueue initialItems={investorVerifications} accessToken={session.accessToken} labels={{ title: t("admin.kyc_adminTitle"), empty: t("admin.kyc_noRequests"), status: t("investors.status"), approve: t("admin.kyc_approve"), reject: t("admin.kyc_reject"), submitted: t("investors.kyc_submitted"), approved: t("investors.kyc_approved"), rejected: t("investors.kyc_rejected") }} />}
       <section aria-labelledby="ai-status-title">
         <h2 id="ai-status-title">{t("admin.aiStatusTitle")}</h2>
         {aiStatus ? (

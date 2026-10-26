@@ -293,7 +293,7 @@ engine = `packages/finance-engine`.
   - done: investor sends a contact request, owner accepts/declines, then threaded messages with email notifications; rate limits
   - exists: apps/api/tests/test_marketplace_messages.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_marketplace_messages.py -q
-- [ ] 7.4 Investor verification
+- [x] 7.4 Investor verification
   - done: investor profile and KYC status flow (submitted, approved, rejected) with admin review; only approved investors see detailed financials
 - [ ] 7.5 Moderation
   - done: report listing/message, admin review queue, hide/ban actions, audit log entries

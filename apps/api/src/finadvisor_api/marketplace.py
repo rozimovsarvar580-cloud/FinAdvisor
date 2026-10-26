@@ -7,10 +7,11 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from finadvisor_api.auth import get_current_user
+from finadvisor_api.auth import _get_current_user, bearer_scheme, get_current_user
 from finadvisor_api.database import get_db
 from finadvisor_api.email_sender import EmailDeliveryError, send_marketplace_email
 from finadvisor_api.models import (
+    InvestorVerification,
     MarketplaceContactRequest,
     MarketplaceListing,
     MarketplaceMessage,
@@ -132,6 +133,7 @@ def my_listings(
 def public_listing_details(
     listing_id: str,
     db: Annotated[Session, Depends(get_db)],
+    credentials=Depends(bearer_scheme),
 ) -> MarketplaceListingDetailResponse:
     listing = db.scalar(
         select(MarketplaceListing).where(
@@ -152,6 +154,13 @@ def public_listing_details(
             detail="marketplace.listing_not_found",
         )
     plan = PlanGenerateResponse.model_validate(saved_plan.generated_plan)
+    investor = _get_current_user(credentials, db) if credentials else None
+    verification = db.scalar(
+        select(InvestorVerification).where(
+            InvestorVerification.user_id == investor.id,
+            InvestorVerification.status == "approved",
+        )
+    ) if investor and investor.role == "investor" else None
     return MarketplaceListingDetailResponse(
         **_listing_response(listing).model_dump(),
         plan={
@@ -160,7 +169,7 @@ def public_listing_details(
             "calculations": {
                 key: value
                 for key, value in plan.calculations.model_dump().items()
-                if key in (listing.public_financial_fields or [])
+                if verification and key in (listing.public_financial_fields or [])
             },
         },
     )
