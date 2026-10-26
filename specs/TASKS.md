@@ -311,7 +311,7 @@ engine = `packages/finance-engine`.
   - done: owner issues commands (generate growth plan, generate report, explain this month); stored, executed by backend/AI, results delivered to owner and agent
 - [x] 8.4 App shell and login
   - done: Tauri app shell with login against the API, language and theme, same design tokens; session token stored in the OS keychain, never in plain files
-- [ ] 8.5 Dashboard
+- [x] 8.5 Dashboard
   - done: day/week/month/year revenue, profit, taxes, stock overview with charts, offline-friendly
 - [ ] 8.6 Accountant screens
   - done: inventory in/out, sales entry, expense entry, product catalog; validation and keyboard-friendly forms

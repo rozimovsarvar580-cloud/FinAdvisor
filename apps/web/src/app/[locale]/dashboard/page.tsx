@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import en from "@legacy-messages/en.json";
 import ru from "@legacy-messages/ru.json";
 import uz from "@legacy-messages/uz.json";
+import { AccountingDashboard } from "@/components/dashboard/accounting-dashboard";
 
 const messages = { uz, ru, en } as const;
 
@@ -23,20 +24,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
     <main style={{ maxWidth: 960 }}>
       <h1>{home.title}</h1>
       <h2>{t("dashboard.title")}</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16 }}>
-        <div className="rounded-xl border border-border p-5">
-          <strong>{t("dashboard.monthlyRevenue")}</strong>
-          <p>248,000,000 UZS</p>
-        </div>
-        <div className="rounded-xl border border-border p-5">
-          <strong>{t("dashboard.monthlyProfit")}</strong>
-          <p>42,700,000 UZS</p>
-        </div>
-        <div className="rounded-xl border border-border p-5">
-          <strong>{t("dashboard.breakEven")}</strong>
-          <p>{t("dashboard.breakEvenDays", { days: 42 })}</p>
-        </div>
-      </div>
+      <AccountingDashboard />
       <nav style={{ display: "flex", gap: 12, marginTop: 24, flexWrap: "wrap" }}>
         <Link href={`/${locale}/dashboard/onboarding`}>{t("dashboard.onboarding")}</Link>
         <Link href={`/${locale}/dashboard/settings`}>{t("dashboard.settings")}</Link>

@@ -1410,7 +1410,31 @@
       "currency": "Valyuta",
       "language": "Til",
       "emailNotifications": "Elektron pochta bildirishnomalari",
-      "enabled": "yoqilgan"
+      "enabled": "yoqilgan",
+      "analyticsTitle": "Buxgalteriya sharhi",
+      "analyticsDescription": "Buxgalteriya yozuvlaridagi tushum, foyda, soliqlar va zaxiralar.",
+      "periods": {
+        "day": "Bugun",
+        "week": "Shu hafta",
+        "month": "Shu oy",
+        "year": "Shu yil"
+      },
+      "metrics": {
+        "revenue": "Tushum",
+        "profit": "Foyda",
+        "taxes": "Soliqlar"
+      },
+      "stockTitle": "Zaxiralar sharhi",
+      "stock": {
+        "in": "Kirim",
+        "sold": "Sotildi",
+        "remaining": "Qoldiq"
+      },
+      "revenueChartTitle": "Davrlar bo?yicha tushum",
+      "offlineCached": "Internet yo?q: saqlangan hisobotlar ko?rsatilmoqda.",
+      "offlineUnavailable": "Internet bo?lmaganda hisobotlar mavjud emas.",
+      "loadingReports": "Hisobotlar yuklanmoqda?",
+      "reportUnavailable": "Hisobot mavjud emas"
     },
     "onboardingRole": {
       "title": "Hisob turini tanlang",

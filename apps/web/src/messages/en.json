@@ -1410,7 +1410,31 @@
       "currency": "Currency",
       "language": "Language",
       "emailNotifications": "Email notifications",
-      "enabled": "enabled"
+      "enabled": "enabled",
+      "analyticsTitle": "Accounting overview",
+      "analyticsDescription": "Revenue, profit, taxes and stock from your accounting records.",
+      "periods": {
+        "day": "Today",
+        "week": "This week",
+        "month": "This month",
+        "year": "This year"
+      },
+      "metrics": {
+        "revenue": "Revenue",
+        "profit": "Profit",
+        "taxes": "Taxes"
+      },
+      "stockTitle": "Stock overview",
+      "stock": {
+        "in": "Received",
+        "sold": "Sold",
+        "remaining": "Remaining"
+      },
+      "revenueChartTitle": "Revenue by period",
+      "offlineCached": "Offline: showing saved reports.",
+      "offlineUnavailable": "Reports are unavailable while offline.",
+      "loadingReports": "Loading reports?",
+      "reportUnavailable": "Report unavailable"
     },
     "onboardingRole": {
       "title": "Choose your account role",
