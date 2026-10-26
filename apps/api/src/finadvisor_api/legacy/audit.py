@@ -3,7 +3,13 @@ from uuid import uuid4
 
 from fastapi import Request
 
+from finadvisor_api.request_logging import RequestJsonFormatter
+
 logger = logging.getLogger("finadvisor.audit")
+if not any(isinstance(handler.formatter, RequestJsonFormatter) for handler in logger.handlers):
+    handler = logging.StreamHandler()
+    handler.setFormatter(RequestJsonFormatter())
+    logger.addHandler(handler)
 
 _ACTIONS = (
     ("/auth/login", "login"),
@@ -55,6 +61,7 @@ async def audit_middleware(request: Request, call_next):
             getattr(request.state, "request_id", "unknown"),
             extra={
                 "request_id": getattr(request.state, "request_id", "unknown"),
+                "user_id": getattr(request.state, "audit_actor_id", None),
                 "method": request.method,
                 "path": request.url.path,
                 "status_code": response.status_code,
