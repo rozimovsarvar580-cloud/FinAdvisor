@@ -325,7 +325,7 @@ engine = `packages/finance-engine`.
 - [x] 8.10 Release workflow
   - done: GitHub Actions matrix (windows-latest, macos-latest) with tauri-action builds installers and attaches them to a GitHub Release on version tags
   - exists: .github/workflows/desktop-release.yml
-- [ ] 8.11 Download page
+- [x] 8.11 Download page
   - done: `/[locale]/desktop-agent` detects the OS, links the latest release assets, shows system requirements and install steps; unsigned-app warning text until signing is done
 - [ ] 8.12 Signing and auto-update
   - done: updater with signature verification, signing steps wired to CI secrets and documented in `apps/desktop/README.md`

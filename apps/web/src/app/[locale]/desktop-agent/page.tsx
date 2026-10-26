@@ -52,6 +52,30 @@ export default function DesktopAgentPage() {
           ))}
         </div>
       </Card>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold">{t("requirementsTitle")}</h2>
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
+            <li>{t("requirements.os")}</li>
+            <li>{t("requirements.architecture")}</li>
+            <li>{t("requirements.connection")}</li>
+          </ul>
+        </Card>
+        <Card className="p-6">
+          <h2 className="text-xl font-semibold">{t("installTitle")}</h2>
+          <ol className="mt-4 list-decimal space-y-2 pl-5 text-muted-foreground">
+            <li>{t("installSteps.download")}</li>
+            <li>{t("installSteps.open")}</li>
+            <li>{t("installSteps.signIn")}</li>
+          </ol>
+        </Card>
+      </div>
+
+      <aside className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-foreground" role="note">
+        <h2 className="font-semibold">{t("unsignedTitle")}</h2>
+        <p className="mt-1 text-muted-foreground">{t("unsignedNotice")}</p>
+      </aside>
     </section>
   );
 }

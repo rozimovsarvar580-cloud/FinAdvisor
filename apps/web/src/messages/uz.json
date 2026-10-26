@@ -1307,6 +1307,20 @@
     "downloadFor": "Uchun yuklab oling",
     "recommended": "Tavsiya etilgan paket: {platform}",
     "detected": "Aniqlandi: {platform}",
+    "requirementsTitle": "Tizim talablari",
+    "requirements": {
+      "os": "Windows yoki macOS o‘rnatilgan qo‘llab-quvvatlanadigan kompyuter.",
+      "architecture": "64-bit protsessor.",
+      "connection": "Kirish va ma’lumotlarni sinxronlash uchun internet aloqasi."
+    },
+    "installTitle": "O‘rnatish",
+    "installSteps": {
+      "download": "Operatsion tizimingiz uchun o‘rnatuvchini yuklab oling.",
+      "open": "Yuklangan faylni oching va o‘rnatish ko‘rsatmalariga amal qiling.",
+      "signIn": "FinAdvisor Agentni ishga tushiring va hisobingizga kiring."
+    },
+    "unsignedTitle": "Ilova hali imzolanmagan",
+    "unsignedNotice": "O‘rnatuvchi hozircha raqamli imzoga ega emas. Operatsion tizimingiz xavfsizlik ogohlantirishini ko‘rsatishi mumkin. Faqat faylni ushbu rasmiy reliz sahifasidan yuklab olgan bo‘lsangiz davom eting.",
     "stats": {
       "queued": "Navbatda",
       "highPriority": "Yuqori ustuvorlik",

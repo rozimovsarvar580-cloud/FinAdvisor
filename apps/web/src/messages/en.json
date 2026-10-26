@@ -1307,6 +1307,20 @@
     "downloadFor": "Download for",
     "recommended": "Recommended package: {platform}",
     "detected": "Detected: {platform}",
+    "requirementsTitle": "System requirements",
+    "requirements": {
+      "os": "A supported Windows or macOS computer.",
+      "architecture": "A 64-bit processor.",
+      "connection": "An internet connection for sign-in and data sync."
+    },
+    "installTitle": "Installation",
+    "installSteps": {
+      "download": "Download the installer for your operating system.",
+      "open": "Open the downloaded file and follow the installer prompts.",
+      "signIn": "Launch FinAdvisor Agent and sign in to your account."
+    },
+    "unsignedTitle": "App is not signed yet",
+    "unsignedNotice": "The installer is currently unsigned. Your operating system may show a security warning. Continue only if you downloaded it from this official release page.",
     "stats": {
       "queued": "Queued",
       "highPriority": "High priority",
