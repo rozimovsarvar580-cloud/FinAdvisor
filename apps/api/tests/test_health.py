@@ -16,6 +16,39 @@ def test_health_check_returns_ok() -> None:
     assert response.json() == {"status": "ok"}
 
 
+def test_api_security_headers_are_present() -> None:
+    response = client.get("/health")
+
+    assert response.headers["x-content-type-options"] == "nosniff"
+    assert response.headers["x-frame-options"] == "DENY"
+    assert response.headers["referrer-policy"] == "strict-origin-when-cross-origin"
+    assert response.headers["permissions-policy"] == "camera=(), microphone=(), geolocation=()"
+    assert response.headers["content-security-policy"] == (
+        "default-src 'none'; frame-ancestors 'none'; base-uri 'none'"
+    )
+
+
+def test_cors_allows_configured_origin_and_rejects_unlisted_origin() -> None:
+    allowed = client.options(
+        "/health",
+        headers={
+            "Origin": "http://localhost:3000",
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+    rejected = client.options(
+        "/health",
+        headers={
+            "Origin": "https://attacker.example",
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+
+    assert allowed.headers["access-control-allow-origin"] == "http://localhost:3000"
+    assert allowed.headers["access-control-allow-credentials"] == "true"
+    assert "access-control-allow-origin" not in rejected.headers
+
+
 def test_readiness_check_returns_ok_when_dependencies_and_migrations_are_ready(monkeypatch) -> None:
     class Connection:
         def __enter__(self):

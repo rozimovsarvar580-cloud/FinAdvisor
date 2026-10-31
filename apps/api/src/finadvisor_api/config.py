@@ -32,6 +32,7 @@ class Settings:
     sentry_dsn: str | None
     finadvisor_api_url: str
     next_public_api_url: str
+    cors_allowed_origins: tuple[str, ...]
     openai_api_key: str | None
     openai_model: str
     openai_timeout_seconds: float
@@ -104,8 +105,20 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
     next_public_api_url = values.get(
         "NEXT_PUBLIC_API_URL", "http://127.0.0.1:8000"
     ).strip()
+    cors_allowed_origins = tuple(
+        origin.strip().rstrip("/")
+        for origin in values.get(
+            "CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000"
+        ).split(",")
+        if origin.strip()
+    )
     _validate_url("FINADVISOR_API_URL", finadvisor_api_url, {"http", "https"})
     _validate_url("NEXT_PUBLIC_API_URL", next_public_api_url, {"http", "https"})
+    for origin in cors_allowed_origins:
+        _validate_url("CORS_ALLOWED_ORIGINS", origin, {"http", "https"})
+        parsed_origin = urlsplit(origin)
+        if parsed_origin.path or parsed_origin.query or parsed_origin.fragment or parsed_origin.username:
+            raise ValueError("CORS_ALLOWED_ORIGINS entries must contain only an origin")
 
     return Settings(
         environment=environment,
@@ -134,6 +147,7 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         sentry_dsn=sentry_dsn,
         finadvisor_api_url=finadvisor_api_url,
         next_public_api_url=next_public_api_url,
+        cors_allowed_origins=cors_allowed_origins,
         openai_api_key=_optional(values, "OPENAI_API_KEY"),
         openai_model=values.get("OPENAI_MODEL", "gpt-4o-mini").strip(),
         openai_timeout_seconds=openai_timeout_seconds,

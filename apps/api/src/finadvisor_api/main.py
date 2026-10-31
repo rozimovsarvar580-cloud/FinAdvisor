@@ -13,6 +13,7 @@ from fastapi.exception_handlers import (
     request_validation_exception_handler as default_validation_exception_handler,
 )
 from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from redis import Redis
 from redis.exceptions import RedisError
@@ -66,6 +67,26 @@ if settings.sentry_dsn:
     )
 
 app = FastAPI(title="FinAdvisor API", version="0.1.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=list(settings.cors_allowed_origins),
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
+)
+
+
+@app.middleware("http")
+async def security_headers_middleware(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    response.headers["Content-Security-Policy"] = "default-src 'none'; frame-ancestors 'none'; base-uri 'none'"
+    if settings.environment in {"prod", "production"}:
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
 
 
 async def handle_http_exception(request: Request, exc: HTTPException) -> Response:

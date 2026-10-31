@@ -13,6 +13,19 @@ def test_development_settings_have_local_defaults() -> None:
     assert settings.payment_provider == "disabled"
     assert settings.email_port == 587
     assert settings.openai_timeout_seconds == 30
+    assert settings.cors_allowed_origins == (
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    )
+
+
+def test_cors_origins_are_configurable_and_must_be_origins() -> None:
+    settings = load_settings({"CORS_ALLOWED_ORIGINS": "https://app.example, https://admin.example/"})
+
+    assert settings.cors_allowed_origins == ("https://app.example", "https://admin.example")
+
+    with pytest.raises(ValueError, match="only an origin"):
+        load_settings({"CORS_ALLOWED_ORIGINS": "https://app.example/path"})
 
 
 def test_settings_load_optional_integrations_and_api_urls() -> None:

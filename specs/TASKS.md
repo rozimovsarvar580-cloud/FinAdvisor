@@ -350,7 +350,7 @@ engine = `packages/finance-engine`.
   - exists: docs/RUNBOOK.md, scripts/backup.sh
 
 ## Stage 10 - Security and compliance
-- [ ] 10.1 HTTP hardening
+- [x] 10.1 HTTP hardening
   - done: strict CORS allowlist, security headers (CSP, HSTS, frame, referrer, permissions), cookies httpOnly/secure/sameSite
 - [ ] 10.2 Rate limiting
   - done: Redis-backed limits on auth, AI, upload, export, messaging endpoints; tests
