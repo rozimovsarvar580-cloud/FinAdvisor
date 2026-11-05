@@ -7,6 +7,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Link } from "@/i18n/navigation";
 
 const criterionKeySchema = z.enum([
   "market_analysis",
@@ -186,9 +187,18 @@ export function PlanAnalyzer() {
         ) : null}
       </div>
       {requestError ? (
-        <p className="mt-4 text-sm text-red-600" role="alert">
-          {errors(requestError)}
-        </p>
+        <>
+          <p className="mt-4 text-sm text-destructive" role="alert">
+            {errors(requestError)}
+          </p>
+          {requestError === "aiLimitReached" ? (
+            <Button asChild className="mt-4" variant="outline">
+              <Link href="/app/billing?plan=pro&period=weekly">
+                {t("upgradeToPro")}
+              </Link>
+            </Button>
+          ) : null}
+        </>
       ) : null}
       <Button
         className="mt-5"

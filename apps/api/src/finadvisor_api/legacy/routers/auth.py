@@ -9,17 +9,13 @@ from ..schemas import (
     RegisterRequest,
     VerificationRequest,
 )
-from ..session_repository import create_session
 from ..verification_repository import consume_verification, issue_verification
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/login", response_model=AuthResponse)
-async def login(data: LoginRequest, db: Session = Depends(get_db)) -> AuthResponse:
-    if data.email == "demo@finadvisor.uz" and data.password == "secret123":
-        create_session(db, "demo-token", str(data.email))
-        return AuthResponse(message="Login successful", email=data.email, token="demo-token")
+async def login(data: LoginRequest) -> AuthResponse:
     raise HTTPException(status_code=401, detail={"code": "invalid_credentials", "message": "Invalid email or password", "details": {}})
 
 

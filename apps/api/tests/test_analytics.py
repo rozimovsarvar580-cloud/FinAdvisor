@@ -7,7 +7,7 @@ from sqlalchemy.pool import StaticPool
 from finadvisor_api.auth import get_current_user
 from finadvisor_api.database import Base, get_db
 from finadvisor_api.main import app
-from finadvisor_api.models import FunnelEvent, User
+from finadvisor_api.models import AnalyticsConsent, FunnelEvent, User
 
 
 @pytest.fixture
@@ -32,9 +32,31 @@ def test_event_requires_explicit_consent_and_is_stored(analytics_context):
     client = TestClient(app)
     rejected = client.post("/analytics/events", json={"event": "visit", "consent": False, "visitor_id": "visitor_identifier_123"})
     assert rejected.status_code == 400
+    no_record = client.post("/analytics/events", json={"event": "visit", "consent": True, "visitor_id": "visitor_identifier_123"})
+    assert no_record.status_code == 400
+    client.post(
+        "/analytics/consent",
+        json={"visitor_id": "visitor_identifier_123", "consent": True},
+    )
     accepted = client.post("/analytics/events", json={"event": "visit", "consent": True, "visitor_id": "visitor_identifier_123"})
     assert accepted.status_code == 202
     assert analytics_context.query(FunnelEvent).one().event == "visit"
+    assert analytics_context.query(AnalyticsConsent).one().consented is True
+
+
+def test_withdrawn_analytics_consent_blocks_future_events(analytics_context):
+    client = TestClient(app)
+    visitor_id = "visitor_identifier_123"
+    client.post("/analytics/consent", json={"visitor_id": visitor_id, "consent": True})
+    client.post("/analytics/consent", json={"visitor_id": visitor_id, "consent": False})
+
+    response = client.post(
+        "/analytics/events",
+        json={"event": "visit", "consent": True, "visitor_id": visitor_id},
+    )
+
+    assert response.status_code == 400
+    assert analytics_context.query(FunnelEvent).count() == 0
 
 
 def test_admin_funnel_aggregates_consented_events_and_rejects_non_admin(analytics_context):

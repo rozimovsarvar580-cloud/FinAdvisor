@@ -21,7 +21,7 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
 
     assert sum(revision.down_revision is None for revision in revisions) == 1
     assert all(not isinstance(revision.down_revision, tuple) for revision in revisions)
-    assert script.get_heads() == ["20261026_19"]
+    assert script.get_heads() == ["20261027_20"]
 
     engine = create_engine(f"sqlite:///{database_path.as_posix()}")
     try:
@@ -74,6 +74,14 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
             funnel_indexes = {
                 index["name"] for index in inspect(connection).get_indexes("funnel_events")
             }
+            consent_columns = {
+                column["name"]
+                for column in inspect(connection).get_columns("analytics_consents")
+            }
+            consent_indexes = {
+                index["name"]
+                for index in inspect(connection).get_indexes("analytics_consents")
+            }
             assert "provider_checkout_id" in invoice_columns
             assert "uq_invoices_provider_checkout_id" in invoice_constraints
             assert "pending_plan" in subscription_columns
@@ -87,5 +95,10 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
             assert "uq_commission_statement_user_period" in statement_constraints
             assert {"event", "visitor_id", "user_id", "consented", "created_at"} <= funnel_columns
             assert "ix_funnel_events_event_created" in funnel_indexes
+            assert {"id", "visitor_id", "consented", "created_at"} <= consent_columns
+            assert {
+                "ix_analytics_consents_visitor_id",
+                "ix_analytics_consents_visitor_created",
+            } <= consent_indexes
     finally:
         engine.dispose()

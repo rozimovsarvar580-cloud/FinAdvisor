@@ -25,7 +25,9 @@ def test_admin_surfaces_are_available():
 
 
 def test_agent_surfaces_are_available():
-    client.post("/api/v1/auth/login", json={"email": "demo@finadvisor.uz", "password": "secret123"})
-    headers = {"Authorization": "Bearer demo-token"}
+    token = "admin-agent-test-token"
+    with SessionLocal() as db:
+        create_session(db, token, "demo@finadvisor.uz")
+    headers = {"Authorization": f"Bearer {token}"}
     assert client.get("/api/v1/agent/devices", headers=headers).json()["items"]
     assert client.get("/api/v1/agent/commands", headers=headers).json()["items"]

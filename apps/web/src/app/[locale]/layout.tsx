@@ -6,6 +6,7 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import { AnalyticsConsentBanner } from "@/components/legal/analytics-consent-banner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { isSupportedLocale } from "@/lib/locales";
 import { buildMetadata, buildProductStructuredData } from "@/lib/site-metadata";
@@ -66,6 +67,7 @@ export default async function LocaleLayout({
             <Header />
             {children}
             <Footer />
+            <AnalyticsConsentBanner />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import type { AbstractIntlMessages } from "use-intl";
@@ -162,5 +162,63 @@ describe("profile settings", () => {
     expect(
       screen.queryByRole("button", { name: "Request deletion" })
     ).toBeNull();
+  });
+
+  it("downloads the account data export", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse(profile))
+      .mockResolvedValueOnce(jsonResponse([]))
+      .mockResolvedValueOnce(new Response('{"account":{}}'));
+    vi.stubGlobal("fetch", fetchMock);
+    const createObjectURL = vi.fn(() => "blob:account-export");
+    const revokeObjectURL = vi.fn();
+    vi.stubGlobal("URL", { createObjectURL, revokeObjectURL });
+    const click = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(() => undefined);
+    renderProfileSettings();
+    await screen.findByText("No social accounts are connected.");
+
+    fireEvent.click(screen.getByRole("button", { name: "Download my data" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/api/auth/me/export",
+        { cache: "no-store" }
+      );
+    });
+    expect(createObjectURL).toHaveBeenCalledOnce();
+    expect(click).toHaveBeenCalledOnce();
+    await waitFor(() => {
+      expect(revokeObjectURL).toHaveBeenCalledWith("blob:account-export");
+    });
+  });
+
+  it("allows cancellation of an existing deletion request", async () => {
+    const pendingProfile = {
+      ...profile,
+      deletion_requested_at: "2026-01-02T00:00:00Z"
+    };
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse(pendingProfile))
+      .mockResolvedValueOnce(jsonResponse([]))
+      .mockResolvedValueOnce(jsonResponse(profile));
+    vi.stubGlobal("fetch", fetchMock);
+    renderProfileSettings();
+    await screen.findByText("You have already requested account deletion.");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Cancel deletion request" })
+    );
+
+    expect(await screen.findByText("The deletion request was canceled.")).toBeDefined();
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      3,
+      "/api/auth/me/deletion-request/cancel",
+      expect.objectContaining({ method: "POST" })
+    );
+    expect(screen.queryByText("TODO(DECISION D16): deletion is scheduled after 30 days. You can cancel before then.")).toBeNull();
   });
 });

@@ -42,6 +42,8 @@ export function ProfileSettings() {
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isRequestingDeletion, setIsRequestingDeletion] = useState(false);
+  const [isCancelingDeletion, setIsCancelingDeletion] = useState(false);
+  const [isExportingData, setIsExportingData] = useState(false);
   const [consentToDeletionRequest, setConsentToDeletionRequest] =
     useState(false);
   const [profileMessage, setProfileMessage] = useState("");
@@ -190,6 +192,66 @@ export function ProfileSettings() {
       throw deletionError;
     } finally {
       setIsRequestingDeletion(false);
+    }
+  };
+
+  const cancelDeletion = async () => {
+    setIsCancelingDeletion(true);
+    setError("");
+    setDeletionMessage("");
+    try {
+      const response = await fetch("/api/auth/me/deletion-request/cancel", {
+        method: "POST"
+      });
+      if (!response.ok) {
+        setError(t("cancelDeletionFailed"));
+        return;
+      }
+      const updatedProfile = (await response.json()) as Profile;
+      setProfile(updatedProfile);
+      setDeletionMessage(t("deletionCancelled"));
+    } catch (cancelError) {
+      if (
+        cancelError instanceof TypeError ||
+        cancelError instanceof SyntaxError
+      ) {
+        setError(t("cancelDeletionFailed"));
+        return;
+      }
+      throw cancelError;
+    } finally {
+      setIsCancelingDeletion(false);
+    }
+  };
+
+  const exportMyData = async () => {
+    setIsExportingData(true);
+    setError("");
+    try {
+      const response = await fetch("/api/auth/me/export", { cache: "no-store" });
+      if (!response.ok) {
+        setError(t("exportDataFailed"));
+        return;
+      }
+      const objectUrl = URL.createObjectURL(await response.blob());
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = "finadvisor-data-export.json";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+    } catch (exportError) {
+      if (
+        exportError instanceof TypeError ||
+        exportError instanceof SyntaxError
+      ) {
+        setError(t("exportDataFailed"));
+        return;
+      }
+      throw exportError;
+    } finally {
+      setIsExportingData(false);
     }
   };
 
@@ -356,15 +418,44 @@ export function ProfileSettings() {
         </form>
       </section>
 
+      <section className="rounded-2xl border border-border bg-card p-6">
+        <h2 className="text-xl font-semibold">{t("exportDataTitle")}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {t("exportDataDescription")}
+        </p>
+        <Button
+          className="mt-4"
+          disabled={isExportingData}
+          loading={isExportingData}
+          onClick={() => void exportMyData()}
+          type="button"
+        >
+          {isExportingData ? t("exportDataLoading") : t("exportDataButton")}
+        </Button>
+      </section>
+
       <section className="rounded-2xl border border-destructive/40 bg-card p-6">
         <h2 className="text-xl font-semibold">{t("deleteAccountTitle")}</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           {t("deleteAccountDescription")}
         </p>
         {profile.deletion_requested_at ? (
-          <p className="mt-4 text-sm text-muted-foreground" role="status">
-            {deletionMessage || t("deletionRequestExists")}
-          </p>
+          <div className="mt-4 space-y-3">
+            <p className="text-sm text-muted-foreground" role="status">
+              {deletionMessage || t("deletionRequestExists")}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {t("deletionGracePeriod")}
+            </p>
+            <Button
+              disabled={isCancelingDeletion}
+              loading={isCancelingDeletion}
+              onClick={() => void cancelDeletion()}
+              type="button"
+            >
+              {isCancelingDeletion ? t("cancelingDeletion") : t("cancelDeletion")}
+            </Button>
+          </div>
         ) : (
           <div className="mt-4 space-y-4">
             <label className="flex items-start gap-2 text-sm">

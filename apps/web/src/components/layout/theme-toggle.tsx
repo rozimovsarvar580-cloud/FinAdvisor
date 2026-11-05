@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 
-export function ThemeToggle() {
+export function ThemeToggle({ testId }: { testId?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
   const t = useTranslations("common");
 
@@ -13,7 +13,7 @@ export function ThemeToggle() {
     <Button
       aria-label={t("theme")}
       aria-pressed={resolvedTheme === "dark"}
-      data-testid="theme-toggle"
+      data-testid={testId}
       onClick={() => {
         document.documentElement.classList.add("theme-transition");
         setTheme(resolvedTheme === "dark" ? "light" : "dark");

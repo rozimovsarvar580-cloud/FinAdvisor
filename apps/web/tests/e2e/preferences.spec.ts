@@ -239,17 +239,17 @@ test("pricing periods update, commission uses the API, and guest selects Pro", a
 
   await expect(page.getByText("$10", { exact: true })).toBeVisible();
   await expect(page.getByText("$20", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Oylik" }).click();
-  await expect(page.getByText("$39", { exact: true })).toBeVisible();
-  await expect(page.getByText("$79", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Yillik" }).click();
-  await expect(page.getByText("$390", { exact: true })).toBeVisible();
-  await expect(page.getByText("$790", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Oylik", exact: true }).click();
+  await expect(page.getByText("$40", { exact: true })).toBeVisible();
+  await expect(page.getByText("$80", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Yillik", exact: true }).click();
+  await expect(page.getByText("$384", { exact: true })).toBeVisible();
+  await expect(page.getByText("$768", { exact: true })).toBeVisible();
 
-  await page.getByLabel("Yillik tushum").fill("1100000000");
+  await page.locator("#annual-revenue").fill("1100000000");
   await page.getByRole("button", { name: "Komissiyani hisoblash" }).click();
   await expect(page.getByText(/23000000\.00/)).toBeVisible();
 
   await page.getByRole("button", { name: "Tanlash" }).nth(1).click();
-  await expect(page).toHaveURL(/\/uz\/signup\?plan=pro$/);
+  await expect(page).toHaveURL(/\/uz\/signup\?plan=pro(?:&callbackUrl=.*)?$/);
 });

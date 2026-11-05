@@ -1,13 +1,20 @@
 from fastapi.testclient import TestClient
 
+from finadvisor_api.legacy.db import SessionLocal
 from finadvisor_api.legacy.main import app
+from finadvisor_api.legacy.session_repository import create_session
 
 client = TestClient(app)
-HEADERS = {"Authorization": "Bearer demo-token"}
+HEADERS = {"Authorization": "Bearer accounting-test-token"}
+
+
+def _authenticate() -> None:
+    with SessionLocal() as db:
+        create_session(db, "accounting-test-token", "demo@finadvisor.uz")
 
 
 def test_accounting_surfaces_return_currency_and_data():
-    client.post("/api/v1/auth/login", json={"email": "demo@finadvisor.uz", "password": "secret123"})
+    _authenticate()
     daily = client.get("/api/v1/accounting/daily", headers=HEADERS)
     inventory = client.get("/api/v1/accounting/inventory", headers=HEADERS)
     payroll = client.get("/api/v1/accounting/payroll", headers=HEADERS)
@@ -23,7 +30,7 @@ def test_accounting_surfaces_return_currency_and_data():
 
 
 def test_statement_import_is_explicitly_accepted():
-    client.post("/api/v1/auth/login", json={"email": "demo@finadvisor.uz", "password": "secret123"})
+    _authenticate()
     response = client.post("/api/v1/accounting/import", headers=HEADERS)
     assert response.status_code == 200
     assert response.json()["status"] == "accepted"

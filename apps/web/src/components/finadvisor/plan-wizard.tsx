@@ -649,11 +649,16 @@ export function PlanWizard({
             {t("back")}
           </Button>
           {step < stepKeys.length - 1 ? (
-            <Button onClick={advanceStep} type="button">
+            <Button key="continue" onClick={advanceStep} type="button">
               {t("next")}
             </Button>
           ) : (
-            <Button disabled={isSubmitting} loading={isSubmitting} type="submit">
+            <Button
+              key="generate"
+              disabled={isSubmitting}
+              loading={isSubmitting}
+              type="submit"
+            >
               {isSubmitting ? t("generating") : t("generate")}
             </Button>
           )}

@@ -175,8 +175,12 @@ export function SignupForm({
             </Button>
           </div>
           <div
-            aria-label={`${t("strength")}: ${strengthLabel}`}
+            aria-label={t("strength")}
+            aria-valuemax={4}
+            aria-valuemin={0}
+            aria-valuenow={passwordStrength}
             className="grid grid-cols-4 gap-1"
+            role="meter"
           >
             {[1, 2, 3, 4].map((level) => (
               <span

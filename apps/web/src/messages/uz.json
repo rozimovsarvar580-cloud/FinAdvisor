@@ -33,7 +33,7 @@
       "title": "Biznesingizni raqamlar bilan ishonchli boshqaring",
       "description": "Restoraningiz uchun moliyaviy reja tuzing, xarajat va tushumni tushuning hamda bankka tayyor biznes-reja oling.",
       "primaryCta": "Reja tuzishni boshlash",
-      "secondaryCta": "Namuna rejani ko‘rish",
+      "secondaryCta": "Namuna PDF'ni ko‘rish",
       "footnote": "Raqamlar aniq hisoblanadi. AI ularni sodda tilda tushuntiradi.",
       "profileSettings": {
         "title": "Profil sozlamalari",
@@ -76,7 +76,17 @@
         "deletionRequestSaved": "O‘chirish so‘rovingiz yuborildi.",
         "deletionRequestExists": "Hisobni o‘chirishni avval so‘ragansiz.",
         "requestDeletion": "O‘chirishni so‘rash",
-        "requestingDeletion": "Yuborilmoqda..."
+        "requestingDeletion": "Yuborilmoqda...",
+        "deletionGracePeriod": "TODO(DECISION D16): hisob 30 kundan keyin o‘chirilishi rejalashtiriladi. Shu vaqtgacha so‘rovni bekor qilishingiz mumkin.",
+        "cancelDeletion": "O‘chirish so‘rovini bekor qilish",
+        "cancelingDeletion": "Bekor qilinmoqda...",
+        "cancelDeletionFailed": "O‘chirish so‘rovini bekor qilib bo‘lmadi. Qayta urinib ko‘ring.",
+        "deletionCancelled": "O‘chirish so‘rovi bekor qilindi.",
+        "exportDataTitle": "Ma’lumotlaringizni eksport qilish",
+        "exportDataDescription": "Hisob va biznes ma’lumotlaringizning JSON nusxasini yuklab oling.",
+        "exportDataButton": "Ma’lumotlarimni yuklab olish",
+        "exportDataLoading": "Yuklab olish tayyorlanmoqda...",
+        "exportDataFailed": "Ma’lumotlarni eksport qilib bo‘lmadi. Qayta urinib ko‘ring."
       },
       "dashboard": {
         "ariaLabel": "Biznesni rejalashtirish paneli namunasi",
@@ -674,6 +684,15 @@
       "en": "English"
     },
     "disclaimer": "FinAdvisor taqdim etgan ma’lumotlar umumiy maqsadlar uchun. Ular moliyaviy, soliq yoki yuridik maslahat o‘rnini bosmaydi.",
+    "analyticsConsent": {
+      "title": "Tahlil sozlamalari",
+      "description": "Mahsulotdan foydalanishni tushunishimizga yordam beradigan taxallusli birinchi tomon tahliliga ruxsat bering. Hisobning asosiy funksiyalari bu tanlovga bog‘liq emas.",
+      "accept": "Tahlilga ruxsat berish",
+      "reject": "Tahlilni rad etish",
+      "manage": "Maxfiylik sozlamalari",
+      "saving": "Saqlanmoqda...",
+      "failed": "Tanlovingizni saqlab bo‘lmadi. Qayta urinib ko‘ring."
+    },
     "footer": {
       "product": "Mahsulot",
       "company": "Kompaniya",
@@ -966,6 +985,7 @@
       "chooseFile": "Fayl tanlash",
       "analyze": "Rejani tahlil qilish",
       "analyzing": "Tahlil qilinmoqda...",
+      "upgradeToPro": "Pro tarifiga o‘tish",
       "readinessScore": "Bankka tayyorgarlik bahosi",
       "score": "Tayyorgarlik bahosi: {score} dan 100",
       "missingTitle": "To‘ldirish tavsiya etiladi",

@@ -38,7 +38,7 @@ export function buildMetadata({
   const copy = messages[localizedLocale];
   const canonicalUrl = getCanonicalUrl(pathname, localizedLocale);
   const title = `${siteConfig.name} | ${copy.landing.hero.title}`;
-  const description = copy.landing.hero.description;
+  const description = `${siteConfig.name}: ${copy.landing.hero.description}`;
   const languages = Object.fromEntries(
     routing.locales.map((item) => {
       const localizedPath = pathname === "/" ? `/${item}` : `/${item}${pathname}`;

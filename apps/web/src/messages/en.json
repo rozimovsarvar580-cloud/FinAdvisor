@@ -33,7 +33,7 @@
       "title": "Run your business with confidence and clear numbers",
       "description": "Build a financial plan for your restaurant, understand costs and revenue, and prepare a bank-ready business plan.",
       "primaryCta": "Start your plan",
-      "secondaryCta": "View sample plan",
+      "secondaryCta": "View sample PDF",
       "footnote": "Calculations are exact. AI explains them in plain language.",
       "profileSettings": {
         "title": "Profile settings",
@@ -76,7 +76,17 @@
         "deletionRequestSaved": "Your deletion request has been submitted.",
         "deletionRequestExists": "You have already requested account deletion.",
         "requestDeletion": "Request deletion",
-        "requestingDeletion": "Submitting..."
+        "requestingDeletion": "Submitting...",
+        "deletionGracePeriod": "TODO(DECISION D16): deletion is scheduled after 30 days. You can cancel before then.",
+        "cancelDeletion": "Cancel deletion request",
+        "cancelingDeletion": "Canceling...",
+        "cancelDeletionFailed": "Could not cancel the deletion request. Please try again.",
+        "deletionCancelled": "The deletion request was canceled.",
+        "exportDataTitle": "Export your data",
+        "exportDataDescription": "Download a JSON copy of your account and business data.",
+        "exportDataButton": "Download my data",
+        "exportDataLoading": "Preparing download...",
+        "exportDataFailed": "Could not export your data. Please try again."
       },
       "dashboard": {
         "ariaLabel": "Illustrative business-planning dashboard",
@@ -674,6 +684,15 @@
       "en": "English"
     },
     "disclaimer": "FinAdvisor information is for general purposes and does not replace financial, tax, or legal advice.",
+    "analyticsConsent": {
+      "title": "Analytics preferences",
+      "description": "Allow pseudonymous, first-party analytics to help us understand product usage. Essential account features do not depend on this choice.",
+      "accept": "Accept analytics",
+      "reject": "Reject analytics",
+      "manage": "Privacy preferences",
+      "saving": "Saving...",
+      "failed": "Your choice could not be saved. Please try again."
+    },
     "footer": {
       "product": "Product",
       "company": "Company",
@@ -966,6 +985,7 @@
       "chooseFile": "Choose file",
       "analyze": "Analyze plan",
       "analyzing": "Analyzing...",
+      "upgradeToPro": "Upgrade to Pro",
       "readinessScore": "Bank-readiness score",
       "score": "Readiness score: {score} out of 100",
       "missingTitle": "Recommended improvements",

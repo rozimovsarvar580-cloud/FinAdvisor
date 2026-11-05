@@ -10,6 +10,8 @@ from typing import Annotated, Literal
 import httpx
 import jwt
 from fastapi import APIRouter, Depends, Header, HTTPException, Request, Response, status
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWTError
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, ValidationError
@@ -26,6 +28,7 @@ from finadvisor_api.email_sender import (
     send_welcome_email,
 )
 from finadvisor_api.models import EmailToken, OAuthAccount, RefreshToken, User
+from finadvisor_api.personal_data import build_account_export
 from finadvisor_api.schemas import (
     ChangePasswordRequest,
     EmailRequest,
@@ -750,6 +753,20 @@ def get_my_connected_accounts(
     ]
 
 
+@router.get("/me/export")
+def export_my_data(
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> JSONResponse:
+    return JSONResponse(
+        content=jsonable_encoder(build_account_export(db, user)),
+        headers={
+            "Cache-Control": "no-store",
+            "Content-Disposition": 'attachment; filename="finadvisor-data-export.json"',
+        },
+    )
+
+
 @router.post("/me/password", status_code=status.HTTP_204_NO_CONTENT)
 def change_my_password(
     payload: ChangePasswordRequest,
@@ -785,6 +802,18 @@ def request_account_deletion(
 ) -> User:
     if user.deletion_requested_at is None:
         user.deletion_requested_at = datetime.now(UTC)
+        db.commit()
+        db.refresh(user)
+    return user
+
+
+@router.post("/me/deletion-request/cancel", response_model=UserResponse)
+def cancel_account_deletion(
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> User:
+    if user.deletion_requested_at is not None:
+        user.deletion_requested_at = None
         db.commit()
         db.refresh(user)
     return user

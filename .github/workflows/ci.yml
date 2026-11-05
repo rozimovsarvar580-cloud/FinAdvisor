@@ -20,7 +20,13 @@ jobs:
         with:
           python-version: "3.12"
       - run: npm ci
+      - name: Audit production npm dependencies
+        run: npm audit --omit=dev --audit-level=high
       - run: python -m pip install -e "./apps/api[dev]" -e "./packages/finance-engine[dev]"
+      - name: Install pip-audit
+        run: python -m pip install pip-audit
+      - name: Audit Python dependencies
+        run: pip-audit --local --skip-editable
       - run: node scripts/verify.mjs
         env:
           JWT_SECRET: "ci-test-secret-key-at-least-32-bytes"

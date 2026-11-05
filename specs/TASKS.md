@@ -352,28 +352,28 @@ engine = `packages/finance-engine`.
 ## Stage 10 - Security and compliance
 - [x] 10.1 HTTP hardening
   - done: strict CORS allowlist, security headers (CSP, HSTS, frame, referrer, permissions), cookies httpOnly/secure/sameSite
-- [ ] 10.2 Rate limiting
+- [x] 10.2 Rate limiting
   - done: Redis-backed limits on auth, AI, upload, export, messaging endpoints; tests
   - exists: apps/api/tests/test_rate_limits.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_rate_limits.py -q
-- [ ] 10.3 Upload safety
+- [x] 10.3 Upload safety
   - done: size/type limits, content sniffing, randomized storage names, no path traversal, files served with safe headers, optional antivirus hook
   - exists: apps/api/tests/test_upload_safety.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_upload_safety.py -q
-- [ ] 10.4 CI security gates
+- [x] 10.4 CI security gates
   - done: secret scanning, `npm audit --omit=dev` and `pip-audit` in CI (fail on high severity), dependabot config
   - exists: .github/dependabot.yml
-- [ ] 10.5 Personal data features
+- [x] 10.5 Personal data features
   - done: export my data, delete my account (with grace period), consent records, cookie/consent banner for analytics; data retention notes in `docs/DATA.md`
   - exists: docs/DATA.md
-- [ ] 10.6 Secrets handling review
+- [x] 10.6 Secrets handling review
   - done: no secret is read by web client code or the desktop app; config docs explain rotation of JWT, NEXTAUTH, INTERNAL_API_KEY and the AI key
   - exists: docs/SECRETS.md
 
 ## Stage 11 - Quality
-- [ ] 11.1 E2E core flows
+- [x] 11.1 E2E core flows
   - done: Playwright covers signup, login, plan creation with the fake AI, export, language switch, theme switch, pricing toggle
-- [ ] 11.2 E2E money flows
+- [x] 11.2 E2E money flows
   - done: Playwright covers Free limit -> upgrade -> fake checkout -> Pro access -> cancel
 - [ ] 11.3 Accessibility
   - done: axe checks on landing, pricing, login, signup, wizard have no serious violations; keyboard navigation and focus order verified

@@ -1,11 +1,22 @@
-import csv
-import io
+from typing import Annotated
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 
+from ...upload_safety import (
+    MAX_UPLOAD_BYTES,
+    AntivirusScanner,
+    UploadSafetyError,
+    count_csv_data_rows,
+    count_xlsx_data_rows,
+    validate_upload,
+)
 from ..auth_dependencies import require_role
 
 router = APIRouter(prefix="/accounting", tags=["accounting"])
+
+
+def get_antivirus_scanner() -> AntivirusScanner | None:
+    return None
 
 
 @router.get("/daily")
@@ -65,6 +76,7 @@ async def loans(_: str = Depends(require_role("accountant", "entrepreneur", "adm
 async def import_statement(
     file: UploadFile | None = File(default=None),
     _: str = Depends(require_role("accountant", "entrepreneur", "admin")),
+    scanner: Annotated[AntivirusScanner | None, Depends(get_antivirus_scanner)] = None,
 ) -> dict[str, object]:
     if file is None:
         return {
@@ -73,27 +85,43 @@ async def import_statement(
             "rows_received": 0,
             "message": "Upload a CSV or XLSX statement to begin import.",
         }
-    allowed = {".csv", ".xlsx"}
-    suffix = "." + file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
-    if suffix not in allowed:
-        raise HTTPException(
-            status_code=415,
-            detail={"code": "unsupported_file", "message": "Only CSV and XLSX files are supported", "details": {}},
+    filename = file.filename or ""
+    content = await file.read(MAX_UPLOAD_BYTES + 1)
+    try:
+        suffix = validate_upload(filename, content, scanner=scanner)
+    except UploadSafetyError as error:
+        code = error.code
+        status_code = (
+            status.HTTP_413_REQUEST_ENTITY_TOO_LARGE
+            if code == "file_too_large"
+            else status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+            if code == "unsupported_file"
+            else status.HTTP_422_UNPROCESSABLE_CONTENT
+            if code == "malware_detected"
+            else status.HTTP_400_BAD_REQUEST
         )
-    content = await file.read()
-    if suffix == ".csv":
-        rows = list(csv.reader(io.StringIO(content.decode("utf-8-sig"))))
-        row_count = max(0, len(rows) - 1)
-    else:
-        from openpyxl import load_workbook
-
-        workbook = load_workbook(io.BytesIO(content), read_only=True, data_only=True)
-        worksheet = workbook.active
-        row_count = max(0, worksheet.max_row - 1)
+        raise HTTPException(
+            status_code=status_code,
+            detail={"code": code, "message": "Upload rejected", "details": {}},
+        ) from error
+    try:
+        row_count = (
+            count_csv_data_rows(content)
+            if suffix == ".csv"
+            else count_xlsx_data_rows(content)
+        )
+    except UploadSafetyError as error:
+        raise HTTPException(
+            status_code=(
+                status.HTTP_413_REQUEST_ENTITY_TOO_LARGE
+                if error.code == "file_too_large"
+                else status.HTTP_400_BAD_REQUEST
+            ),
+            detail={"code": error.code, "message": "Upload rejected", "details": {}},
+        ) from error
     return {
         "status": "accepted",
         "import_id": "import-001",
         "rows_received": row_count,
-        "filename": file.filename,
         "message": "Statement validated and queued for import.",
     }

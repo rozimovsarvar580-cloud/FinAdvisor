@@ -36,9 +36,13 @@ export async function forwardAuthenticatedAuthRequest(
     cache: "no-store"
   });
   const responseBody = await response.text();
-  const contentType = response.headers.get("content-type");
+  const responseHeaders = new Headers();
+  for (const header of ["Content-Type", "Content-Disposition", "Cache-Control"]) {
+    const value = response.headers.get(header);
+    if (value) responseHeaders.set(header, value);
+  }
   return new Response(responseBody || null, {
     status: response.status,
-    headers: contentType ? { "Content-Type": contentType } : undefined
+    headers: responseHeaders
   });
 }

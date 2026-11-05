@@ -71,10 +71,13 @@ test("owner chat renders translated labels and escapes transcript messages", () 
   for (const locale of ["uz", "ru", "en"]) assert.ok(getMessages(locale).chatSend);
 });
 
-test("desktop bundle sources contain no AI credential or direct provider endpoint", async () => {
+test("desktop bundle sources contain no server credentials or direct AI provider endpoint", async () => {
   const { readFile } = await import("node:fs/promises");
   const sources = await Promise.all(["app.js", "view.js"].map((file) => readFile(new URL(`./${file}`, import.meta.url), "utf8")));
-  assert.doesNotMatch(sources.join("\n"), /OPENAI_API_KEY|sk-[A-Za-z0-9]{20,}|api\.openai\.com/);
+  assert.doesNotMatch(
+    sources.join("\n"),
+    /OPENAI_API_KEY|INTERNAL_API_KEY|JWT_SECRET|NEXTAUTH_SECRET|sk-[A-Za-z0-9]{20,}|api\.openai\.com/
+  );
 });
 
 test("HTML text escaping covers markup and attribute delimiters", () => {

@@ -96,3 +96,8 @@ through Tailwind; no hex literals in components.
 ## D15 Paid plan changes
 Changes to an active paid plan take effect at the next renewal. Keep the current plan and access in place
 until the provider confirms the scheduled change; do not calculate or charge proration in the application.
+
+## D16 Account deletion grace period
+Default: a deletion request is purged after 30 days; account owners may cancel the request during that
+period. This is an operational placeholder, not a verified legal retention period. Marker:
+`TODO(DECISION D16)`.

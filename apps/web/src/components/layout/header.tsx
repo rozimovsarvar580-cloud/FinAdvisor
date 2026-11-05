@@ -104,7 +104,7 @@ export function Header() {
         <div className="flex items-center gap-1.5">
           <div className="hidden items-center gap-1.5 sm:flex">
             <LocaleSwitcher />
-            <ThemeToggle />
+            <ThemeToggle testId="theme-toggle" />
           </div>
           <div className="hidden items-center gap-2 md:flex">
             <Button asChild variant="ghost">
