@@ -7,7 +7,19 @@ interface AxeViolation {
   id: string;
   help: string;
   impact: string | null;
-  nodes: Array<{ failureSummary?: string; target: string[] }>;
+  nodes: Array<{ failureSummary?: string; html: string; target: string[] }>;
+}
+
+interface AxeFinding {
+  id: string;
+  impact: string | null;
+  help: string;
+  nodes: Array<{
+    failureSummary?: string;
+    html: string;
+    target: string[];
+  }>;
+  page: string;
 }
 
 declare global {
@@ -21,7 +33,20 @@ declare global {
 async function expectNoSeriousAxeViolations(
   page: Page,
   pageName: string
-): Promise<void> {
+): Promise<AxeFinding[]> {
+  await page.evaluate(async () => {
+    const activeAnimations = document
+      .getAnimations()
+      .filter(
+        (animation) =>
+          animation.effect?.getTiming().iterations !== Number.POSITIVE_INFINITY
+      );
+    await Promise.all(
+      activeAnimations.map((animation) =>
+        animation.finished.catch(() => undefined)
+      )
+    );
+  });
   await page.addScriptTag({ content: axe.source });
   const violations = await page.evaluate(async () => {
     const results = await window.axe.run(document);
@@ -36,21 +61,24 @@ async function expectNoSeriousAxeViolations(
         help: violation.help,
         nodes: violation.nodes.map((node) => ({
           target: node.target,
-          failureSummary: node.failureSummary
+          failureSummary: node.failureSummary,
+          html: node.html
         }))
       }));
   });
 
-  expect(violations, `${pageName} has serious axe violations`).toEqual([]);
+  return violations.map((violation) => ({ ...violation, page: pageName }));
 }
 
 test("landing, pricing, login, signup, and wizard have no serious axe violations", async ({
   page
 }) => {
+  const findings: AxeFinding[] = [];
+  await page.emulateMedia({ reducedMotion: "reduce" });
   for (const route of ["/en", "/en/pricing", "/en/login", "/en/signup"]) {
     await page.goto(route);
     await expect(page.locator("main")).toBeVisible();
-    await expectNoSeriousAxeViolations(page, route);
+    findings.push(...(await expectNoSeriousAxeViolations(page, route)));
   }
 
   await installAuthenticatedSession(page);
@@ -58,7 +86,10 @@ test("landing, pricing, login, signup, and wizard have no serious axe violations
   await expect(
     page.getByRole("heading", { name: "Create a business plan" })
   ).toBeVisible();
-  await expectNoSeriousAxeViolations(page, "/en/app/finadvisor");
+  findings.push(
+    ...(await expectNoSeriousAxeViolations(page, "/en/app/finadvisor"))
+  );
+  expect(findings, "Target pages have serious axe violations").toEqual([]);
 });
 
 test("signup controls follow a predictable keyboard focus order", async ({
