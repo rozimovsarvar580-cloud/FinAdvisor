@@ -40,6 +40,7 @@ function renderForm() {
 
 describe("role onboarding", () => {
   beforeEach(() => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 200 })));
     mocks.session.data = {
       accessToken: "active-access-token",
       needsRole: true,
@@ -52,7 +53,7 @@ describe("role onboarding", () => {
   it("offers the three supported roles and persists the selected role", async () => {
     mocks.update.mockResolvedValue({
       needsRole: false,
-      roleUpdateError: undefined
+      error: undefined
     });
     renderForm();
 
@@ -63,16 +64,20 @@ describe("role onboarding", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save and continue" }));
 
     await waitFor(() => {
-      expect(mocks.update).toHaveBeenCalledWith({ role: "investor" });
+      expect(fetch).toHaveBeenCalledWith(
+        "/api/auth/role",
+        expect.objectContaining({
+          method: "PATCH",
+          body: JSON.stringify({ role: "investor" })
+        })
+      );
+      expect(mocks.update).toHaveBeenCalledWith();
       expect(mocks.replace).toHaveBeenCalledWith("/app");
     });
   });
 
   it("keeps the user on onboarding and shows an error when saving fails", async () => {
-    mocks.update.mockResolvedValue({
-      needsRole: true,
-      roleUpdateError: "RoleUpdateError"
-    });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 403 })));
     renderForm();
 
     fireEvent.click(screen.getByRole("button", { name: "Save and continue" }));
@@ -80,6 +85,7 @@ describe("role onboarding", () => {
     expect((await screen.findByRole("alert")).textContent).toBe(
       "We could not save your account type. Please try again."
     );
+    expect(mocks.update).not.toHaveBeenCalled();
     expect(mocks.replace).not.toHaveBeenCalled();
   });
 });

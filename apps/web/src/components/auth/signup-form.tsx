@@ -17,13 +17,8 @@ import type { SocialProviderAvailability } from "@/lib/social-providers";
 import { SocialSignInButtons } from "./social-sign-in-buttons";
 
 const signupSchema = z.object({
-<<<<<<< HEAD
-  name: z.string().trim().min(1, "nameRequired").max(200, "nameTooLong"),
-  email: z.string().email("emailRequired"),
-=======
   name: z.string().trim().min(1, "nameRequired").max(200),
   email: z.string().min(1, "emailRequired").email("emailRequired"),
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
   password: z
     .string()
     .min(8, "passwordTooShort")
@@ -45,11 +40,7 @@ export function SignupForm({
   const t = useTranslations("auth");
   const errors = useTranslations("errors");
   const [serverError, setServerError] = useState<string>();
-<<<<<<< HEAD
-  const [showPassword, setShowPassword] = useState(false);
-=======
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
   const {
     register,
     handleSubmit,
@@ -132,19 +123,9 @@ export function SignupForm({
           <label className="text-sm font-medium" htmlFor="signup-name">
             {t("name")}
           </label>
-          <Input
-            aria-describedby={formErrors.name ? "signup-name-error" : undefined}
-            aria-invalid={Boolean(formErrors.name)}
-            autoComplete="name"
-            id="signup-name"
-            {...register("name")}
-          />
+          <Input autoComplete="name" id="signup-name" {...register("name")} />
           {formErrors.name?.message ? (
-<<<<<<< HEAD
-            <p className="text-sm text-red-600" id="signup-name-error" role="alert">
-=======
             <p className="text-sm text-destructive" role="alert">
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
               {errors(formErrors.name.message)}
             </p>
           ) : null}
@@ -155,21 +136,13 @@ export function SignupForm({
             {t("email")}
           </label>
           <Input
-            aria-describedby={
-              formErrors.email ? "signup-email-error" : undefined
-            }
-            aria-invalid={Boolean(formErrors.email)}
             autoComplete="email"
             id="signup-email"
             type="email"
             {...register("email")}
           />
           {formErrors.email?.message ? (
-<<<<<<< HEAD
-            <p className="text-sm text-red-600" id="signup-email-error" role="alert">
-=======
             <p className="text-sm text-destructive" role="alert">
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
               {errors(formErrors.email.message)}
             </p>
           ) : null}
@@ -184,30 +157,6 @@ export function SignupForm({
               {t("strength")}: {strengthLabel}
             </span>
           </div>
-<<<<<<< HEAD
-          <div className="relative">
-            <Input
-              aria-describedby={
-                formErrors.password ? "signup-password-error" : undefined
-              }
-              aria-invalid={Boolean(formErrors.password)}
-              autoComplete="new-password"
-              className="pr-24"
-              id="signup-password"
-              type={showPassword ? "text" : "password"}
-              {...register("password")}
-            />
-            <Button
-              aria-label={t(showPassword ? "hidePassword" : "showPassword")}
-              className="absolute right-1 top-1/2 -translate-y-1/2 px-2"
-              disabled={isSubmitting}
-              onClick={() => setShowPassword((visible) => !visible)}
-              size="sm"
-              type="button"
-              variant="ghost"
-            >
-              {t(showPassword ? "hidePassword" : "showPassword")}
-=======
           <div className="flex gap-2">
             <Input
               autoComplete="new-password"
@@ -223,16 +172,15 @@ export function SignupForm({
               variant="ghost"
             >
               {t(isPasswordVisible ? "hidePassword" : "showPassword")}
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
             </Button>
           </div>
           <div
-            aria-label={`${t("strength")}: ${strengthLabel}`}
+            aria-label={t("strength")}
+            className="grid grid-cols-4 gap-1"
+            role="meter"
             aria-valuemax={4}
             aria-valuemin={0}
             aria-valuenow={passwordStrength}
-            className="grid grid-cols-4 gap-1"
-            role="meter"
           >
             {[1, 2, 3, 4].map((level) => (
               <span
@@ -245,11 +193,7 @@ export function SignupForm({
             ))}
           </div>
           {formErrors.password?.message ? (
-<<<<<<< HEAD
-            <p className="text-sm text-red-600" id="signup-password-error" role="alert">
-=======
             <p className="text-sm text-destructive" role="alert">
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
               {errors(formErrors.password.message)}
             </p>
           ) : null}
@@ -268,8 +212,6 @@ export function SignupForm({
 
         <div className="flex items-start gap-2 text-sm text-muted-foreground">
           <input
-            aria-describedby={formErrors.terms ? "signup-terms-error" : undefined}
-            aria-invalid={Boolean(formErrors.terms)}
             aria-labelledby="signup-terms-consent"
             className="mt-0.5 h-4 w-4 rounded border-input accent-primary"
             type="checkbox"
@@ -291,11 +233,7 @@ export function SignupForm({
           </span>
         </div>
         {formErrors.terms?.message ? (
-<<<<<<< HEAD
-          <p className="text-sm text-red-600" id="signup-terms-error" role="alert">
-=======
           <p className="text-sm text-destructive" role="alert">
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
             {errors(formErrors.terms.message)}
           </p>
         ) : null}
@@ -306,12 +244,7 @@ export function SignupForm({
           </p>
         ) : null}
 
-        <Button
-          className="w-full"
-          disabled={isSubmitting}
-          loading={isSubmitting}
-          type="submit"
-        >
+        <Button className="w-full" disabled={isSubmitting} type="submit">
           {isSubmitting ? t("loading") : t("signupSubmit")}
         </Button>
       </form>

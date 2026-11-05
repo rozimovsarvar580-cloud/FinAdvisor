@@ -14,7 +14,6 @@ from finadvisor_api.accounting import router as accounting_api_router
 from finadvisor_api.admin_api import router as admin_api_router
 from finadvisor_api.agent import router as agent_router
 from finadvisor_api.analysis import router as analysis_router
-from finadvisor_api.auth import profile_router
 from finadvisor_api.auth import router as auth_router
 from finadvisor_api.billing import router as billing_router
 from finadvisor_api.calculations import router as calculations_router
@@ -61,13 +60,9 @@ app.add_exception_handler(RequestValidationError, handle_validation_exception)
 app.middleware("http")(rate_limit_middleware)
 app.middleware("http")(audit_middleware)
 app.include_router(auth_router)
-<<<<<<< HEAD
-app.include_router(profile_router)
-=======
 app.include_router(billing_router)
 app.include_router(admin_api_router)
 app.include_router(accounting_api_router)
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
 app.include_router(agent_router)
 app.include_router(analysis_router)
 app.include_router(chat_router)

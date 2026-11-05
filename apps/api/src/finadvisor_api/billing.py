@@ -1,17 +1,15 @@
-from datetime import UTC, date, datetime, timedelta
-from decimal import Decimal
+from datetime import UTC, datetime, timedelta
 from typing import Annotated, Literal
 from urllib.parse import urlencode
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from finance_engine import calculate_progressive_commission
 from finance_engine.money import (
     minor_units_to_decimal_string,
     usd_price_to_minor_units,
 )
 from pydantic import BaseModel, ConfigDict, Field
-from sqlalchemy import func, select
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
@@ -19,8 +17,6 @@ from finadvisor_api.auth import get_current_user
 from finadvisor_api.config import get_settings
 from finadvisor_api.database import get_db
 from finadvisor_api.models import (
-    CommissionLedger,
-    CommissionStatement,
     Invoice,
     Payment,
     PaymentEvent,

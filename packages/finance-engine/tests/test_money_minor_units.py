@@ -50,7 +50,7 @@ def test_minor_units_formatter_rejects_non_integer_values(amount_minor) -> None:
 
 @pytest.mark.parametrize(
     ("amount", "expected"),
-    [(Decimal("0"), 0), (Decimal("0.01"), 1), (Decimal("12.34"), 1234), (Decimal("1.235"), 124)],
+    [(Decimal(0), 0), (Decimal("0.01"), 1), (Decimal("12.34"), 1234), (Decimal("1.235"), 124)],
 )
 def test_decimal_amounts_convert_to_minor_units_with_half_up_rounding(
     amount: Decimal, expected: int

@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { RoleOnboardingForm } from "@/components/auth/role-onboarding-form";
-
-export default function RoleOnboardingPage() {
-  return <RoleOnboardingForm />;
-=======
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
@@ -104,5 +98,4 @@ export default function RoleOnboardingPage() {
       </section>
     </main>
   );
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
 }

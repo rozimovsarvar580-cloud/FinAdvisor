@@ -10,19 +10,24 @@ import { Button } from "@/components/ui/button";
 
 const roles: UserRole[] = ["tadbirkor", "buxgalter", "investor"];
 
+function getOnboardingRole(role: string | undefined): UserRole {
+  if (role === "buxgalter" || role === "investor") return role;
+  return "tadbirkor";
+}
+
 export function RoleOnboardingForm() {
   const { data: session, status, update } = useSession();
   const router = useRouter();
   const t = useTranslations("auth");
-  const [role, setRole] = useState<UserRole>(
-    session?.user.role ?? "tadbirkor"
+  const [role, setRole] = useState<UserRole>(() =>
+    getOnboardingRole(session?.user.role)
   );
   const [isSaving, setIsSaving] = useState(false);
   const [hasError, setHasError] = useState(false);
   const canSubmit =
     status === "authenticated" &&
     Boolean(session?.accessToken) &&
-    !session?.refreshError;
+    session?.error !== "RefreshAccessTokenError";
 
   async function submitRole(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -33,11 +38,21 @@ export function RoleOnboardingForm() {
     setHasError(false);
     setIsSaving(true);
     try {
-      const updatedSession = await update({ role });
+      const response = await fetch("/api/auth/role", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role })
+      });
+      if (!response.ok) {
+        setHasError(true);
+        return;
+      }
+
+      const updatedSession = await update();
       if (
         !updatedSession ||
-        updatedSession.needsRole ||
-        updatedSession.roleUpdateError
+        updatedSession.needsRole !== false ||
+        updatedSession.error === "RefreshAccessTokenError"
       ) {
         setHasError(true);
         return;

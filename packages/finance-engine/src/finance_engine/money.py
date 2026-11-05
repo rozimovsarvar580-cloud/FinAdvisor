@@ -33,7 +33,7 @@ def minor_units_to_decimal_string(amount_minor: int) -> str:
 def decimal_to_minor_units(amount: Decimal) -> int:
     if not amount.is_finite():
         raise ValueError("Money amount must be finite")
-    return int((amount * ONE_HUNDRED).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+    return int((amount * ONE_HUNDRED).quantize(Decimal(1), rounding=ROUND_HALF_UP))
 
 
 def validate_non_negative(name: str, amount: Decimal) -> None:

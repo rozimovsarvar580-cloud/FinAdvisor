@@ -25,12 +25,6 @@ class LoginRequest(BaseModel):
 
 
 class RefreshTokenRequest(BaseModel):
-<<<<<<< HEAD
-    refresh_token: str = Field(min_length=32, max_length=128)
-
-
-class EmailRequest(BaseModel):
-=======
     refresh_token: str = Field(min_length=1, max_length=128)
 
 
@@ -47,41 +41,13 @@ class PasswordResetRequest(EmailTokenRequest):
 
 
 class OAuthExchangeRequest(BaseModel):
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     model_config = ConfigDict(str_strip_whitespace=True)
-
-    email: EmailStr
-
-
-class EmailTokenRequest(BaseModel):
-    token: str = Field(min_length=32, max_length=128)
-
-
-class ResetPasswordRequest(BaseModel):
-    token: str = Field(min_length=32, max_length=128)
-    password: str = Field(min_length=8, max_length=128)
-
-
-class AuthActionResponse(BaseModel):
-    message: str
-
-
-class OAuthExchangeRequest(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
 
     provider: Literal["google", "facebook"]
     provider_account_id: str = Field(min_length=1, max_length=255)
     email: EmailStr
     name: str = Field(min_length=1, max_length=200)
     avatar_url: str | None = Field(default=None, max_length=2048)
-<<<<<<< HEAD
-    email_verified: bool
-    role: UserRole = "tadbirkor"
-
-
-class RoleUpdateRequest(BaseModel):
-    role: UserRole
-=======
     email_verified: bool = False
     role: UserRole = "tadbirkor"
 
@@ -108,7 +74,6 @@ class ChangePasswordRequest(BaseModel):
 class OAuthAccountSummary(BaseModel):
     provider: Literal["google", "facebook"]
     connected_at: datetime
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
 
 
 class UserResponse(BaseModel):
@@ -130,10 +95,7 @@ class UserResponse(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
-<<<<<<< HEAD
-=======
     expires_in: int
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     token_type: Literal["bearer"] = "bearer"
     user: UserResponse
 

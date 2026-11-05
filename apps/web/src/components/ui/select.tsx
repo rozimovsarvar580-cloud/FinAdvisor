@@ -13,15 +13,11 @@ export const Select = forwardRef<
         "flex h-10 rounded-xl border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none transition-colors hover:border-primary/60 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:bg-muted/60 disabled:opacity-50 motion-reduce:transition-none",
         className
       )}
-      ref={ref}
       {...props}
     >
       {children}
     </select>
   );
 });
-<<<<<<< HEAD
-=======
 
 Select.displayName = "Select";
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331

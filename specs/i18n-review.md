@@ -1,15 +1,5 @@
 # Translation review
 
-<<<<<<< HEAD
-Reviewed the main navigation, landing and About copy, business commission wording, plan feature names, marketplace empty-state copy, and legal-document notices in English, Russian, and Uzbek.
-
-- Uzbek copy uses Latin script; the sole Cyrillic value found is the native-language label `Русский`. The reviewed Uzbek copy uses formal, respectful instructions.
-- Rephrased the Uzbek About headings for a natural meaning (“from information toward an evidence-based decision” and “review project assumptions clearly”). Standardized “desktop agent” as “kompyuter agenti” in the reviewed Uzbek product strings.
-- Replaced the literal Russian calque “настольный агент” in commission copy with the established product term “десктопный агент”; adjusted the revenue wording to “учтённой” for natural business usage.
-- Kept product names and common technical terms such as FinAdvisor, AI, KYC, Pro, Business, and Windows/macOS unchanged. Their glossary treatment can be revisited if product terminology changes.
-
-This is a language review, not a legal approval. Legal pages remain drafts with their existing `TODO(LEGAL)` markers.
-=======
 ## Scope
 
 Reviewed the user-facing navigation, landing/about copy, pricing and FAQ text,
@@ -38,4 +28,3 @@ and `en` bundles.
 - This editorial pass is not a substitute for native-speaker proofreading.
   Legal and policy copy still requires the separate lawyer review tracked by
   H8 before publication.
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331

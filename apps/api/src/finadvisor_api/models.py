@@ -4,15 +4,8 @@ from decimal import Decimal
 
 from sqlalchemy import (
     JSON,
-    Boolean,
-<<<<<<< HEAD
-    DateTime,
-    ForeignKey,
-    Index,
-    Numeric,
-    String,
-=======
     BigInteger,
+    Boolean,
     CheckConstraint,
     Date,
     DateTime,
@@ -23,7 +16,6 @@ from sqlalchemy import (
     Numeric,
     String,
     Text,
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     UniqueConstraint,
     func,
 )
@@ -50,9 +42,6 @@ class User(Base):
     name: Mapped[str] = mapped_column(String(200))
     avatar_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     role: Mapped[str] = mapped_column(String(24), default="tadbirkor")
-<<<<<<< HEAD
-    locale: Mapped[str] = mapped_column(String(5), default="uz")
-=======
     subscription_plan: Mapped[str] = mapped_column(
         String(16), default="free", server_default="free"
     )
@@ -67,7 +56,6 @@ class User(Base):
     deletion_requested_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     auth_provider: Mapped[str] = mapped_column(String(24), default="credentials")
     provider_user_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)

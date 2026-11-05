@@ -14,18 +14,11 @@ export const siteConfig = {
   locales: routing.locales
 };
 
-<<<<<<< HEAD
-export function getCanonicalUrl(
-  pathname = "/",
-  locale: string = routing.defaultLocale
-) {
-=======
 function getLocale(locale: string): Locale {
   return isSupportedLocale(locale) ? locale : siteConfig.defaultLocale;
 }
 
 export function getCanonicalUrl(pathname = "/", locale = routing.defaultLocale) {
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
   const normalizedPath = pathname === "/" ? "/" : pathname.replace(/\/+/g, "/");
   const localizedPath =
     normalizedPath === "/"

@@ -22,11 +22,7 @@
     "hero": {
       "eyebrow": "Biznes uchun",
       "title": "Kompyuter agenti komissiyasi qanday hisoblanishini ko‘ring",
-<<<<<<< HEAD
-      "description": "Kompyuter agenti qayd etgan yillik tushumdan olinadigan progressiv komissiya miqdorini ko‘ring."
-=======
       "description": "Kompyuter agenti qayd etgan yillik tushum asosida progressiv komissiya miqdorini ko‘ring."
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     },
     "commissionTitle": "Yillik komissiyani baholang",
     "commissionDescription": "Progressiv hisob-kitobni ko‘rish uchun slayderdan foydalaning yoki summani kiriting."
@@ -149,11 +145,7 @@
         },
         "approach": {
           "eyebrow": "Yondashuvimiz",
-<<<<<<< HEAD
-          "title": "Ma’lumotlardan asosli qaror sari",
-=======
           "title": "Ma’lumotlardan asosli qarorgacha",
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
           "description": "Har bir bosqich siz kiritgan ma’lumot va tekshiriladigan hisob-kitoblarga tayanadi.",
           "steps": [
             {
@@ -190,13 +182,8 @@
               "description": "Kiritilgan taxminlar va ularning hisob-kitobdagi natijalarini bir joyda ko‘rib, tadbirkorga biznes-rejani tayyorlashda ko‘maklashing."
             },
             "investor": {
-<<<<<<< HEAD
-              "label": "Investor",
-              "title": "Loyiha taxminlarini aniq ko‘rib chiqing",
-=======
               "label": "Sarmoyador",
               "title": "Loyiha taxminlarini tushunarli ko‘ring",
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
               "description": "Loyiha egasi tuzgan reja va asosiy taxminlarni ko‘rib chiqing. Bu vosita tekshiruv yoki mustaqil tahlilning o‘rnini bosmaydi."
             }
           }
@@ -522,7 +509,7 @@
           "calculators": "Moliyaviy kalkulyatorlar",
           "businessPlan": "Biznes-reja",
           "agentSynergy": "Agent-Synergy strategiyasi",
-          "desktopAgent": "Windows/macOS uchun kompyuter agenti",
+          "desktopAgent": "Windows/macOS ish stoli agenti",
           "accountantOwnerAccounts": "Buxgalter va egasi hisoblari"
         }
       }
@@ -581,7 +568,7 @@
       "eyebrow": "Shaffof hisob",
       "title": "Yillik tushum bo‘yicha hisob-kitob",
       "description": "Yillik tushumni kiriting. Har bir stavka faqat o‘z pog‘onasidagi tushum qismiga qo‘llanadi.",
-      "agentRevenueNote": "Ushbu baho kompyuter agenti qayd etgan yillik tushumga asoslanadi.",
+      "agentRevenueNote": "Ushbu baho desktop agent qayd etgan yillik tushumga asoslanadi.",
       "tiers": {
         "first": "Dastlabki 100 mln so‘m — 4%",
         "second": "Keyingi 900 mln so‘m — 2%",
@@ -620,7 +607,7 @@
     "hidePassword": "Parolni yashirish",
     "role": "Hisob turi",
     "onboardingRoleTitle": "Hisob turini tanlang",
-    "onboardingRoleDescription": "Hisobingizni sozlashimiz uchun FinAdvisor’dan qanday foydalanishingizni tanlang.",
+    "onboardingRoleDescription": "FinAdvisor hisobingizni moslashimiz uchun undan qanday maqsadda foydalanishingizni ayting.",
     "onboardingRoleSubmit": "Saqlash va davom etish",
     "onboardingRoleSaving": "Saqlanmoqda...",
     "onboardingRoleError": "Hisob turini saqlab bo‘lmadi. Qayta urinib ko‘ring.",
@@ -656,26 +643,26 @@
     "profit": "Sof foyda"
   },
   "authFlows": {
-    "forgotTitle": "Parolni unutdingizmi?",
-    "forgotDescription": "Hisobingizga bog‘langan elektron pochta manzilini kiriting. Agar u ro‘yxatdan o‘tgan bo‘lsa, tiklash havolasini yuboramiz.",
+    "forgotTitle": "Parolingizni unutdingizmi?",
+    "forgotDescription": "Hisobingizga bog‘langan elektron pochta manzilini kiriting. Agar u ro‘yxatdan o‘tgan bo‘lsa, parolni tiklash havolasini yuboramiz.",
     "forgotSubmit": "Tiklash havolasini yuborish",
     "sending": "Yuborilmoqda...",
     "forgotSuccess": "Agar manzil ro‘yxatdan o‘tgan bo‘lsa, unga parolni tiklash havolasi yuboriladi.",
     "forgotError": "Tiklash havolasini yuborib bo‘lmadi. Qayta urinib ko‘ring.",
     "resetTitle": "Yangi parol yarating",
-    "resetDescription": "Hisobingiz uchun yangi parolni tanlang.",
+    "resetDescription": "Hisobingiz uchun yangi parol tanlang.",
     "newPassword": "Yangi parol",
     "resetSubmit": "Parolni saqlash",
     "saving": "Saqlanmoqda...",
-    "resetSuccess": "Parolingiz o‘zgartirildi. Endi hisobga kirishingiz mumkin.",
-    "resetError": "Tiklash havolasi yaroqsiz yoki muddati o‘tgan. Yangisini so‘rang.",
-    "missingToken": "Havolada kerakli ma’lumot yo‘q. Yangi xat so‘rab, undagi havoladan foydalaning.",
-    "verifyTitle": "Elektron pochtani tasdiqlang",
-    "verifyDescription": "Ushbu elektron pochta manzili sizga tegishli ekanini tasdiqlang.",
+    "resetSuccess": "Parolingiz o‘zgartirildi. Endi tizimga kirishingiz mumkin.",
+    "resetError": "Parolni tiklash havolasi yaroqsiz yoki muddati tugagan. Yangisini so‘rang.",
+    "missingToken": "Bu havolada kerakli ma’lumot yo‘q. Yangi xat so‘rab, undagi havoladan foydalaning.",
+    "verifyTitle": "Elektron pochtangizni tasdiqlang",
+    "verifyDescription": "Bu elektron pochta manzili sizga tegishli ekanini tasdiqlang.",
     "verifySubmit": "Elektron pochtani tasdiqlash",
     "verifying": "Tasdiqlanmoqda...",
-    "verifySuccess": "Elektron pochtangiz tasdiqlandi. Endi hisobga kirishingiz mumkin.",
-    "verifyError": "Tasdiqlash havolasi yaroqsiz yoki muddati o‘tgan. Yangisini so‘rang.",
+    "verifySuccess": "Elektron pochtangiz tasdiqlandi. Endi tizimga kirishingiz mumkin.",
+    "verifyError": "Tasdiqlash havolasi yaroqsiz yoki muddati tugagan. Yangisini so‘rang.",
     "backToLogin": "Kirish sahifasiga qaytish"
   },
   "common": {
@@ -823,7 +810,7 @@
     "nameRequired": "Ismingizni kiriting",
     "nameTooLong": "Ism 200 belgidan oshmasligi kerak",
     "emailRequired": "To‘g‘ri elektron pochta manzilini kiriting",
-    "passwordRequired": "Parolni kiriting",
+    "passwordRequired": "Parolingizni kiriting",
     "passwordTooShort": "Parol kamida 8 belgidan iborat bo‘lishi kerak",
     "passwordTooLong": "Parol 128 belgidan oshmasligi kerak",
     "passwordConfirmationRequired": "Parolni tasdiqlang",
@@ -1228,13 +1215,8 @@
   },
   "desktopAgent": {
     "eyebrow": "Kompyuter agenti",
-<<<<<<< HEAD
-    "title": "Mahalliy vazifalarni sinxronlash",
-    "description": "Agent mahalliy sinxronlash vazifalarini ustuvorlik bo‘yicha tartibga soladi, moliyaviy hisob-kitoblar esa moliyaviy dvigatelda qoladi.",
-=======
     "title": "Lokal ish jarayonlarini sinxronlash",
     "description": "Agent qurilmadagi sinxronlash vazifalarini ustuvorlik bo‘yicha tartibga soladi, moliyaviy hisob-kitoblar esa moliyaviy hisoblash tizimida bajariladi.",
->>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     "downloadFor": "Uchun yuklab oling",
     "recommended": "Tavsiya etilgan paket: {platform}",
     "detected": "Aniqlandi: {platform}",
