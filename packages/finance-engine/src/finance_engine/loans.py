@@ -30,6 +30,16 @@ class LoanSchedule:
     inputs: dict[str, str]
 
 
+@dataclass(frozen=True)
+class LoanAffordabilityResult:
+    affordable: bool
+    monthly_available_cash: Decimal
+    maximum_monthly_payment: Decimal
+    minimum_monthly_surplus: Decimal
+    formula: str
+    inputs: dict[str, str]
+
+
 def _validate_loan_inputs(
     principal: Decimal, annual_interest_rate_percent: Decimal, term_months: int
 ) -> None:
@@ -141,4 +151,30 @@ def differential_schedule(
         payments,
         "principal_payment = principal / term_months; "
         "interest = opening_balance * monthly_rate",
+    )
+
+
+def check_loan_affordability(
+    monthly_available_cash: Decimal,
+    schedule: LoanSchedule,
+) -> LoanAffordabilityResult:
+    if not monthly_available_cash.is_finite():
+        raise ValueError("monthly_available_cash must be finite")
+    if not schedule.payments:
+        raise ValueError("loan schedule must contain at least one payment")
+
+    maximum_payment = max(payment.payment for payment in schedule.payments)
+    minimum_surplus = min(
+        monthly_available_cash - payment.payment for payment in schedule.payments
+    )
+    return LoanAffordabilityResult(
+        affordable=minimum_surplus >= ZERO,
+        monthly_available_cash=monthly_available_cash,
+        maximum_monthly_payment=maximum_payment,
+        minimum_monthly_surplus=minimum_surplus,
+        formula="affordable = monthly_available_cash >= every scheduled payment",
+        inputs={
+            "monthly_available_cash": format(monthly_available_cash, "f"),
+            "maximum_monthly_payment": format(maximum_payment, "f"),
+        },
     )

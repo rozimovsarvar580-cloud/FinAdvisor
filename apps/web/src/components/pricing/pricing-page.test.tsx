@@ -33,7 +33,7 @@ describe("pricing page", () => {
       screen.getByRole("button", { name: "What is included in each plan?" })
     ).toBeTruthy();
     expect(screen.getByText(/draft only.*TODO\(H8\)/)).toBeTruthy();
-    expect(screen.getByText(/Online checkout is not connected yet/)).toBeTruthy();
+    expect(screen.getByText(/Weekly plans can be sent to checkout/)).toBeTruthy();
     expect(
       screen.getByRole("slider", { name: "Adjust annual revenue" })
     ).toBeTruthy();

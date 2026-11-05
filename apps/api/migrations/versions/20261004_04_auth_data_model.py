@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 """Add normalized OAuth identities and hashed authentication tokens.
+=======
+"""Add locale and normalized authentication token tables.
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
 
 Revision ID: 20261004_04
 Revises: 20261004_03
@@ -20,6 +24,10 @@ def upgrade() -> None:
         "users",
         sa.Column("locale", sa.String(length=5), server_default="uz", nullable=False),
     )
+<<<<<<< HEAD
+=======
+
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     op.create_table(
         "oauth_accounts",
         sa.Column("id", sa.String(length=36), nullable=False),
@@ -81,15 +89,28 @@ def upgrade() -> None:
         sa.UniqueConstraint("token_hash"),
     )
     op.create_index("ix_email_tokens_user_id", "email_tokens", ["user_id"])
+<<<<<<< HEAD
     op.create_index("ix_email_tokens_expires_at", "email_tokens", ["expires_at"])
     op.create_index(
         "ix_email_tokens_user_purpose", "email_tokens", ["user_id", "purpose"]
+=======
+    op.create_index("ix_email_tokens_token_hash", "email_tokens", ["token_hash"])
+    op.create_index("ix_email_tokens_expires_at", "email_tokens", ["expires_at"])
+    op.create_index(
+        "ix_email_tokens_user_purpose",
+        "email_tokens",
+        ["user_id", "purpose"],
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     )
 
 
 def downgrade() -> None:
     op.drop_index("ix_email_tokens_user_purpose", table_name="email_tokens")
     op.drop_index("ix_email_tokens_expires_at", table_name="email_tokens")
+<<<<<<< HEAD
+=======
+    op.drop_index("ix_email_tokens_token_hash", table_name="email_tokens")
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     op.drop_index("ix_email_tokens_user_id", table_name="email_tokens")
     op.drop_table("email_tokens")
 

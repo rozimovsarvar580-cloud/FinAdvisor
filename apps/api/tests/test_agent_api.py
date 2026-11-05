@@ -1,16 +1,19 @@
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from finadvisor_api import auth as auth_module
 from finadvisor_api.database import Base, get_db
 from finadvisor_api.main import app
+from finadvisor_api.models import User
 
 
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     monkeypatch.setenv("JWT_SECRET", "unit-test-secret-key-at-least-32-bytes-long")
+    monkeypatch.setattr(auth_module, "send_auth_email", lambda *args: None)
     engine = create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
@@ -18,6 +21,7 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     )
     Base.metadata.create_all(bind=engine)
     testing_session_local = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+    app.state.test_session_factory = testing_session_local
 
     def override_get_db():
         with testing_session_local() as session:
@@ -48,6 +52,11 @@ def register_user(
         },
     )
     assert response.status_code == 201
+    with client.app.state.test_session_factory() as db:
+        user = db.scalar(select(User).where(User.email == email))
+        assert user is not None
+        user.subscription_plan = "business"
+        db.commit()
     return {"Authorization": f"Bearer {response.json()['access_token']}"}
 
 

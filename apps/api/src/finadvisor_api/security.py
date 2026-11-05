@@ -12,6 +12,7 @@ from argon2.exceptions import VerificationError
 from finadvisor_api.config import get_settings
 
 password_hasher = PasswordHasher()
+ACCESS_TOKEN_LIFETIME_SECONDS = 15 * 60
 
 
 class LoginAttemptLimiter:
@@ -87,5 +88,9 @@ def create_access_token(subject: str) -> str:
     secret = get_settings().jwt_secret
     if not secret:
         raise RuntimeError("JWT_SECRET must be configured before issuing tokens")
+<<<<<<< HEAD
     expires_at = datetime.now(UTC) + timedelta(minutes=15)
+=======
+    expires_at = datetime.now(UTC) + timedelta(seconds=ACCESS_TOKEN_LIFETIME_SECONDS)
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     return jwt.encode({"sub": subject, "exp": expires_at}, secret, algorithm="HS256")

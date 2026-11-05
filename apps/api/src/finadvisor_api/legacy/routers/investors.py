@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+
+from ..auth_dependencies import require_role
 
 router = APIRouter(prefix="/investors", tags=["investors"])
 
@@ -14,15 +16,21 @@ async def discover_plans() -> dict[str, object]:
 
 
 @router.get("/saved")
-async def saved_plans() -> dict[str, object]:
+async def saved_plans(
+    _: str = Depends(require_role("investor", "admin")),
+) -> dict[str, object]:
     return {"items": [{"id": "plan-002", "name": "Shahar Qosh", "saved": True}]}
 
 
 @router.get("/inbox")
-async def investor_inbox() -> dict[str, object]:
+async def investor_inbox(
+    _: str = Depends(require_role("investor", "admin")),
+) -> dict[str, object]:
     return {"items": [{"id": "thread-001", "plan_id": "plan-002", "unread": True, "subject": "Funding questions"}]}
 
 
 @router.get("/kyc")
-async def kyc_profile() -> dict[str, object]:
+async def kyc_profile(
+    _: str = Depends(require_role("investor", "admin")),
+) -> dict[str, object]:
     return {"status": "pending", "required": ["identity", "source_of_funds", "agreement"]}

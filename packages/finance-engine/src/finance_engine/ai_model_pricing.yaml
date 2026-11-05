@@ -1,0 +1,7 @@
+models:
+  gpt-4o-mini:
+    input_usd_per_million: "0.15"
+    output_usd_per_million: "0.60"
+    source_url: https://developers.openai.com/api/docs/pricing
+    effective_date: TODO(VERIFY)
+    verified: false

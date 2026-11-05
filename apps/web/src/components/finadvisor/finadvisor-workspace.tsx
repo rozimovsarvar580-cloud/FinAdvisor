@@ -65,6 +65,7 @@ type TabKey = (typeof tabKeys)[number];
 export function FinAdvisorWorkspace() {
   const t = useTranslations("finadvisor");
   const billing = useTranslations("billing");
+  const common = useTranslations("common");
   const [activeTab, setActiveTab] = useState<TabKey>("businessPlan");
   const [planResult, setPlanResult] = useState<PlanResult>();
 
@@ -86,6 +87,9 @@ export function FinAdvisorWorkspace() {
           {billing("openPage")}
         </Link>
       </div>
+      <p className="mb-6 rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm leading-6 text-muted-foreground">
+        {common("disclaimer")}
+      </p>
       <div className="grid gap-6 lg:grid-cols-[250px_minmax(0,1fr)]">
         <Card className="h-fit p-3">
           <nav
@@ -115,7 +119,12 @@ export function FinAdvisorWorkspace() {
         </Card>
         <section aria-live="polite" className="min-w-0">
           {activeTab === "businessPlan" ? (
-            <PlanWizard onGenerated={setPlanResult} />
+            <PlanWizard
+              onGenerated={(result) => {
+                setPlanResult(result);
+                setActiveTab("reports");
+              }}
+            />
           ) : null}
           {activeTab === "calculators" ? <CalculatorsPanel /> : null}
           {activeTab === "whatIf" ? <WhatIfPanel /> : null}
@@ -124,7 +133,10 @@ export function FinAdvisorWorkspace() {
             <AIChatPanel calculations={planResult?.calculations} />
           ) : null}
           {activeTab === "reports" ? (
-            <ReportsPanel planResult={planResult} />
+            <ReportsPanel
+              onPlanUpdated={setPlanResult}
+              planResult={planResult}
+            />
           ) : null}
           {activeTab === "investorMarketplace" ? (
             <InvestorMarketplaceSection />

@@ -32,7 +32,7 @@ describe("plan select button", () => {
         locale="en"
         messages={enMessages as unknown as AbstractIntlMessages}
       >
-        <PlanSelectButton plan="pro" />
+        <PlanSelectButton plan="pro" period="weekly" />
       </NextIntlClientProvider>
     );
   }
@@ -42,16 +42,18 @@ describe("plan select button", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Choose plan" }));
 
-    expect(push).toHaveBeenCalledWith("/signup?plan=pro");
+    expect(push).toHaveBeenCalledWith(
+      "/signup?plan=pro&callbackUrl=%2Fen%2Fapp%2Fbilling%3Fplan%3Dpro%26period%3Dweekly"
+    );
   });
 
-  it("routes signed-in users to the existing billing overview", () => {
+  it("routes signed-in users to checkout with the selected plan", () => {
     session.status = "authenticated";
     renderButton();
 
-    fireEvent.click(screen.getByRole("button", { name: "View billing" }));
+    fireEvent.click(screen.getByRole("button", { name: "Continue to checkout" }));
 
-    expect(push).toHaveBeenCalledWith("/app/billing");
+    expect(push).toHaveBeenCalledWith("/app/billing?plan=pro&period=weekly");
   });
 
   it("disables the action while the session is loading", () => {

@@ -1,12 +1,16 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from ..auth_dependencies import require_role
 from ..schemas import ExplanationRequest
 
 router = APIRouter(prefix="/analysis", tags=["analysis"])
 
 
 @router.get("/{plan_id}")
-async def analyze_plan(plan_id: str) -> dict[str, object]:
+async def analyze_plan(
+    plan_id: str,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> dict[str, object]:
     return {
         "plan_id": plan_id,
         "bank_readiness": {"score": 72, "currency": "UZS", "status": "needs_review"},
@@ -17,7 +21,11 @@ async def analyze_plan(plan_id: str) -> dict[str, object]:
 
 
 @router.post("/{plan_id}/explain")
-async def explain_plan_result(plan_id: str, data: ExplanationRequest) -> dict[str, object]:
+async def explain_plan_result(
+    plan_id: str,
+    data: ExplanationRequest,
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> dict[str, object]:
     """Explain supplied engine output without recomputing financial values."""
     return {
         "plan_id": plan_id,

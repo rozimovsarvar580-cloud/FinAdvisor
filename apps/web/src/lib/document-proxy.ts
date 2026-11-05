@@ -1,12 +1,21 @@
 const planIdPattern = /^[A-Za-z0-9_-]{1,80}$/;
+const exportFormats = new Set(["pdf", "excel", "bank-pack", "synergy"]);
 
 export async function forwardDocumentExport(
   request: Request,
   planId: string,
   format: string
 ): Promise<Response> {
-  if (!planIdPattern.test(planId) || (format !== "pdf" && format !== "excel")) {
+  if (!planIdPattern.test(planId) || !exportFormats.has(format)) {
     return Response.json({ detail: "documents.invalid_request" }, { status: 400 });
+  }
+
+  const authorization = request.headers.get("Authorization");
+  if (!authorization) {
+    return Response.json(
+      { detail: "documents.authentication_required" },
+      { status: 401 }
+    );
   }
 
   const body = await request.text();
@@ -18,7 +27,10 @@ export async function forwardDocumentExport(
       `${apiUrl}/documents/${encodeURIComponent(planId)}/${format}`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: authorization,
+          "Content-Type": "application/json"
+        },
         body,
         cache: "no-store"
       }

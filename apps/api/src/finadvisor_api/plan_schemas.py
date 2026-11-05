@@ -67,7 +67,9 @@ class PlanCalculations(StrictInput):
 class PlanGenerateResponse(StrictInput):
     summary: str
     sections: list[PlanSection]
+    markdown: str
     calculations: PlanCalculations
+    assumptions: PlanGenerateRequest
 
 
 class SavedPlanSummary(StrictInput):
@@ -77,8 +79,59 @@ class SavedPlanSummary(StrictInput):
     created_at: datetime
 
 
+class PlanVersionSnapshot(StrictInput):
+    version: int = Field(ge=1)
+    created_at: datetime
+    summary: str
+    sections: list[PlanSection]
+    markdown: str
+
+
+class PlanVersionHistoryResponse(StrictInput):
+    current_version: int = Field(ge=1)
+    versions: list[PlanVersionSnapshot]
+    share_enabled: bool
+
+
+class PlanShareResponse(StrictInput):
+    token: str = Field(min_length=40, max_length=50)
+
+
 class SavedPlanGenerateResponse(PlanGenerateResponse):
     plan_id: str
+    version: int = Field(ge=1)
+
+
+CalculatorType = Literal[
+    "annuity",
+    "differential",
+    "capex",
+    "payroll",
+    "tax-comparison",
+    "break-even",
+    "payback",
+    "dscr",
+    "reverse-revenue",
+    "startup-cost",
+    "loan-affordability",
+    "revenue-projection",
+]
+
+
+class SaveCalculatorRequest(StrictInput):
+    calculation_type: CalculatorType
+    inputs: dict[str, object]
+
+
+class SavedCalculatorResult(StrictInput):
+    calculation_type: CalculatorType
+    saved_at: datetime
+    calculation: dict[str, object]
+
+
+class SaveCalculatorResponse(StrictInput):
+    plan_id: str
+    result: SavedCalculatorResult
 
 
 class PublicPlanDetails(StrictInput):
@@ -87,3 +140,16 @@ class PublicPlanDetails(StrictInput):
     location: str
     created_at: datetime
     plan: PlanGenerateResponse
+
+
+class InvestorQuestionAnswer(StrictInput):
+    question: str = Field(min_length=1, max_length=2_000)
+    answer: str = Field(min_length=1, max_length=5_000)
+
+
+class InvestorQAContent(StrictInput):
+    items: list[InvestorQuestionAnswer] = Field(min_length=5, max_length=10)
+
+
+class InvestorQAResponse(InvestorQAContent):
+    plan_id: str

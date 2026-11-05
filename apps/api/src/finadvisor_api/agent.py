@@ -1,19 +1,39 @@
+from datetime import date
 from typing import Annotated
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from finadvisor_api.auth import get_current_user
+from finadvisor_api.commission import create_revenue_entry
 from finadvisor_api.database import get_db
 from finadvisor_api.models import AgentCommand, AgentDevice, User
+from finadvisor_api.plan_limits import require_plan_feature
 from finadvisor_api.schemas import (
     AgentCommandResponse,
     AgentDeviceRegisterRequest,
     AgentDeviceResponse,
     AgentSyncStatementRequest,
 )
+
+
+class AgentRevenueCreateRequest(BaseModel):
+    revenue_minor: int = Field(ge=0)
+    revenue_date: date
+    source_entry_id: str = Field(min_length=1, max_length=64)
+    device_id: str | None = Field(default=None, min_length=1, max_length=64)
+
+
+class AgentRevenueResponse(BaseModel):
+    id: str
+    source_entry_id: str
+    revenue_minor: int
+    commission_minor: int
+    revenue_date: date
+    status: str
 
 router = APIRouter(prefix="/agent", tags=["agent"])
 OPERATOR_ROLES = {"tadbirkor", "buxgalter"}
@@ -25,6 +45,7 @@ def require_agent_operator(user: User) -> None:
             status_code=status.HTTP_403_FORBIDDEN,
             detail="agent.operator_required",
         )
+    require_plan_feature(user, "desktop_agent")
 
 
 @router.get("/devices", response_model=dict[str, list[AgentDeviceResponse]])
@@ -102,6 +123,47 @@ def list_commands(
             for item in records
         ]
     }
+
+
+@router.post(
+    "/revenue",
+    response_model=AgentRevenueResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_agent_revenue(
+    data: AgentRevenueCreateRequest,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> AgentRevenueResponse:
+    require_agent_operator(user)
+    if data.device_id is not None:
+        device = db.scalar(
+            select(AgentDevice).where(
+                AgentDevice.id == data.device_id,
+                AgentDevice.owner_email == user.email,
+            )
+        )
+        if device is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="agent.device_not_found",
+            )
+    entry = create_revenue_entry(
+        db,
+        user_id=user.id,
+        revenue_minor=data.revenue_minor,
+        revenue_date=data.revenue_date,
+        source_entry_id=data.source_entry_id,
+        device_id=data.device_id,
+    )
+    return AgentRevenueResponse(
+        id=entry.id,
+        source_entry_id=entry.source_entry_id,
+        revenue_minor=entry.revenue_minor,
+        commission_minor=entry.commission_minor,
+        revenue_date=entry.revenue_date,
+        status=entry.status,
+    )
 
 
 @router.post(

@@ -13,11 +13,27 @@ from .metrics import (
     calculate_break_even,
     calculate_payback,
 )
+from .money import decimal_to_minor_units, usd_price_to_minor_units
+from .projections import (
+    PeriodProjection,
+    RevenueProjectionInput,
+    RevenueProjectionResult,
+    SensitivityScenario,
+    calculate_revenue_projection,
+)
 from .revenue_profit import (
     RevenueProfitInput,
     RevenueProfitResult,
     RevenueStream,
     calculate_revenue_profit,
+)
+from .startup_cost import (
+    STARTUP_COST_CATEGORIES,
+    StartupCostCategory,
+    StartupCostEstimate,
+    StartupCostItem,
+    StartupCostLine,
+    estimate_startup_cost,
 )
 
 CommissionTier = Literal["first_100m", "next_900m", "above_1b"]
@@ -79,6 +95,7 @@ def calculate_progressive_commission(annual_revenue: Decimal) -> CommissionResul
 
 
 __all__ = [
+    "STARTUP_COST_CATEGORIES",
     "BreakEvenInput",
     "BreakEvenResult",
     "CapexInput",
@@ -89,12 +106,24 @@ __all__ = [
     "CommissionTier",
     "PaybackInput",
     "PaybackResult",
+    "PeriodProjection",
     "RevenueProfitInput",
     "RevenueProfitResult",
+    "RevenueProjectionInput",
+    "RevenueProjectionResult",
     "RevenueStream",
+    "SensitivityScenario",
+    "StartupCostCategory",
+    "StartupCostEstimate",
+    "StartupCostItem",
+    "StartupCostLine",
     "calculate_break_even",
     "calculate_capex",
     "calculate_payback",
     "calculate_progressive_commission",
     "calculate_revenue_profit",
+    "calculate_revenue_projection",
+    "decimal_to_minor_units",
+    "estimate_startup_cost",
+    "usd_price_to_minor_units",
 ]

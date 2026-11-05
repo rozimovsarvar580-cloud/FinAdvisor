@@ -11,8 +11,24 @@ regimes:
     base: "annual_revenue"
     source_article: "Tax Code, Article 467"
     eligibility_note: "Illustrative general rate; confirm taxpayer eligibility and activity-specific rules."
+    source_url: "https://lex.uz/docs/4674893?ONDATE=01.01.2026"
+    effective_date: "2026-01-01"
+    verified: false
+    verified_by: null
   profit_tax:
     rate: "0.15"
     base: "positive_taxable_profit"
     source_article: "Tax Code, Article 337"
     eligibility_note: "Illustrative general rate; confirm taxpayer eligibility and activity-specific rules."
+    source_url: "https://lex.uz/docs/4674893?ONDATE=01.01.2026"
+    effective_date: "2026-01-01"
+    verified: false
+    verified_by: null
+payroll:
+  employer_contributions:
+    - key: employer_social_contribution
+      rate: null
+      source_url: TODO(VERIFY)
+      effective_date: TODO(VERIFY)
+      verified: false
+      verified_by: null

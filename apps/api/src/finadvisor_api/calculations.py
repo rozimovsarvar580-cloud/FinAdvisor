@@ -1,5 +1,12 @@
-from fastapi import APIRouter, HTTPException, status
-from finance_engine.loans import LoanSchedule, annuity_schedule, differential_schedule
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from finance_engine.loans import (
+    LoanSchedule,
+    annuity_schedule,
+    check_loan_affordability,
+    differential_schedule,
+)
 from finance_engine.operations import (
     CapexItem,
     StaffPosition,
@@ -12,9 +19,18 @@ from finance_engine.profitability import (
     payback_period,
     revenue_for_target_profit,
 )
-from finance_engine.tax import compare_tax_regimes
+from finance_engine.projections import (
+    PeriodProjection,
+    calculate_revenue_projection,
+)
+from finance_engine.projections import (
+    RevenueProjectionInput as EngineRevenueProjectionInput,
+)
+from finance_engine.startup_cost import StartupCostItem, estimate_startup_cost
+from finance_engine.tax import compare_tax_regimes, tax_rule_provenance
 from pydantic import BaseModel, ValidationError
 
+from finadvisor_api.auth import get_current_user
 from finadvisor_api.calc_schemas import (
     AnnuityResponse,
     BreakEvenInput,
@@ -26,6 +42,8 @@ from finadvisor_api.calc_schemas import (
     DscrInput,
     DscrResponse,
     ExplanationResponse,
+    LoanAffordabilityInput,
+    LoanAffordabilityResponse,
     LoanInput,
     LoanPaymentResponse,
     LoanResultResponse,
@@ -33,19 +51,48 @@ from finadvisor_api.calc_schemas import (
     PaybackResponse,
     PayrollInput,
     PayrollResponse,
+    RevenueProjectionInput,
+    RevenueProjectionResponse,
     ReverseRevenueInput,
     ReverseRevenueResponse,
+    StartupCostInput,
+    StartupCostResponse,
     TaxComparisonInput,
     TaxResponse,
+    TaxRulesResponse,
 )
+from finadvisor_api.models import User
+from finadvisor_api.plan_limits import require_calculator
 
 router = APIRouter(prefix="/calc", tags=["calculations"])
+
+
+@router.get("/tax-rules", response_model=TaxRulesResponse)
+def tax_rules() -> TaxRulesResponse:
+    source_name, rules = tax_rule_provenance()
+    return TaxRulesResponse(
+        source_name=source_name,
+        rules=[
+            {
+                "key": rule.key,
+                "rate": rule.rate,
+                "source_url": rule.source_url,
+                "effective_date": rule.effective_date,
+                "verified": rule.verified,
+                "verified_by": rule.verified_by,
+            }
+            for rule in rules
+        ],
+    )
 
 INPUT_MODELS: dict[str, type[BaseModel]] = {
     "annuity": LoanInput,
     "differential": LoanInput,
     "capex": CapexInput,
     "payroll": PayrollInput,
+    "startup-cost": StartupCostInput,
+    "loan-affordability": LoanAffordabilityInput,
+    "revenue-projection": RevenueProjectionInput,
     "tax-comparison": TaxComparisonInput,
     "break-even": BreakEvenInput,
     "payback": PaybackInput,
@@ -103,8 +150,11 @@ def _loan_response(schedule: LoanSchedule) -> LoanResultResponse:
 
 @router.post("/{calculation_type}", response_model=CalculationResponse)
 def calculate(
-    calculation_type: str, payload: dict[str, object]
+    calculation_type: str,
+    payload: dict[str, object],
+    user: Annotated[User, Depends(get_current_user)],
 ) -> CalculationResponse:
+    require_calculator(user, calculation_type)
     validated = _validate_payload(calculation_type, payload)
 
     try:
@@ -172,6 +222,52 @@ def calculate(
                     "employee_count": result.employee_count,
                     "monthly_payroll": format(result.monthly_payroll, "f"),
                     "annual_payroll": format(result.annual_payroll, "f"),
+                    "employer_contributions": [
+                        {
+                            "key": contribution.key,
+                            "rate": (
+                                format(contribution.rate, "f")
+                                if contribution.rate is not None
+                                else None
+                            ),
+                            "monthly_amount": (
+                                format(contribution.monthly_amount, "f")
+                                if contribution.monthly_amount is not None
+                                else None
+                            ),
+                            "annual_amount": (
+                                format(contribution.annual_amount, "f")
+                                if contribution.annual_amount is not None
+                                else None
+                            ),
+                            "source_url": contribution.source_url,
+                            "effective_date": contribution.effective_date,
+                            "verified": contribution.verified,
+                        }
+                        for contribution in result.employer_contributions
+                    ],
+                    "monthly_employer_contributions": (
+                        format(result.monthly_employer_contributions, "f")
+                        if result.monthly_employer_contributions is not None
+                        else None
+                    ),
+                    "annual_employer_contributions": (
+                        format(result.annual_employer_contributions, "f")
+                        if result.annual_employer_contributions is not None
+                        else None
+                    ),
+                    "monthly_total_employer_cost": (
+                        format(result.monthly_total_employer_cost, "f")
+                        if result.monthly_total_employer_cost is not None
+                        else None
+                    ),
+                    "annual_total_employer_cost": (
+                        format(result.annual_total_employer_cost, "f")
+                        if result.annual_total_employer_cost is not None
+                        else None
+                    ),
+                    "contributions_complete": result.contributions_complete,
+                    "contributions_verified": result.contributions_verified,
                     "positions": [
                         {
                             "role": position.role,
@@ -180,6 +276,137 @@ def calculate(
                             "monthly_payroll": format(position.monthly_payroll, "f"),
                         }
                         for position in result.positions
+                    ],
+                },
+                explanation=_explanation(result.formula, result.inputs),
+            )
+
+        if calculation_type == "startup-cost":
+            if not isinstance(validated, StartupCostInput):
+                raise RuntimeError("Calculation input dispatch is inconsistent")
+            result = estimate_startup_cost(
+                [
+                    StartupCostItem(
+                        category=item.category,
+                        name=item.name,
+                        quantity=item.quantity,
+                        unit_cost=item.unit_cost,
+                    )
+                    for item in validated.items
+                ]
+            )
+            return StartupCostResponse(
+                calculation_type="startup-cost",
+                result={
+                    "items": [
+                        {
+                            "category": item.category,
+                            "name": item.name,
+                            "quantity": format(item.quantity, "f"),
+                            "unit_cost": format(item.unit_cost, "f"),
+                            "total_cost": format(item.total_cost, "f"),
+                        }
+                        for item in result.items
+                    ],
+                    "category_totals": {
+                        category: format(amount, "f")
+                        for category, amount in result.category_totals.items()
+                    },
+                    "total_cost": format(result.total_cost, "f"),
+                },
+                explanation=_explanation(result.formula, result.inputs),
+            )
+
+        if calculation_type == "loan-affordability":
+            if not isinstance(validated, LoanAffordabilityInput):
+                raise RuntimeError("Calculation input dispatch is inconsistent")
+            schedule_calculator = (
+                annuity_schedule
+                if validated.method == "annuity"
+                else differential_schedule
+            )
+            schedule = schedule_calculator(
+                validated.principal,
+                validated.annual_interest_rate_percent,
+                validated.term_months,
+            )
+            result = check_loan_affordability(
+                validated.monthly_available_cash, schedule
+            )
+            return LoanAffordabilityResponse(
+                calculation_type="loan-affordability",
+                result={
+                    "affordable": result.affordable,
+                    "monthly_available_cash": format(
+                        result.monthly_available_cash, "f"
+                    ),
+                    "maximum_monthly_payment": format(
+                        result.maximum_monthly_payment, "f"
+                    ),
+                    "minimum_monthly_surplus": format(
+                        result.minimum_monthly_surplus, "f"
+                    ),
+                    "schedule": _loan_response(schedule),
+                },
+                explanation=_explanation(result.formula, result.inputs),
+            )
+
+        if calculation_type == "revenue-projection":
+            if not isinstance(validated, RevenueProjectionInput):
+                raise RuntimeError("Calculation input dispatch is inconsistent")
+            result = calculate_revenue_projection(
+                EngineRevenueProjectionInput(
+                    daily_revenue=validated.daily_revenue,
+                    monthly_fixed_costs=validated.monthly_fixed_costs,
+                    variable_cost_ratio_percent=validated.variable_cost_ratio_percent,
+                    operating_days_per_week=validated.operating_days_per_week,
+                    operating_days_per_month=validated.operating_days_per_month,
+                    operating_days_per_year=validated.operating_days_per_year,
+                    target_monthly_profit=validated.target_monthly_profit,
+                    revenue_sensitivity_percentages=tuple(
+                        validated.revenue_sensitivity_percentages
+                    ),
+                    variable_cost_sensitivity_points=tuple(
+                        validated.variable_cost_sensitivity_points
+                    ),
+                )
+            )
+
+            def period_response(period: PeriodProjection) -> dict[str, str | int]:
+                return {
+                    "operating_days": period.operating_days,
+                    "revenue": format(period.revenue, "f"),
+                    "variable_costs": format(period.variable_costs, "f"),
+                    "fixed_costs": format(period.fixed_costs, "f"),
+                    "operating_profit": format(period.operating_profit, "f"),
+                }
+
+            return RevenueProjectionResponse(
+                calculation_type="revenue-projection",
+                result={
+                    "daily": period_response(result.daily),
+                    "weekly": period_response(result.weekly),
+                    "monthly": period_response(result.monthly),
+                    "yearly": period_response(result.yearly),
+                    "break_even_revenue_monthly": format(
+                        result.break_even.break_even_revenue, "f"
+                    ),
+                    "target_revenue_monthly": format(
+                        result.target_revenue.required_revenue, "f"
+                    ),
+                    "sensitivity": [
+                        {
+                            "revenue_change_percent": format(
+                                scenario.revenue_change_percent, "f"
+                            ),
+                            "variable_cost_change_points": format(
+                                scenario.variable_cost_change_points, "f"
+                            ),
+                            "projected_monthly_profit": format(
+                                scenario.projected_monthly_profit, "f"
+                            ),
+                        }
+                        for scenario in result.sensitivity
                     ],
                 },
                 explanation=_explanation(result.formula, result.inputs),
@@ -211,6 +438,8 @@ def calculate(
                             "effective_from": regime.effective_from,
                             "published_at": regime.published_at,
                             "eligibility_note": regime.eligibility_note,
+                            "verified": regime.verified,
+                            "verified_by": regime.verified_by,
                         }
                         for regime in result.regimes
                     ],

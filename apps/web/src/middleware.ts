@@ -51,6 +51,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   const [, locale, ...segments] = request.nextUrl.pathname.split("/");
+<<<<<<< HEAD
   const roleOnboarding = segments[0] === "onboarding" && segments[1] === "role";
   const protectedSection = segments[0] === "app" || segments[0] === "dashboard";
   if (locale && isSupportedLocale(locale)) {
@@ -58,6 +59,19 @@ export default async function middleware(request: NextRequest) {
     const token = secret ? await getToken({ req: request, secret }) : null;
     const legacyToken = request.cookies.get("finadvisor_token")?.value;
     if ((protectedSection || roleOnboarding) && !token && !legacyToken) {
+=======
+  const roleOnboardingRoute =
+    segments[0] === "onboarding" && segments[1] === "role";
+  const protectedSection =
+    segments[0] === "app" ||
+    segments[0] === "dashboard" ||
+    segments[0] === "admin" ||
+    roleOnboardingRoute;
+  if (locale && isSupportedLocale(locale) && protectedSection) {
+    const secret = process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET;
+    const token = secret ? await getToken({ req: request, secret }) : null;
+    if (!token) {
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = `/${locale}/login`;
       loginUrl.search = "";
@@ -67,13 +81,27 @@ export default async function middleware(request: NextRequest) {
       );
       return NextResponse.redirect(loginUrl);
     }
+<<<<<<< HEAD
     if (token?.needsRole === true && !roleOnboarding) {
+=======
+    if (token?.needsRole === true && !roleOnboardingRoute) {
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
       const onboardingUrl = request.nextUrl.clone();
       onboardingUrl.pathname = `/${locale}/onboarding/role`;
       onboardingUrl.search = "";
       return NextResponse.redirect(onboardingUrl);
     }
+<<<<<<< HEAD
     if (token && token.needsRole !== true && roleOnboarding) {
+=======
+    if (token && token.needsRole !== true && roleOnboardingRoute) {
+      const appUrl = request.nextUrl.clone();
+      appUrl.pathname = `/${locale}/app`;
+      appUrl.search = "";
+      return NextResponse.redirect(appUrl);
+    }
+    if (segments[0] === "admin" && token.role !== "admin") {
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
       const appUrl = request.nextUrl.clone();
       appUrl.pathname = `/${locale}/app`;
       appUrl.search = "";

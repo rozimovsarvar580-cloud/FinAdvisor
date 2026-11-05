@@ -1,5 +1,6 @@
 import { AuthShell } from "@/components/auth/auth-shell";
 import { SignupForm } from "@/components/auth/signup-form";
+import { getSocialProviderAvailability } from "@/lib/social-providers";
 
 export default function SignupPage({
   params,
@@ -17,7 +18,10 @@ export default function SignupPage({
 
   return (
     <AuthShell>
-      <SignupForm callbackUrl={callbackUrl} />
+      <SignupForm
+        callbackUrl={callbackUrl}
+        providersAvailable={getSocialProviderAvailability()}
+      />
     </AuthShell>
   );
 }

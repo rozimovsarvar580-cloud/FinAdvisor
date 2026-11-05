@@ -24,7 +24,11 @@ class Settings:
     email_username: str | None
     email_password: str | None
     email_from: str | None
+<<<<<<< HEAD
     email_api_key: str | None
+=======
+    resend_api_key: str | None
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     payment_provider: str
     payment_public_key: str | None
     payment_secret_key: str | None
@@ -131,7 +135,11 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         email_username=_optional(values, "EMAIL_USERNAME"),
         email_password=_optional(values, "EMAIL_PASSWORD"),
         email_from=_optional(values, "EMAIL_FROM"),
+<<<<<<< HEAD
         email_api_key=_optional(values, "EMAIL_API_KEY"),
+=======
+        resend_api_key=_optional(values, "RESEND_API_KEY"),
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
         payment_provider=values.get("PAYMENT_PROVIDER", "disabled").strip().lower(),
         payment_public_key=_optional(values, "PAYMENT_PUBLIC_KEY"),
         payment_secret_key=_optional(values, "PAYMENT_SECRET_KEY"),

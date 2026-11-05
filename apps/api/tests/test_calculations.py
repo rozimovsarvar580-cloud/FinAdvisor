@@ -1,9 +1,23 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from finadvisor_api.auth import get_current_user
 from finadvisor_api.main import app
+from finadvisor_api.models import User
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def authenticated_business_user(monkeypatch: pytest.MonkeyPatch) -> None:
+    user = User(
+        id="calculation-business-user",
+        email="calculation-business@example.com",
+        name="Calculation Business",
+        role="tadbirkor",
+        subscription_plan="business",
+    )
+    monkeypatch.setitem(app.dependency_overrides, get_current_user, lambda: user)
 
 
 @pytest.mark.parametrize(
@@ -109,3 +123,31 @@ def test_calc_rejects_invalid_profitability_and_unknown_type() -> None:
 
     assert invalid_break_even.status_code == 422
     assert unknown.status_code == 404
+
+
+def test_tax_rules_endpoint_exposes_unverified_provenance() -> None:
+    response = client.get("/calc/tax-rules")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["source_name"] == "Uzbekistan Tax Code, LexUZ"
+    assert {rule["key"] for rule in payload["rules"]} == {
+        "turnover_tax",
+        "profit_tax",
+        "employer_social_contribution",
+    }
+    assert all(rule["verified"] is False for rule in payload["rules"])
+    assert all(rule["verified_by"] is None for rule in payload["rules"])
+    assert all(rule["source_url"] and rule["effective_date"] for rule in payload["rules"])
+
+
+def test_tax_comparison_marks_unverified_rules_as_estimates() -> None:
+    response = client.post(
+        "/calc/tax-comparison",
+        json={"annual_revenue": "100000000", "annual_expenses": "70000000"},
+    )
+
+    assert response.status_code == 200
+    regimes = response.json()["result"]["regimes"]
+    assert all(regime["verified"] is False for regime in regimes)
+    assert all(regime["verified_by"] is None for regime in regimes)

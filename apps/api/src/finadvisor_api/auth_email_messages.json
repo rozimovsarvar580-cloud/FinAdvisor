@@ -1,0 +1,56 @@
+{
+  "uz": {
+    "verify": {
+      "subject": "Email manzilingizni tasdiqlang",
+      "body": "Email manzilingizni tasdiqlash uchun ushbu havolani oching:\n\n{link}"
+    },
+    "reset": {
+      "subject": "Parolni tiklash",
+      "body": "Parolni tiklash uchun ushbu havolani oching:\n\n{link}"
+    },
+    "welcome": {
+      "subject": "FinAdvisor’ga xush kelibsiz",
+      "body": "Assalomu alaykum, {name}. FinAdvisor’dan foydalanganingiz uchun rahmat."
+    },
+    "payment_retry": {
+      "subject": "Obuna to‘lovi qayta uriniladi",
+      "body": "Obunangiz uchun {amount} {currency} to‘lovi amalga oshmadi. To‘lov usulingizni tekshiring; rejalashtirilgan qayta urinish davom etadi."
+    }
+  },
+  "ru": {
+    "verify": {
+      "subject": "Подтвердите адрес электронной почты",
+      "body": "Чтобы подтвердить адрес электронной почты, откройте ссылку:\n\n{link}"
+    },
+    "reset": {
+      "subject": "Сброс пароля",
+      "body": "Чтобы сбросить пароль, откройте ссылку:\n\n{link}"
+    },
+    "welcome": {
+      "subject": "Добро пожаловать в FinAdvisor",
+      "body": "Здравствуйте, {name}. Спасибо, что выбрали FinAdvisor."
+    },
+    "payment_retry": {
+      "subject": "Повторная попытка оплаты подписки",
+      "body": "Не удалось списать {amount} {currency} за подписку. Проверьте способ оплаты; запланированная повторная попытка будет выполнена."
+    }
+  },
+  "en": {
+    "verify": {
+      "subject": "Verify your email address",
+      "body": "Open this link to verify your email address:\n\n{link}"
+    },
+    "reset": {
+      "subject": "Reset your password",
+      "body": "Open this link to reset your password:\n\n{link}"
+    },
+    "welcome": {
+      "subject": "Welcome to FinAdvisor",
+      "body": "Hello, {name}. Thank you for choosing FinAdvisor."
+    },
+    "payment_retry": {
+      "subject": "Subscription payment retry",
+      "body": "We could not collect {amount} {currency} for your subscription. Please check your payment method; the scheduled retry will proceed."
+    }
+  }
+}

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { buildMetadata, buildSitemapEntries } from "./site-metadata";
+import {
+  buildMetadata,
+  buildProductStructuredData,
+  buildSitemapEntries
+} from "./site-metadata";
 
 describe("buildMetadata", () => {
   it("includes locale-specific canonical metadata and alternates", () => {
@@ -10,6 +14,20 @@ describe("buildMetadata", () => {
     expect(metadata.alternates?.canonical).toContain("/ru/pricing");
     expect(metadata.alternates?.languages?.en).toContain("/en/pricing");
     expect(metadata.openGraph?.locale).toBe("ru");
+    expect(metadata.title).toContain("Управляйте бизнесом уверенно, опираясь на цифры");
+    expect(metadata.description).toContain("Составьте финансовый план ресторана");
+  });
+});
+
+describe("buildProductStructuredData", () => {
+  it("returns localized product structured data without invented pricing", () => {
+    const data = buildProductStructuredData("uz");
+
+    expect(data["@type"]).toBe("SoftwareApplication");
+    expect(data.inLanguage).toBe("uz");
+    expect(data.url).toContain("/uz");
+    expect(data.description).toContain("Restoraningiz uchun moliyaviy reja");
+    expect(data).not.toHaveProperty("offers");
   });
 });
 

@@ -14,7 +14,11 @@ from finadvisor_api.models import OAuthAccount, User
 @pytest.fixture
 def client(monkeypatch: pytest.MonkeyPatch) -> Iterator[TestClient]:
     monkeypatch.setenv("JWT_SECRET", "unit-test-secret-key-at-least-32-bytes-long")
+<<<<<<< HEAD
     monkeypatch.setenv("INTERNAL_API_KEY", "oauth-internal-test-key")
+=======
+    monkeypatch.setattr(auth_module, "send_auth_email", lambda *args: None)
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     engine = create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
@@ -193,6 +197,7 @@ def test_oauth_exchange_creates_and_reuses_provider_identity(
 ) -> None:
     headers = {"X-Internal-Key": "oauth-internal-test-key"}
     first = client.post(
+<<<<<<< HEAD
         "/auth/oauth",
         json=_oauth_payload(role="investor"),
         headers=headers,
@@ -201,6 +206,22 @@ def test_oauth_exchange_creates_and_reuses_provider_identity(
         "/auth/oauth",
         json=_oauth_payload(name="Updated Owner", role="tadbirkor"),
         headers=headers,
+=======
+        "/auth/oauth/provider-token",
+        json={
+            "provider": "google",
+            "access_token": "provider-access-token",
+            "role": "investor",
+        },
+    )
+    second = client.post(
+        "/auth/oauth/provider-token",
+        json={
+            "provider": "google",
+            "access_token": "provider-access-token",
+            "role": "tadbirkor",
+        },
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     )
 
     assert first.status_code == second.status_code == 200
@@ -233,6 +254,7 @@ def test_oauth_exchange_requires_internal_key_and_rejects_access_tokens(
 
 def test_oauth_exchange_creates_facebook_identity_with_avatar(client: TestClient) -> None:
     response = client.post(
+<<<<<<< HEAD
         "/auth/oauth",
         json=_oauth_payload(
             provider="facebook",
@@ -243,6 +265,50 @@ def test_oauth_exchange_creates_facebook_identity_with_avatar(client: TestClient
             role="buxgalter",
         ),
         headers={"X-Internal-Key": "oauth-internal-test-key"},
+=======
+        "/auth/oauth/provider-token",
+        json={"provider": "facebook", "access_token": "invalid-provider-token"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "auth.invalid_provider_token"
+
+
+def test_oauth_exchange_reads_facebook_profile(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    requests: list[httpx.Request] = []
+    async_client = httpx.AsyncClient
+
+    def provider_response(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(
+            200,
+            json={
+                "id": "facebook-user-123",
+                "email": "owner@example.com",
+                "name": "Restaurant Owner",
+                "picture": {"data": {"url": "https://example.com/avatar.png"}},
+            },
+            request=request,
+        )
+
+    monkeypatch.setattr(
+        auth_module.httpx,
+        "AsyncClient",
+        lambda **kwargs: async_client(
+            transport=httpx.MockTransport(provider_response), **kwargs
+        ),
+    )
+
+    response = client.post(
+        "/auth/oauth/provider-token",
+        json={
+            "provider": "facebook",
+            "access_token": "provider-access-token",
+            "role": "buxgalter",
+        },
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
     )
 
     assert response.status_code == 200
@@ -253,8 +319,36 @@ def test_oauth_exchange_creates_facebook_identity_with_avatar(client: TestClient
     assert response.json()["user"]["email_verified"] is False
 
 
+<<<<<<< HEAD
 def test_oauth_links_existing_email_only_when_verified(client: TestClient) -> None:
     registration = client.post(
+=======
+def test_oauth_exchange_links_an_existing_email_only_when_verified(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    async_client = httpx.AsyncClient
+
+    def provider_response(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "sub": "google-user-456",
+                "email": "owner@example.com",
+                "email_verified": True,
+                "name": "Another Owner",
+            },
+            request=request,
+        )
+
+    monkeypatch.setattr(
+        auth_module.httpx,
+        "AsyncClient",
+        lambda **kwargs: async_client(
+            transport=httpx.MockTransport(provider_response), **kwargs
+        ),
+    )
+    client.post(
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331
         "/auth/register",
         json={
             "email": "owner@example.com",
@@ -262,6 +356,7 @@ def test_oauth_links_existing_email_only_when_verified(client: TestClient) -> No
             "password": "StrongPass123!",
         },
     )
+<<<<<<< HEAD
     headers = {"X-Internal-Key": "oauth-internal-test-key"}
     unverified = client.post(
         "/auth/oauth",
@@ -295,3 +390,27 @@ def test_oauth_links_existing_email_only_when_verified(client: TestClient) -> No
         assert linked_account.user_id == registration.json()["user"]["id"]
     finally:
         session_generator.close()
+=======
+
+    response = client.post(
+        "/auth/oauth/provider-token",
+        json={"provider": "google", "access_token": "provider-access-token"},
+    )
+
+    assert response.status_code == 200
+    db_generator = app.dependency_overrides[get_db]()
+    db = next(db_generator)
+    try:
+        user = db.scalar(select(User).where(User.email == "owner@example.com"))
+        account = db.scalar(
+            select(OAuthAccount).where(
+                OAuthAccount.provider == "google",
+                OAuthAccount.provider_account_id == "google-user-456",
+            )
+        )
+        assert user is not None
+        assert account is not None
+        assert account.user_id == user.id
+    finally:
+        db_generator.close()
+>>>>>>> 12899e6e553a1563cc224d5ccc910c29dc2ea331

@@ -1,10 +1,14 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+
+from ..auth_dependencies import require_role
 
 router = APIRouter(prefix="/workspace", tags=["workspace"])
 
 
 @router.get("/onboarding")
-async def onboarding_state() -> dict[str, object]:
+async def onboarding_state(
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> dict[str, object]:
     return {
         "status": "in_progress",
         "steps": [
@@ -16,7 +20,9 @@ async def onboarding_state() -> dict[str, object]:
 
 
 @router.get("/dashboard")
-async def dashboard_summary() -> dict[str, object]:
+async def dashboard_summary(
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> dict[str, object]:
     return {
         "owner": "Ali Valiyev",
         "restaurant": "Samarqand Bistro",
@@ -28,7 +34,9 @@ async def dashboard_summary() -> dict[str, object]:
 
 
 @router.get("/settings")
-async def settings() -> dict[str, object]:
+async def settings(
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> dict[str, object]:
     return {
         "language": "uz",
         "currency": "UZS",
@@ -37,7 +45,9 @@ async def settings() -> dict[str, object]:
 
 
 @router.get("/notifications")
-async def notifications() -> dict[str, object]:
+async def notifications(
+    _: str = Depends(require_role("entrepreneur", "accountant", "admin")),
+) -> dict[str, object]:
     return {
         "items": [
             {"id": "n-1", "title": "Tax filing reminder", "read": False},

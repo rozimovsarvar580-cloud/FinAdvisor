@@ -1,4 +1,12 @@
 export async function POST(request: Request) {
+  const authorization = request.headers.get("Authorization");
+  if (!authorization) {
+    return Response.json(
+      { detail: "plans.authentication_required" },
+      { status: 401 }
+    );
+  }
+
   let body: string;
   try {
     body = await request.text();
@@ -14,7 +22,10 @@ export async function POST(request: Request) {
   try {
     response = await fetch(`${apiUrl}/plans/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: authorization,
+        "Content-Type": "application/json"
+      },
       body,
       cache: "no-store"
     });
