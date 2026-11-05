@@ -9,9 +9,11 @@ class RedisRateLimiter:
         self.limit = limit
         self.window_seconds = window_seconds
 
-    def allow(self, key: str) -> bool:
+    def allow(self, key: str, limit: int | None = None, window_seconds: int | None = None) -> bool:
+        effective_limit = self.limit if limit is None else limit
+        effective_window = self.window_seconds if window_seconds is None else window_seconds
         redis_key = f"finadvisor:rate:{key}"
         count = self.client.incr(redis_key)
         if count == 1:
-            self.client.expire(redis_key, self.window_seconds)
-        return count <= self.limit
+            self.client.expire(redis_key, effective_window)
+        return count <= effective_limit

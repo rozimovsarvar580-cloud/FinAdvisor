@@ -4,6 +4,13 @@ from dataclasses import dataclass
 from decimal import Decimal
 from typing import Literal
 
+from .admin_metrics import (
+    RecurringRevenueMinor,
+    calculate_cancellation_rate_percent,
+    normalize_recurring_revenue_minor,
+    sum_decimal_amounts,
+    sum_minor_units,
+)
 from .capex import CapexInput, CapexItem, CapexResult, calculate_capex
 from .metrics import (
     BreakEvenInput,
@@ -13,7 +20,11 @@ from .metrics import (
     calculate_break_even,
     calculate_payback,
 )
-from .money import decimal_to_minor_units, usd_price_to_minor_units
+from .money import (
+    decimal_amount_to_string,
+    decimal_to_minor_units,
+    usd_price_to_minor_units,
+)
 from .projections import (
     PeriodProjection,
     RevenueProjectionInput,
@@ -109,6 +120,7 @@ __all__ = [
     "PeriodProjection",
     "RevenueProfitInput",
     "RevenueProfitResult",
+    "RecurringRevenueMinor",
     "RevenueProjectionInput",
     "RevenueProjectionResult",
     "RevenueStream",
@@ -118,12 +130,17 @@ __all__ = [
     "StartupCostItem",
     "StartupCostLine",
     "calculate_break_even",
+    "calculate_cancellation_rate_percent",
     "calculate_capex",
     "calculate_payback",
     "calculate_progressive_commission",
     "calculate_revenue_profit",
     "calculate_revenue_projection",
+    "decimal_amount_to_string",
     "decimal_to_minor_units",
     "estimate_startup_cost",
+    "normalize_recurring_revenue_minor",
+    "sum_decimal_amounts",
+    "sum_minor_units",
     "usd_price_to_minor_units",
 ]

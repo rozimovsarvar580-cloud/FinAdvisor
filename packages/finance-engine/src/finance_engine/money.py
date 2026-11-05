@@ -30,6 +30,14 @@ def minor_units_to_decimal_string(amount_minor: int) -> str:
     return format(Decimal(amount_minor).scaleb(-2), ".2f")
 
 
+def decimal_amount_to_string(amount: Decimal) -> str:
+    if not amount.is_finite():
+        raise ValueError("Money amount must be finite")
+    if amount == ZERO:
+        return "0"
+    return format(amount.normalize(), "f")
+
+
 def decimal_to_minor_units(amount: Decimal) -> int:
     if not amount.is_finite():
         raise ValueError("Money amount must be finite")
