@@ -1,3 +1,9 @@
+---
+noteId: "5dd4b350da9c11f19fcb3b18069fac28"
+tags: []
+
+---
+
 # Personal data and retention (operational draft)
 
 This document describes current application behavior, not a legal privacy notice. A qualified reviewer

@@ -1,3 +1,9 @@
+---
+noteId: "5dd50171da9c11f19fcb3b18069fac28"
+tags: []
+
+---
+
 # Secret handling and rotation
 
 This document describes where the current application consumes the listed secrets and how operators

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
 
 import { Card } from "@/components/ui/card";
@@ -68,6 +68,35 @@ export function FinAdvisorWorkspace() {
   const common = useTranslations("common");
   const [activeTab, setActiveTab] = useState<TabKey>("businessPlan");
   const [planResult, setPlanResult] = useState<PlanResult>();
+  const tabListRef = useRef<HTMLElement>(null);
+
+  const handleTabKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (!(event.target instanceof HTMLButtonElement)) return;
+
+    const tabs = Array.from(
+      tabListRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ??
+        []
+    );
+    const currentIndex = tabs.indexOf(event.target);
+    if (currentIndex < 0) return;
+
+    let nextIndex: number;
+    if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = tabs.length - 1;
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const offset = event.key === "ArrowDown" ? 1 : -1;
+      nextIndex = (currentIndex + offset + tabs.length) % tabs.length;
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+    tabs[nextIndex].focus();
+    setActiveTab(tabKeys[nextIndex]);
+  };
 
   return (
     <main className="mx-auto min-h-[calc(100vh-4rem)] max-w-7xl px-page py-8">
@@ -97,19 +126,24 @@ export function FinAdvisorWorkspace() {
             className="space-y-1"
             role="tablist"
             aria-orientation="vertical"
+            onKeyDown={handleTabKeyDown}
+            ref={tabListRef}
           >
             {tabKeys.map((tab) => (
               <button
                 aria-selected={activeTab === tab}
+                aria-controls="finadvisor-workspace-panel"
                 className={cn(
-                  "flex w-full items-center rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors",
+                  "flex w-full items-center rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
                   activeTab === tab
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
+                id={`finadvisor-tab-${tab}`}
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 role="tab"
+                tabIndex={activeTab === tab ? 0 : -1}
                 type="button"
               >
                 {t(`tabs.${tab}`)}
@@ -117,7 +151,14 @@ export function FinAdvisorWorkspace() {
             ))}
           </nav>
         </Card>
-        <section aria-live="polite" className="min-w-0">
+        <section
+          aria-live="polite"
+          aria-labelledby={`finadvisor-tab-${activeTab}`}
+          className="min-w-0"
+          id="finadvisor-workspace-panel"
+          role="tabpanel"
+          tabIndex={0}
+        >
           {activeTab === "businessPlan" ? (
             <PlanWizard
               onGenerated={(result) => {

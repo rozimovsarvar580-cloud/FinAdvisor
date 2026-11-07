@@ -78,7 +78,7 @@ export function LandingPage() {
           className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,hsl(var(--primary)/.12),transparent_55%)]"
         />
         <div className="mx-auto grid min-h-[640px] max-w-7xl items-center gap-14 px-page py-20 lg:grid-cols-[1.05fr_.95fr] lg:py-28">
-          <Reveal className="max-w-2xl">
+          <div className="max-w-2xl">
             <p className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground">
               <span aria-hidden="true" className="h-2 w-2 rounded-full bg-primary" />
               {t("hero.badge")}
@@ -130,7 +130,7 @@ export function LandingPage() {
             <p className="mt-5 text-xs text-muted-foreground">
               {t("hero.footnote")}
             </p>
-          </Reveal>
+          </div>
 
           <Reveal className="relative mx-auto w-full max-w-lg">
             <LandingDashboardPreview
@@ -324,7 +324,7 @@ export function LandingPage() {
       <section className="bg-primary py-16 text-primary-foreground sm:py-20">
         <div className="mx-auto grid max-w-7xl items-center gap-8 px-page lg:grid-cols-[1fr_auto]">
           <Reveal>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary-foreground/70">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em]">
               {t("investors.eyebrow")}
             </p>
             <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">

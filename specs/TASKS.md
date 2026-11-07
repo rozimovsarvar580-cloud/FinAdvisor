@@ -375,9 +375,9 @@ engine = `packages/finance-engine`.
   - done: Playwright covers signup, login, plan creation with the fake AI, export, language switch, theme switch, pricing toggle
 - [x] 11.2 E2E money flows
   - done: Playwright covers Free limit -> upgrade -> fake checkout -> Pro access -> cancel
-- [ ] 11.3 Accessibility
+- [x] 11.3 Accessibility
   - done: axe checks on landing, pricing, login, signup, wizard have no serious violations; keyboard navigation and focus order verified
-- [ ] 11.4 Performance
+- [x] 11.4 Performance
   - done: Lighthouse performance and SEO >= 90 on landing and pricing (documented in `docs/QUALITY.md`); images optimized; fonts preloaded
   - exists: docs/QUALITY.md
 - [ ] 11.5 Responsive pass

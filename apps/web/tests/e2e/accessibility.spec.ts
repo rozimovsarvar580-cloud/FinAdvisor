@@ -113,3 +113,32 @@ test("signup controls follow a predictable keyboard focus order", async ({
     await expect(page.locator(selector)).toBeFocused();
   }
 });
+
+test("workspace tabs support vertical arrow and boundary-key navigation", async ({
+  page
+}) => {
+  await installAuthenticatedSession(page);
+  await page.goto("/en/app/finadvisor");
+
+  const tabs = page.getByRole("tab");
+  const firstTab = tabs.first();
+  const secondTab = tabs.nth(1);
+  const lastTab = tabs.last();
+
+  await firstTab.focus();
+  await page.keyboard.press("ArrowDown");
+  await expect(secondTab).toBeFocused();
+  await expect(secondTab).toHaveAttribute("aria-selected", "true");
+
+  await page.keyboard.press("ArrowUp");
+  await expect(firstTab).toBeFocused();
+  await expect(firstTab).toHaveAttribute("aria-selected", "true");
+
+  await page.keyboard.press("End");
+  await expect(lastTab).toBeFocused();
+  await expect(lastTab).toHaveAttribute("aria-selected", "true");
+
+  await page.keyboard.press("Home");
+  await expect(firstTab).toBeFocused();
+  await expect(firstTab).toHaveAttribute("aria-selected", "true");
+});

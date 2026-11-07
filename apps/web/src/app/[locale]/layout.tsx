@@ -14,12 +14,14 @@ import "../globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
   display: "swap",
+  preload: true,
   subsets: ["latin", "latin-ext", "cyrillic-ext"],
   variable: "--font-plus-jakarta"
 });
 
 const inter = Inter({
   display: "swap",
+  preload: true,
   subsets: ["latin", "latin-ext", "cyrillic"],
   variable: "--font-inter"
 });

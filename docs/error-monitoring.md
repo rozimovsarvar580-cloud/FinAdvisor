@@ -1,3 +1,9 @@
+---
+noteId: "5dd50172da9c11f19fcb3b18069fac28"
+tags: []
+
+---
+
 # Error monitoring and source maps
 
 Error reporting is disabled when `SENTRY_DSN` is unset. Set it in the API and desktop process environments. For the browser bundle, set `NEXT_PUBLIC_SENTRY_DSN` to the same Sentry project DSN; keep it unset to disable browser reporting. Do not put auth tokens, request bodies, or personal data in monitoring context.
