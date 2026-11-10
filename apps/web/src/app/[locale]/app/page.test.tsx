@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const { session, replace } = vi.hoisted(() => ({
   session: {
     status: "loading" as string,
-    data: { needsRole: false }
+    data: { needsRole: false, user: { role: "tadbirkor" as string } }
   },
   replace: vi.fn()
 }));
@@ -22,7 +22,7 @@ import AppIndex from "./page";
 describe("localized app index", () => {
   beforeEach(() => {
     session.status = "loading";
-    session.data = { needsRole: false };
+    session.data = { needsRole: false, user: { role: "tadbirkor" } };
     replace.mockClear();
   });
 
@@ -34,7 +34,7 @@ describe("localized app index", () => {
 
   it("sends a new OAuth account to onboarding", async () => {
     session.status = "authenticated";
-    session.data = { needsRole: true };
+    session.data.needsRole = true;
 
     render(<AppIndex params={{ locale: "ru" }} />);
 
@@ -50,6 +50,22 @@ describe("localized app index", () => {
 
     await waitFor(() => {
       expect(replace).toHaveBeenCalledWith("/en/app/finadvisor");
+    });
+  });
+
+  it.each([
+    ["tadbirkor", "/en/app/finadvisor"],
+    ["buxgalter", "/en/accounting"],
+    ["investor", "/en/investors"],
+    ["admin", "/en/admin"]
+  ])("routes authenticated %s users to their workspace", async (role, destination) => {
+    session.status = "authenticated";
+    session.data.user.role = role;
+
+    render(<AppIndex params={{ locale: "en" }} />);
+
+    await waitFor(() => {
+      expect(replace).toHaveBeenCalledWith(destination);
     });
   });
 });

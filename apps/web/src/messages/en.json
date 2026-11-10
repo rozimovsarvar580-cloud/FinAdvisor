@@ -11,6 +11,131 @@
     "primaryNavigation": "Primary navigation",
     "mobileNavigation": "Mobile navigation"
   },
+  "firstRun": {
+    "title": "Your first steps",
+    "description": "Use this checklist and short tour to get started with FinAdvisor.",
+    "checklistTitle": "First-run checklist",
+    "tourTitle": "Product tour",
+    "startTour": "Start the tour",
+    "previous": "Previous",
+    "next": "Next",
+    "finishTour": "Finish tour",
+    "skipTour": "Skip tour",
+    "tourProgress": "Step {current} of {total}",
+    "markComplete": "Mark checklist complete",
+    "reopen": "Reopen your checklist",
+    "storageError": "Your progress could not be saved in this browser.",
+    "roles": {
+      "tadbirkor": {
+        "checklist": [
+          {
+            "title": "Draft a business plan",
+            "description": "Enter your business assumptions and review the calculated results.",
+            "action": "Open the plan builder"
+          },
+          {
+            "title": "Record daily activity",
+            "description": "Start keeping your restaurant's daily revenue and expense records.",
+            "action": "Open daily accounting"
+          },
+          {
+            "title": "Prepare a project listing",
+            "description": "Choose whether to share a saved plan with potential investors.",
+            "action": "Open the investor marketplace"
+          }
+        ],
+        "tour": [
+          {
+            "title": "Build a business plan",
+            "description": "Describe your restaurant and review the financial calculations and assumptions.",
+            "action": "Go to the plan builder"
+          },
+          {
+            "title": "Keep daily records",
+            "description": "Use accounting tools to organize your business records.",
+            "action": "Go to daily accounting"
+          },
+          {
+            "title": "Explore investor listings",
+            "description": "Review the marketplace and decide what project details to share.",
+            "action": "Go to the marketplace"
+          }
+        ]
+      },
+      "buxgalter": {
+        "checklist": [
+          {
+            "title": "Review the accounting workspace",
+            "description": "Open the tools for managing your business records.",
+            "action": "Open accounting"
+          },
+          {
+            "title": "Organize inventory",
+            "description": "Review inventory records and keep item information up to date.",
+            "action": "Open inventory"
+          },
+          {
+            "title": "Record daily activity",
+            "description": "Review daily revenue and expense entries.",
+            "action": "Open daily accounting"
+          }
+        ],
+        "tour": [
+          {
+            "title": "Start in accounting",
+            "description": "The accounting workspace links to daily records, inventory, payroll, and other tools.",
+            "action": "Go to accounting"
+          },
+          {
+            "title": "Review inventory",
+            "description": "Use the inventory page to keep track of recorded items.",
+            "action": "Go to inventory"
+          },
+          {
+            "title": "Review daily records",
+            "description": "Open daily accounting to review the business's recorded activity.",
+            "action": "Go to daily accounting"
+          }
+        ]
+      },
+      "investor": {
+        "checklist": [
+          {
+            "title": "Browse available projects",
+            "description": "Review owner-published listings and their disclosed details.",
+            "action": "Browse the marketplace"
+          },
+          {
+            "title": "Review investor verification",
+            "description": "See the information needed to complete investor verification.",
+            "action": "Open verification"
+          },
+          {
+            "title": "Save a promising listing",
+            "description": "Keep projects you want to revisit in your saved listings.",
+            "action": "Open saved listings"
+          }
+        ],
+        "tour": [
+          {
+            "title": "Browse projects",
+            "description": "Listings are supplied by owners and are not independently verified.",
+            "action": "Go to the marketplace"
+          },
+          {
+            "title": "Check verification",
+            "description": "Review the investor verification steps before contacting a project owner.",
+            "action": "Go to verification"
+          },
+          {
+            "title": "Return to saved projects",
+            "description": "Find the listings you chose to save for later review.",
+            "action": "Go to saved listings"
+          }
+        ]
+      }
+    }
+  },
   "home": {
     "tagline": "Clear financial decisions for your business",
     "socialImage": {
@@ -34,6 +159,11 @@
       "description": "Build a financial plan for your restaurant, understand costs and revenue, and prepare a bank-ready business plan.",
       "primaryCta": "Start your plan",
       "secondaryCta": "View sample PDF",
+      "demoCta": "Try read-only demo",
+      "demoLoading": "Opening demo...",
+      "demoError": "The demo is unavailable right now. Please try again later.",
+      "demoConnectionFailed": "Could not connect to the demo. Check your connection and try again.",
+      "demoReadOnlyBanner": "Read-only demo: all business information is illustrative sample data, and changes are disabled.",
       "footnote": "Calculations are exact. AI explains them in plain language.",
       "profileSettings": {
         "title": "Profile settings",
@@ -1040,6 +1170,7 @@
       "savedVersion": "Saved as version {version}.",
       "emptyTitle": "No report yet",
       "emptyDescription": "Create a business plan first. Its prepared calculations and AI explanations will appear here.",
+      "createPlanAction": "Start a business plan",
       "calculationsTitle": "Financial calculations",
       "sectionsTitle": "Business plan sections",
       "markdownTitle": "Markdown version",
@@ -1191,7 +1322,8 @@
       },
       "invoices": {
         "title": "Invoices",
-        "empty": "No invoices yet."
+        "empty": "No invoices yet.",
+        "viewPlans": "View subscription options"
       }
     }
   },
@@ -1234,6 +1366,7 @@
       "savedPlan": "Business plan to publish",
       "selectSavedPlan": "Select one of your saved business plans",
       "noSavedPlans": "Generate and save a business plan first.",
+      "createPlan": "Create a business plan",
       "summary": "Project summary",
       "publish": "Publish listing",
       "publishing": "Publishing…",
@@ -1285,11 +1418,14 @@
       "title": "No published projects yet",
       "description": "When a restaurant owner publishes a project, it will appear here.",
       "filteredTitle": "No projects match this stage",
-      "filteredDescription": "Choose another project stage to see more published projects."
+      "filteredDescription": "Choose another project stage to see more published projects.",
+      "clearFilters": "Clear filters",
+      "refresh": "Refresh listings"
     },
     "myListingsEmpty": {
       "title": "No listings yet",
-      "description": "Projects you publish will appear here so you can manage their visibility."
+      "description": "Projects you publish will appear here so you can manage their visibility.",
+      "createListing": "Create a listing"
     },
     "amountPlaceholder": "250000000",
     "saved": {
@@ -1310,6 +1446,8 @@
       "back": "Back to marketplace",
       "error": "Interest requests could not be loaded or updated.",
       "empty": "No investor interest yet.",
+      "emptyDescription": "Published listings can receive investor interest. Review your listings to make sure they are ready to share.",
+      "emptyAction": "Review my listings",
       "investor": "Investor",
       "accept": "Accept",
       "decline": "Decline",

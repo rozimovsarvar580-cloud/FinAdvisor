@@ -19,8 +19,18 @@ export default function AppIndexClient({ params }: { params: { locale: string } 
       return;
     }
 
-    // Default landing (keeps prior behavior).
-    router.replace(`/${locale}/app/finadvisor`);
+    const role = session.status === "authenticated"
+      ? session.data?.user.role
+      : undefined;
+    const destination =
+      role === "buxgalter"
+        ? "/accounting"
+        : role === "investor"
+          ? "/investors"
+          : role === "admin"
+            ? "/admin"
+            : "/app/finadvisor";
+    router.replace(`/${locale}${destination}`);
   }, [session, router, locale]);
 
   // Render nothing while deciding; avoid layout shift.

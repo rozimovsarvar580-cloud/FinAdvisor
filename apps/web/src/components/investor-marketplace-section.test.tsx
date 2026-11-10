@@ -52,6 +52,13 @@ describe("investor marketplace empty states", () => {
     expect(
       screen.getByText("Projects you publish will appear here so you can manage their visibility.")
     ).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: "Create a listing" }).getAttribute("href")
+    ).toBe("#investor-listing-form");
+    expect(
+      screen.getByRole("link", { name: "Create a business plan" }).getAttribute("href")
+    ).toBe("/en/app/finadvisor");
+    expect(screen.getByRole("button", { name: "Refresh listings" })).toBeTruthy();
   });
 
   it("does not mistake a failed list request for an empty collection", async () => {

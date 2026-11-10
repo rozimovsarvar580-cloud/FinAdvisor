@@ -70,7 +70,7 @@ export function LandingDashboardPreview({
               className="min-w-0 rounded-xl border border-border bg-background p-3 sm:p-4"
               key={label}
             >
-              <p className="truncate text-[0.65rem] text-muted-foreground sm:text-xs">
+              <p className="min-h-8 break-words text-[0.65rem] leading-4 text-muted-foreground sm:text-xs">
                 {label}
               </p>
               <p aria-hidden="true" className="mt-2 text-lg font-semibold sm:text-xl">

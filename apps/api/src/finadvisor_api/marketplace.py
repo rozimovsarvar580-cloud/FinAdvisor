@@ -2,7 +2,7 @@ from time import monotonic
 from typing import Annotated
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -142,6 +142,7 @@ def my_listings(
 def public_listing_details(
     listing_id: str,
     db: Annotated[Session, Depends(get_db)],
+    request: Request,
     credentials=Depends(bearer_scheme),
 ) -> MarketplaceListingDetailResponse:
     listing = db.scalar(
@@ -163,7 +164,7 @@ def public_listing_details(
             detail="marketplace.listing_not_found",
         )
     plan = PlanGenerateResponse.model_validate(saved_plan.generated_plan)
-    investor = _get_current_user(credentials, db) if credentials else None
+    investor = _get_current_user(credentials, db, request) if credentials else None
     verification = db.scalar(
         select(InvestorVerification).where(
             InvestorVerification.user_id == investor.id,

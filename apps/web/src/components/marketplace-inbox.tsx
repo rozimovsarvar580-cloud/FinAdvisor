@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Link } from "@/i18n/navigation";
 
 type Listing = { id: string; business_name: string };
@@ -48,6 +50,16 @@ export function MarketplaceInbox() {
     {items.length ? items.map((item) => <Card key={item.id} className="space-y-3 p-5">
       <h2 className="font-semibold">{item.business_name}</h2><p className="text-sm text-muted-foreground">{t("investor")}: {item.investor_id}</p><p>{item.message}</p><p className="text-sm">{t(`status.${item.status}`)}</p>
       {item.status === "pending" ? <div className="flex gap-2"><button className="rounded-md bg-primary px-3 py-2 text-primary-foreground focus-visible:outline focus-visible:outline-2" onClick={() => void decide(item.id, "accepted")}>{t("accept")}</button><button className="rounded-md border border-border px-3 py-2 hover:bg-muted focus-visible:outline focus-visible:outline-2" onClick={() => void decide(item.id, "declined")}>{t("decline")}</button></div> : null}
-    </Card>) : !error ? <Card className="p-6 text-muted-foreground">{t("empty")}</Card> : null}
+    </Card>) : !error ? (
+      <EmptyState
+        action={
+          <Button asChild variant="outline">
+            <Link href="/investors">{t("emptyAction")}</Link>
+          </Button>
+        }
+        description={t("emptyDescription")}
+        title={t("empty")}
+      />
+    ) : null}
   </main>;
 }

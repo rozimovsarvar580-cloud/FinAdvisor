@@ -40,6 +40,7 @@ def test_auth_data_model_migration_upgrades_a_fresh_database(
             "avatar_url",
             "locale",
             "deletion_requested_at",
+            "is_demo",
         } <= user_columns
 
         oauth_unique_constraints = inspector.get_unique_constraints("oauth_accounts")

@@ -5,6 +5,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { useLocale, useTranslations } from "next-intl";
 
 import { CountUp } from "@/components/motion/count-up";
+import { DemoLoginButton } from "@/components/landing/demo-login-button";
 import { LandingDashboardPreview } from "@/components/landing/landing-dashboard-preview";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -96,6 +97,7 @@ export function LandingPage() {
                   <span aria-hidden="true">→</span>
                 </Link>
               </Button>
+              <DemoLoginButton />
               <Modal
                 description={t("hero.samplePlan.description")}
                 title={t("hero.samplePlan.title")}

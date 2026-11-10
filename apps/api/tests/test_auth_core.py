@@ -12,6 +12,7 @@ from finadvisor_api import auth as auth_module
 from finadvisor_api.database import Base, get_db
 from finadvisor_api.main import app
 from finadvisor_api.models import RefreshToken, User
+from finadvisor_api.seed_demo import seed_demo
 
 
 @pytest.fixture
@@ -112,6 +113,44 @@ def test_login_and_refresh_rotate_tokens_and_reject_replay(
     )
     assert profile.status_code == 200
     assert profile.json()["email"] == "owner@example.com"
+
+
+def test_demo_login_issues_a_session_that_cannot_write(client: TestClient) -> None:
+    db_generator = app.dependency_overrides[get_db]()
+    db = next(db_generator)
+    try:
+        seed_demo(db)
+    finally:
+        db_generator.close()
+
+    login = client.post("/auth/demo")
+    assert login.status_code == 200
+    assert login.json()["user"]["is_demo"] is True
+    assert login.json()["refresh_token"] is None
+    headers = {"Authorization": f"Bearer {login.json()['access_token']}"}
+
+    profile = client.get("/auth/me", headers=headers)
+    assert profile.status_code == 200
+    assert profile.json()["is_demo"] is True
+
+    plans = client.get("/plans/mine", headers=headers)
+    assert plans.status_code == 200
+    assert plans.json()["items"][0]["business_name"] == "Namuna restorani"
+    inventory = client.get("/accounting/inventory", headers=headers)
+    assert inventory.status_code == 200
+    assert inventory.json()["items"][0]["data"]["name"] == "Guruch (namuna)"
+
+    write = client.post(
+        "/accounting/entries",
+        json={
+            "entry_date": "2026-01-01",
+            "category": "sales",
+            "amount": "1000",
+        },
+        headers=headers,
+    )
+    assert write.status_code == 403
+    assert write.json()["detail"] == "auth.demo_read_only"
 
 
 def test_logout_revokes_refresh_token(client: TestClient) -> None:

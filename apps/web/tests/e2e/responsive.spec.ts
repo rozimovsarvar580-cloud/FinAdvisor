@@ -62,6 +62,7 @@ async function findResponsiveLayoutIssues(page: Page) {
     ).filter(
       (element) =>
         element.getClientRects().length > 0 &&
+        !element.classList.contains("sr-only") &&
         (element.innerText?.trim() ||
           ("value" in element && Boolean(element.value)))
     );
@@ -174,10 +175,12 @@ test("main pages fit supported locales, themes, and viewport widths", async ({
           });
 
           if (route.name === "workspace" && viewport.width < 1024) {
+            await page.waitForLoadState("networkidle");
             const menuToggle = page.getByTestId("app-menu-toggle");
             await expect(menuToggle).toBeVisible();
             await expect(page.locator("#app-sidebar")).toBeHidden();
             await menuToggle.click();
+            await expect(menuToggle).toHaveAttribute("aria-expanded", "true");
             await expect(page.locator("#app-sidebar")).toBeVisible();
             const openMenuIssues = await findResponsiveLayoutIssues(page);
             expect(

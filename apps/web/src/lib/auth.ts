@@ -8,7 +8,7 @@ import { z } from "zod";
 
 const loginResultSchema = z.object({
   access_token: z.string().min(1),
-  refresh_token: z.string().min(1),
+  refresh_token: z.string().min(1).nullable(),
   expires_in: z.number().int().positive(),
   is_new: z.boolean().optional(),
   user: z.object({
@@ -16,7 +16,8 @@ const loginResultSchema = z.object({
     email: z.string().email(),
     name: z.string(),
     role: z.enum(["tadbirkor", "buxgalter", "investor", "admin"]),
-    needs_role: z.boolean().default(false)
+    needs_role: z.boolean().default(false),
+    is_demo: z.boolean().default(false)
   })
 });
 
@@ -25,7 +26,8 @@ const currentUserSchema = z.object({
   email: z.string().email(),
   name: z.string(),
   role: z.enum(["tadbirkor", "buxgalter", "investor", "admin"]),
-  needs_role: z.boolean()
+  needs_role: z.boolean(),
+  is_demo: z.boolean().default(false)
 });
 
 type OAuthProvider = "google" | "facebook";
@@ -45,9 +47,10 @@ type OAuthAccountProfile = {
 type FinAdvisorUser = User & {
   role: SessionRole;
   accessToken: string;
-  refreshToken: string;
+  refreshToken: string | null;
   accessTokenExpires: number;
   needsRole: boolean;
+  isDemo: boolean;
 };
 
 const refreshFailure = (token: JWT): JWT => ({
@@ -103,6 +106,7 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     refreshToken: result.refresh_token,
     accessTokenExpires: Date.now() + result.expires_in * 1000,
     needsRole: result.user.needs_role,
+    isDemo: result.user.is_demo,
     error: undefined
   };
 }
@@ -126,6 +130,7 @@ async function refreshSessionIdentity(token: JWT): Promise<JWT> {
     email: result.email,
     role: result.role,
     needsRole: result.needs_role,
+    isDemo: result.is_demo,
     error: undefined
   };
 }
@@ -167,9 +172,36 @@ const providers: NextAuthOptions["providers"] = [
     name: "Email",
     credentials: {
       email: { label: "Email", type: "email" },
-      password: { label: "Password", type: "password" }
+      password: { label: "Password", type: "password" },
+      demo: { label: "Demo", type: "text" }
     },
     async authorize(credentials) {
+      if (credentials?.demo === "true") {
+        const apiUrl = process.env.FINADVISOR_API_URL ?? "http://127.0.0.1:8000";
+        const response = await fetch(`${apiUrl}/auth/demo`, {
+          method: "POST",
+          cache: "no-store"
+        });
+        if (response.status === 404 || response.status === 429) {
+          return null;
+        }
+        if (!response.ok) {
+          throw new Error(`Authentication service returned ${response.status}`);
+        }
+        const result = loginResultSchema.parse(await response.json());
+        return {
+          id: result.user.id,
+          name: result.user.name,
+          email: result.user.email,
+          role: result.user.role,
+          accessToken: result.access_token,
+          refreshToken: result.refresh_token,
+          accessTokenExpires: Date.now() + result.expires_in * 1000,
+          needsRole: result.user.needs_role,
+          isDemo: result.user.is_demo
+        } satisfies FinAdvisorUser;
+      }
+
       if (!credentials?.email || !credentials.password) {
         return null;
       }
@@ -198,7 +230,8 @@ const providers: NextAuthOptions["providers"] = [
         accessToken: result.access_token,
         refreshToken: result.refresh_token,
         accessTokenExpires: Date.now() + result.expires_in * 1000,
-        needsRole: result.user.needs_role
+        needsRole: result.user.needs_role,
+        isDemo: result.user.is_demo
       } satisfies FinAdvisorUser;
     }
   })
@@ -277,6 +310,7 @@ export const authOptions: NextAuthOptions = {
         token.refreshToken = result.refresh_token;
         token.accessTokenExpires = Date.now() + result.expires_in * 1000;
         token.needsRole = result.user.needs_role;
+        token.isDemo = result.user.is_demo;
         return token;
       }
 
@@ -286,6 +320,7 @@ export const authOptions: NextAuthOptions = {
         token.refreshToken = user.refreshToken;
         token.accessTokenExpires = user.accessTokenExpires;
         token.needsRole = user.needsRole;
+        token.isDemo = user.isDemo;
       }
 
       if (
@@ -302,6 +337,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role;
         session.user.name = token.name;
         session.user.email = token.email;
+        session.user.isDemo = token.isDemo ?? false;
       }
       session.accessToken = token.accessToken;
       session.needsRole = token.needsRole;

@@ -21,9 +21,14 @@ def verify_password(password: str, password_hash: str) -> bool:
         return False
 
 
-def create_access_token(subject: str) -> str:
+def create_access_token(
+    subject: str,
+    expires_in_seconds: int = ACCESS_TOKEN_LIFETIME_SECONDS,
+) -> str:
     secret = get_settings().jwt_secret
     if not secret:
         raise RuntimeError("JWT_SECRET must be configured before issuing tokens")
-    expires_at = datetime.now(UTC) + timedelta(seconds=ACCESS_TOKEN_LIFETIME_SECONDS)
+    if expires_in_seconds <= 0:
+        raise ValueError("Access token lifetime must be positive")
+    expires_at = datetime.now(UTC) + timedelta(seconds=expires_in_seconds)
     return jwt.encode({"sub": subject, "exp": expires_at}, secret, algorithm="HS256")

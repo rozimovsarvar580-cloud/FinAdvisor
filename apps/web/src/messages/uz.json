@@ -11,6 +11,131 @@
     "primaryNavigation": "Asosiy navigatsiya",
     "mobileNavigation": "Mobil navigatsiya"
   },
+  "firstRun": {
+    "title": "Birinchi qadamlar",
+    "description": "FinAdvisor’dan foydalanishni boshlash uchun ushbu ro‘yxat va qisqa yo‘riqnomadan foydalaning.",
+    "checklistTitle": "Boshlang‘ich vazifalar",
+    "tourTitle": "Mahsulot bo‘ylab yo‘riqnoma",
+    "startTour": "Yo‘riqnomani boshlash",
+    "previous": "Orqaga",
+    "next": "Keyingi",
+    "finishTour": "Yo‘riqnomani tugatish",
+    "skipTour": "Yo‘riqnomani o‘tkazib yuborish",
+    "tourProgress": "{total} qadamdan {current}-qadam",
+    "markComplete": "Vazifalarni tugatdim",
+    "reopen": "Ro‘yxatni qayta ochish",
+    "storageError": "Jarayonni ushbu brauzerda saqlab bo‘lmadi.",
+    "roles": {
+      "tadbirkor": {
+        "checklist": [
+          {
+            "title": "Biznes-reja qoralamasini tuzing",
+            "description": "Biznes taxminlarini kiriting va hisoblangan natijalarni ko‘rib chiqing.",
+            "action": "Reja tuzuvchini ochish"
+          },
+          {
+            "title": "Kundalik faoliyatni qayd eting",
+            "description": "Restoranning kundalik daromad va xarajatlarini hisobga olishni boshlang.",
+            "action": "Kundalik hisobni ochish"
+          },
+          {
+            "title": "Loyiha e’lonini tayyorlang",
+            "description": "Saqlangan rejangizni potensial investorlarga ulashishni xohlashingizni hal qiling.",
+            "action": "Investorlar bozorini ochish"
+          }
+        ],
+        "tour": [
+          {
+            "title": "Biznes-reja tuzing",
+            "description": "Restoraningizni tavsiflang va moliyaviy hisob-kitoblar hamda taxminlarni ko‘rib chiqing.",
+            "action": "Reja tuzuvchiga o‘tish"
+          },
+          {
+            "title": "Kundalik hisobni yuriting",
+            "description": "Biznes qaydlarini tartibga solish uchun hisob vositalaridan foydalaning.",
+            "action": "Kundalik hisobga o‘tish"
+          },
+          {
+            "title": "Investor e’lonlarini ko‘rib chiqing",
+            "description": "Bozorni ko‘rib chiqing va loyiha haqidagi qaysi ma’lumotlarni ulashishni hal qiling.",
+            "action": "Bozorga o‘tish"
+          }
+        ]
+      },
+      "buxgalter": {
+        "checklist": [
+          {
+            "title": "Buxgalteriya bo‘limini ko‘rib chiqing",
+            "description": "Biznes qaydlarini yuritish uchun vositalarni oching.",
+            "action": "Buxgalteriyani ochish"
+          },
+          {
+            "title": "Ombor hisobini tartibga soling",
+            "description": "Ombor qaydlarini ko‘rib chiqing va mahsulot ma’lumotlarini yangilang.",
+            "action": "Omborni ochish"
+          },
+          {
+            "title": "Kundalik faoliyatni qayd eting",
+            "description": "Kundalik daromad va xarajat qaydlarini ko‘rib chiqing.",
+            "action": "Kundalik hisobni ochish"
+          }
+        ],
+        "tour": [
+          {
+            "title": "Buxgalteriyadan boshlang",
+            "description": "Buxgalteriya bo‘limida kundalik hisob, ombor, ish haqi va boshqa vositalar mavjud.",
+            "action": "Buxgalteriyaga o‘tish"
+          },
+          {
+            "title": "Omborni ko‘rib chiqing",
+            "description": "Qayd etilgan mahsulotlarni kuzatish uchun ombor sahifasidan foydalaning.",
+            "action": "Omborga o‘tish"
+          },
+          {
+            "title": "Kundalik qaydlarni ko‘rib chiqing",
+            "description": "Biznes faoliyati qaydlarini ko‘rish uchun kundalik hisobni oching.",
+            "action": "Kundalik hisobga o‘tish"
+          }
+        ]
+      },
+      "investor": {
+        "checklist": [
+          {
+            "title": "Mavjud loyihalarni ko‘rib chiqing",
+            "description": "Tadbirkorlar e’lon qilgan loyihalar va oshkor qilingan ma’lumotlarni ko‘rib chiqing.",
+            "action": "Bozorni ko‘rish"
+          },
+          {
+            "title": "Investor tasdiqlash jarayonini ko‘rib chiqing",
+            "description": "Investor tasdiqlash uchun kerakli ma’lumotlar bilan tanishing.",
+            "action": "Tasdiqlash sahifasini ochish"
+          },
+          {
+            "title": "Qiziqarli e’lonni saqlang",
+            "description": "Keyinroq qayta ko‘rmoqchi bo‘lgan loyihalaringizni saqlang.",
+            "action": "Saqlangan e’lonlarni ochish"
+          }
+        ],
+        "tour": [
+          {
+            "title": "Loyihalarni ko‘rib chiqing",
+            "description": "E’lonlardagi ma’lumotlar tadbirkorlar tomonidan beriladi va mustaqil tekshirilmaydi.",
+            "action": "Bozorga o‘tish"
+          },
+          {
+            "title": "Tasdiqlashni ko‘rib chiqing",
+            "description": "Loyiha egasiga murojaat qilishdan oldin investor tasdiqlash bosqichlari bilan tanishing.",
+            "action": "Tasdiqlashga o‘tish"
+          },
+          {
+            "title": "Saqlangan loyihalarga qayting",
+            "description": "Keyinroq ko‘rib chiqish uchun saqlagan e’lonlaringizni toping.",
+            "action": "Saqlangan e’lonlarga o‘tish"
+          }
+        ]
+      }
+    }
+  },
   "home": {
     "tagline": "Biznesingiz uchun aniq moliyaviy qarorlar",
     "socialImage": {
@@ -34,6 +159,11 @@
       "description": "Restoraningiz uchun moliyaviy reja tuzing, xarajat va tushumni tushuning hamda bankka tayyor biznes-reja oling.",
       "primaryCta": "Reja tuzishni boshlash",
       "secondaryCta": "Namuna PDF'ni ko‘rish",
+      "demoCta": "Faqat ko‘rish uchun demo",
+      "demoLoading": "Demo ochilmoqda...",
+      "demoError": "Demo hozircha mavjud emas. Keyinroq qayta urinib ko‘ring.",
+      "demoConnectionFailed": "Demoga ulanib bo‘lmadi. Internet aloqasini tekshirib, qayta urinib ko‘ring.",
+      "demoReadOnlyBanner": "Faqat ko‘rish rejimidagi demo: biznes ma’lumotlari namunaviy, o‘zgartirishlar o‘chirilgan.",
       "footnote": "Raqamlar aniq hisoblanadi. AI ularni sodda tilda tushuntiradi.",
       "profileSettings": {
         "title": "Profil sozlamalari",
@@ -1040,6 +1170,7 @@
       "savedVersion": "{version}-versiya sifatida saqlandi.",
       "emptyTitle": "Hali hisobot yo‘q",
       "emptyDescription": "Avval biznes-reja yarating. Uning tayyorlangan raqamlari va AI izohlari shu yerda ko‘rinadi.",
+      "createPlanAction": "Biznes-reja tuzishni boshlash",
       "calculationsTitle": "Moliyaviy hisob-kitoblar",
       "sectionsTitle": "Biznes-reja bo‘limlari",
       "markdownTitle": "Markdown ko‘rinishi",
@@ -1191,7 +1322,8 @@
       },
       "invoices": {
         "title": "Hisob-fakturalar",
-        "empty": "Hozircha hisob-fakturalar yo'q."
+        "empty": "Hozircha hisob-fakturalar yo‘q.",
+        "viewPlans": "Obuna rejalarini ko‘rish"
       }
     }
   },
@@ -1234,6 +1366,7 @@
       "savedPlan": "E’lon qilinadigan biznes-reja",
       "selectSavedPlan": "Saqlangan biznes-rejalaringizdan birini tanlang",
       "noSavedPlans": "Avval biznes-reja yarating va saqlang.",
+      "createPlan": "Biznes-reja yaratish",
       "summary": "Loyiha haqida",
       "publish": "E’lon qilish",
       "publishing": "E’lon qilinmoqda…",
@@ -1285,11 +1418,14 @@
       "title": "Hozircha e’lon qilingan loyiha yo‘q",
       "description": "Restoran egasi loyihani e’lon qilganda, u shu yerda ko‘rinadi.",
       "filteredTitle": "Bu bosqichda loyihalar yo‘q",
-      "filteredDescription": "E’lon qilingan loyihalarni ko‘rish uchun boshqa bosqichni tanlang."
+      "filteredDescription": "E’lon qilingan loyihalarni ko‘rish uchun boshqa bosqichni tanlang.",
+      "clearFilters": "Filtrlarni tozalash",
+      "refresh": "E’lonlarni yangilash"
     },
     "myListingsEmpty": {
       "title": "Hozircha e’lonlaringiz yo‘q",
-      "description": "E’lon qilgan loyihalaringiz shu yerda ko‘rinadi va ularning ommaviyligini boshqarishingiz mumkin."
+      "description": "E’lon qilgan loyihalaringiz shu yerda ko‘rinadi va ularning ommaviyligini boshqarishingiz mumkin.",
+      "createListing": "E’lon yaratish"
     },
     "amountPlaceholder": "250000000",
     "saved": {
@@ -1310,6 +1446,8 @@
       "back": "Marketplace’ga qaytish",
       "error": "So‘rovlarni yuklab yoki yangilab bo‘lmadi.",
       "empty": "Hozircha investorlar qiziqish bildirmagan.",
+      "emptyDescription": "E’lon qilingan loyihalar investorlarda qiziqish uyg‘otishi mumkin. E’lonlaringiz ulashishga tayyorligini tekshiring.",
+      "emptyAction": "E’lonlarimni ko‘rib chiqish",
       "investor": "Sarmoyador",
       "accept": "Qabul qilish",
       "decline": "Rad etish",

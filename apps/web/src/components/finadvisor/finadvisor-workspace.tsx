@@ -175,6 +175,7 @@ export function FinAdvisorWorkspace() {
           ) : null}
           {activeTab === "reports" ? (
             <ReportsPanel
+              onCreatePlan={() => setActiveTab("businessPlan")}
               onPlanUpdated={setPlanResult}
               planResult={planResult}
             />

@@ -21,6 +21,7 @@ from sqlalchemy.orm import Session
 
 from finadvisor_api.config import get_settings
 from finadvisor_api.database import get_db
+from finadvisor_api.demo_account import DEMO_ACCOUNT_EMAIL
 from finadvisor_api.email_sender import (
     EmailDeliveryError,
     ensure_auth_email_delivery_configured,
@@ -106,6 +107,7 @@ class LoginAttemptLimiter:
 
 
 login_attempt_limiter = LoginAttemptLimiter()
+DEMO_ACCESS_TOKEN_LIFETIME_SECONDS = 4 * 60 * 60
 
 
 class OAuthIdentity(BaseModel):
@@ -448,6 +450,35 @@ def login(
     return _issue_response(user, db)
 
 
+@router.post("/demo", response_model=TokenResponse)
+def demo_login(
+    request: Request,
+    db: Annotated[Session, Depends(get_db)],
+) -> TokenResponse:
+    user = db.scalar(
+        select(User).where(
+            User.email == DEMO_ACCOUNT_EMAIL,
+            User.is_demo.is_(True),
+            User.is_suspended.is_(False),
+        )
+    )
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="auth.demo_unavailable",
+        )
+    request.state.login_actor_id = user.id
+    return TokenResponse(
+        access_token=create_access_token(
+            user.id,
+            expires_in_seconds=DEMO_ACCESS_TOKEN_LIFETIME_SECONDS,
+        ),
+        refresh_token=None,
+        expires_in=DEMO_ACCESS_TOKEN_LIFETIME_SECONDS,
+        user=UserResponse.model_validate(user),
+    )
+
+
 @router.post("/refresh", response_model=TokenResponse)
 def refresh(
     payload: RefreshTokenRequest,
@@ -631,7 +662,7 @@ def get_current_user(
     ],
     db: Annotated[Session, Depends(get_db)],
 ) -> User:
-    user = _get_current_user(credentials, db)
+    user = _get_current_user(credentials, db, request)
     if user.needs_role:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -650,14 +681,23 @@ def get_current_user_allow_pending_role(
     ],
     db: Annotated[Session, Depends(get_db)],
 ) -> User:
-    user = _get_current_user(credentials, db)
+    user = _get_current_user(credentials, db, request)
     request.state.audit_actor_id = user.id
     return user
+
+
+def _enforce_demo_read_only(user: User, request: Request) -> None:
+    if user.is_demo and request.method not in {"GET", "HEAD"}:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="auth.demo_read_only",
+        )
 
 
 def _get_current_user(
     credentials: HTTPAuthorizationCredentials | None,
     db: Session,
+    request: Request,
 ) -> User:
     # If no credentials were provided, respond with 401 regardless of server JWT secret
     # configuration so unauthenticated requests get the expected Unauthorized response.
@@ -694,6 +734,7 @@ def _get_current_user(
         )
     if user.is_suspended:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="auth.account_suspended")
+    _enforce_demo_read_only(user, request)
     return user
 
 

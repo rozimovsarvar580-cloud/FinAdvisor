@@ -1,0 +1,16 @@
+.git
+.loop
+.env
+.env.*
+**/ai.config.json
+**/node_modules
+**/.next
+**/__pycache__
+**/*.py[cod]
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/test-results
+**/.pytest_cache
+**/.ruff_cache
+apps/api/tests

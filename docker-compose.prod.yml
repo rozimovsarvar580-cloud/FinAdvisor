@@ -1,0 +1,193 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-finadvisor}
+      POSTGRES_USER: ${POSTGRES_USER:-finadvisor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: ${FINADVISOR_API_IMAGE:-finadvisor-api:production}
+    environment:
+      APP_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL for the postgres service}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: ${FINADVISOR_API_IMAGE:-finadvisor-api:production}
+    environment:
+      APP_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL for the postgres service}
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4o-mini}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY:-}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-disabled}
+      EMAIL_HOST: ${EMAIL_HOST:-}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_USERNAME: ${EMAIL_USERNAME:-}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-disabled}
+      PAYMENT_PUBLIC_KEY: ${PAYMENT_PUBLIC_KEY:-}
+      PAYMENT_SECRET_KEY: ${PAYMENT_SECRET_KEY:-}
+      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:-}
+      CORS_ALLOWED_ORIGINS: https://${SITE_DOMAIN:?Set SITE_DOMAIN}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=3)"
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 30s
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: ${FINADVISOR_API_IMAGE:-finadvisor-api:production}
+    environment:
+      APP_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL for the postgres service}
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-disabled}
+      PAYMENT_PUBLIC_KEY: ${PAYMENT_PUBLIC_KEY:-}
+      PAYMENT_SECRET_KEY: ${PAYMENT_SECRET_KEY:-}
+      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:-}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-disabled}
+      EMAIL_HOST: ${EMAIL_HOST:-}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_USERNAME: ${EMAIL_USERNAME:-}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+    command:
+      - sh
+      - -c
+      - |
+        set -eu
+        while true; do
+          if [ "$$PAYMENT_PROVIDER" = "disabled" ]; then
+            echo "Renewal job skipped: payment provider is not configured."
+          else
+            python -m finadvisor_api.renewals
+          fi
+          python -m finadvisor_api.purge_expired_accounts
+          sleep 3600
+        done
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://api.${SITE_DOMAIN:?Set SITE_DOMAIN}
+        NEXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN:?Set SITE_DOMAIN}
+    image: ${FINADVISOR_WEB_IMAGE:-finadvisor-web:production}
+    environment:
+      NODE_ENV: production
+      NEXTAUTH_URL: https://${SITE_DOMAIN:?Set SITE_DOMAIN}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?Set NEXTAUTH_SECRET}
+      FINADVISOR_API_URL: https://api.${SITE_DOMAIN}
+      NEXT_PUBLIC_SITE_URL: https://${SITE_DOMAIN}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      FACEBOOK_CLIENT_ID: ${FACEBOOK_CLIENT_ID:-}
+      FACEBOOK_CLIENT_SECRET: ${FACEBOOK_CLIENT_SECRET:-}
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/uz').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 45s
+
+  proxy:
+    image: caddy:2-alpine
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:?Set SITE_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  caddy_data:
+  caddy_config:

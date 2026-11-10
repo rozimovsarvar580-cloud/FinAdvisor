@@ -254,7 +254,7 @@ export function InvestorMarketplaceSection() {
             <p className="mt-2 text-sm text-muted-foreground">
               {t("form.disclaimer")}
             </p>
-            <form className="mt-5 grid gap-4 md:grid-cols-2" onSubmit={publishListing}>
+            <form className="mt-5 grid gap-4 md:grid-cols-2" id="investor-listing-form" onSubmit={publishListing}>
               <label className="grid gap-2 text-sm font-medium md:col-span-2">
                 {t("form.savedPlan")}
                 <select
@@ -273,8 +273,11 @@ export function InvestorMarketplaceSection() {
                   ))}
                 </select>
                 {myPlans.length === 0 ? (
-                  <span className="font-normal text-muted-foreground">
-                    {t("form.noSavedPlans")}
+                  <span className="space-y-2 font-normal text-muted-foreground">
+                    <span className="block">{t("form.noSavedPlans")}</span>
+                    <Button asChild size="sm" variant="outline">
+                      <Link href="/app/finadvisor">{t("form.createPlan")}</Link>
+                    </Button>
                   </span>
                 ) : null}
               </label>
@@ -371,6 +374,13 @@ export function InvestorMarketplaceSection() {
                 ))
               ) : !error ? (
                 <EmptyState
+                  action={
+                    <Button asChild variant="outline">
+                      <Link href="#investor-listing-form">
+                        {t("myListingsEmpty.createListing")}
+                      </Link>
+                    </Button>
+                  }
                   description={t("myListingsEmpty.description")}
                   title={t("myListingsEmpty.title")}
                 />
@@ -431,6 +441,30 @@ export function InvestorMarketplaceSection() {
             ))
           ) : !error ? (
             <EmptyState
+              action={
+                listings.length > 0 ? (
+                  <Button
+                    onClick={() => {
+                      setStage("all");
+                      setCity("");
+                      setMinFunding("");
+                      setMaxFunding("");
+                      setPage(1);
+                    }}
+                    variant="outline"
+                  >
+                    {t("empty.clearFilters")}
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={loading}
+                    onClick={() => void loadListings()}
+                    variant="outline"
+                  >
+                    {t("empty.refresh")}
+                  </Button>
+                )
+              }
               className="col-span-full"
               description={t(listings.length > 0 ? "empty.filteredDescription" : "empty.description")}
               title={t(listings.length > 0 ? "empty.filteredTitle" : "empty.title")}

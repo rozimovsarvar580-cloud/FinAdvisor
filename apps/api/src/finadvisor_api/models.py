@@ -43,6 +43,7 @@ class User(Base):
     avatar_url: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     role: Mapped[str] = mapped_column(String(24), default="tadbirkor")
     is_suspended: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
+    is_demo: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
     subscription_plan: Mapped[str] = mapped_column(
         String(16), default="free", server_default="free"
     )

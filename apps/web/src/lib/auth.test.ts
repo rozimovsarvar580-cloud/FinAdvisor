@@ -15,6 +15,61 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+describe("demo credentials provider", () => {
+  it("requests a short-lived read-only demo session from the API", async () => {
+    vi.stubEnv("FINADVISOR_API_URL", "https://api.finadvisor.test");
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          access_token: "demo-jwt",
+          refresh_token: null,
+          expires_in: 14_400,
+          user: {
+            id: "demo-user",
+            email: "demo@finadvisor.uz",
+            name: "Demo Restaurant",
+            role: "tadbirkor",
+            needs_role: false,
+            is_demo: true
+          }
+        }),
+        { status: 200 }
+      )
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const credentialsProvider = authOptions.providers.find(
+      (provider) => provider.id === "credentials"
+    );
+    if (!credentialsProvider || credentialsProvider.type !== "credentials") {
+      throw new Error("Credentials provider is required");
+    }
+    const configuredProvider = credentialsProvider as typeof credentialsProvider & {
+      options: {
+        authorize: (
+          credentials: Record<string, string>,
+          request: never
+        ) => Promise<unknown> | unknown;
+      };
+    };
+
+    const result = await configuredProvider.options.authorize(
+      { demo: "true" },
+      {} as never
+    );
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(result).toMatchObject({
+      id: "demo-user",
+      isDemo: true,
+      refreshToken: null
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.finadvisor.test/auth/demo",
+      { method: "POST", cache: "no-store" }
+    );
+  });
+});
+
 describe("exchangeOAuthAccount", () => {
   it("exchanges a verified provider access token with the API", async () => {
     vi.stubEnv("FINADVISOR_API_URL", "https://api.finadvisor.test");

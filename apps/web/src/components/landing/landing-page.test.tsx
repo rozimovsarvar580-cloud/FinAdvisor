@@ -11,6 +11,10 @@ vi.mock("@/i18n/navigation", () => ({
   Link: "a"
 }));
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ replace: vi.fn() })
+}));
+
 vi.mock("framer-motion", async (importOriginal) => {
   const actual = await importOriginal<typeof import("framer-motion")>();
   return {
@@ -57,6 +61,9 @@ describe("landing page", () => {
     ).toBeTruthy();
     expect(
       screen.getByRole("link", { name: messages.landing.hero.primaryCta })
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: messages.landing.hero.demoCta })
     ).toBeTruthy();
     expect(
       screen.getByRole("button", { name: messages.landing.hero.secondaryCta })

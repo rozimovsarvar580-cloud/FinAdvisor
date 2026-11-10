@@ -88,7 +88,7 @@ export function Header() {
 
         <nav
           aria-label={t("primaryNavigation")}
-          className="hidden items-center gap-8 md:flex"
+          className="hidden items-center gap-8 lg:flex"
         >
           {links.map((link) => (
             <Link
@@ -106,7 +106,7 @@ export function Header() {
             <LocaleSwitcher />
             <ThemeToggle testId="theme-toggle" />
           </div>
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             <Button asChild variant="ghost">
               <Link href="/login">{t("login")}</Link>
             </Button>
@@ -119,7 +119,7 @@ export function Header() {
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
             aria-label={menuOpen ? t("closeMenu") : t("openMenu")}
-            className="md:hidden"
+            className="lg:hidden"
             data-testid="mobile-menu-toggle"
             onClick={() => setMenuOpen((open) => !open)}
             size="icon"
@@ -133,7 +133,7 @@ export function Header() {
       <nav
         id="mobile-navigation"
         aria-label={t("mobileNavigation")}
-        className={`absolute inset-x-0 top-16 border-b border-border bg-background p-5 shadow-lg md:hidden ${
+        className={`absolute inset-x-0 top-16 border-b border-border bg-background p-5 shadow-lg lg:hidden ${
           menuOpen ? "" : "hidden"
         }`}
         hidden={!menuOpen}
@@ -153,7 +153,7 @@ export function Header() {
               <LocaleSwitcher />
               <ThemeToggle />
             </div>
-            <div className="flex gap-2 border-t border-border pt-4 md:hidden">
+            <div className="flex gap-2 border-t border-border pt-4 lg:hidden">
               <Button asChild className="flex-1" variant="outline">
                 <Link href="/login" onClick={() => setMenuOpen(false)}>
                   {t("login")}

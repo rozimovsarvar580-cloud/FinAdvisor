@@ -62,10 +62,12 @@ const documentFormats: { format: DocumentFormat; label: string }[] = [
 
 export function ReportsPanel({
   planResult,
-  onPlanUpdated
+  onPlanUpdated,
+  onCreatePlan
 }: {
   planResult?: PlanResult;
   onPlanUpdated: (result: PlanResult) => void;
+  onCreatePlan: () => void;
 }) {
   const t = useTranslations("finadvisor.reports");
   const errors = useTranslations("errors");
@@ -386,6 +388,11 @@ export function ReportsPanel({
   if (!planResult) {
     return (
       <EmptyState
+        action={
+          <Button onClick={onCreatePlan}>
+            {t("createPlanAction")}
+          </Button>
+        }
         description={t("emptyDescription")}
         title={t("emptyTitle")}
       />

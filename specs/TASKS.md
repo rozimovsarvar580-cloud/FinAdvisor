@@ -380,22 +380,22 @@ engine = `packages/finance-engine`.
 - [x] 11.4 Performance
   - done: Lighthouse performance and SEO >= 90 on landing and pricing (documented in `docs/QUALITY.md`); images optimized; fonts preloaded
   - exists: docs/QUALITY.md
-- [ ] 11.5 Responsive pass
+- [x] 11.5 Responsive pass
   - done: Playwright screenshots at 375, 768, 1280 px for the main pages show no horizontal scroll or clipped text in uz/ru/en and both themes
-- [ ] 11.6 API load smoke
+- [x] 11.6 API load smoke
   - done: simple load script for login, plan generation (fake AI) and report endpoints with target latency documented
 
 ## Stage 12 - Deployment
 - [x] 12.1 Dockerfiles
   - done: production Dockerfiles for web and api (multi-stage, non-root user, healthcheck)
   - exists: apps/web/Dockerfile, apps/api/Dockerfile
-- [ ] 12.2 Compose for production
+- [x] 12.2 Compose for production
   - done: `docker-compose.prod.yml` with web, api, worker/scheduler, postgres, redis, reverse proxy with TLS; volumes and restart policies; migrations run on deploy
   - exists: docker-compose.prod.yml
-- [ ] 12.3 CD workflow
+- [x] 12.3 CD workflow
   - done: GitHub Actions builds and pushes images, runs migrations, deploys to staging on main and to production on tag, with manual approval for production
   - exists: .github/workflows/deploy.yml
-- [ ] 12.4 Staging environment docs
+- [x] 12.4 Staging environment docs
   - done: `docs/DEPLOY.md` step by step: servers, DNS, TLS, env vars, first deploy, rollback
   - exists: docs/DEPLOY.md
 - [ ] 12.5 First staging deploy
@@ -404,7 +404,7 @@ engine = `packages/finance-engine`.
   - exists: scripts/smoke-staging.mjs
 
 ## Stage 13 - Launch and growth
-- [ ] 13.1 Demo data and demo account
+- [x] 13.1 Demo data and demo account
   - done: seed script creates a demo restaurant plan, accountant data and investor listing; demo login on the landing page (read-only)
 - [ ] 13.2 Onboarding
   - done: first-run checklist and short product tour for each role; empty states lead to the next action

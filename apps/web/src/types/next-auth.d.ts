@@ -10,15 +10,17 @@ declare module "next-auth" {
       name?: string | null;
       email?: string | null;
       role?: "tadbirkor" | "buxgalter" | "investor" | "admin";
+      isDemo?: boolean;
     } & DefaultSession["user"];
   }
 
   interface User {
     role?: "tadbirkor" | "buxgalter" | "investor" | "admin";
     accessToken?: string;
-    refreshToken?: string;
+    refreshToken?: string | null;
     accessTokenExpires?: number;
     needsRole?: boolean;
+    isDemo?: boolean;
   }
 }
 
@@ -26,9 +28,10 @@ declare module "next-auth/jwt" {
   interface JWT {
     role?: "tadbirkor" | "buxgalter" | "investor" | "admin";
     accessToken?: string;
-    refreshToken?: string;
+    refreshToken?: string | null;
     accessTokenExpires?: number;
     needsRole?: boolean;
+    isDemo?: boolean;
     error?: "RefreshAccessTokenError";
   }
 }

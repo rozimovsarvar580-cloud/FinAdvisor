@@ -103,6 +103,10 @@ describe("billing checkout page", () => {
     renderBillingPage("weekly", redirect);
 
     expect(screen.getByText("$10")).toBeTruthy();
+    expect(await screen.findByText("No invoices yet.")).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: "View subscription options" }).getAttribute("href")
+    ).toBe("#billing-checkout");
     const checkoutButton = screen.getByRole("button", {
       name: "Continue to checkout"
     });

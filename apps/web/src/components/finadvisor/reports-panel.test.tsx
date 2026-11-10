@@ -87,6 +87,25 @@ afterEach(() => {
 });
 
 describe("reports panel", () => {
+  it("leads to plan creation when there is no report yet", () => {
+    const onCreatePlan = vi.fn();
+
+    render(
+      <NextIntlClientProvider
+        locale="en"
+        messages={enMessages as unknown as AbstractIntlMessages}
+      >
+        <ReportsPanel
+          onCreatePlan={onCreatePlan}
+          onPlanUpdated={vi.fn()}
+        />
+      </NextIntlClientProvider>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Start a business plan" }));
+    expect(onCreatePlan).toHaveBeenCalledOnce();
+  });
+
   it("offers all plan exports and shows a localized tier restriction", async () => {
     const fetchMock = vi
       .fn()
@@ -104,7 +123,7 @@ describe("reports panel", () => {
         locale="en"
         messages={enMessages as unknown as AbstractIntlMessages}
       >
-        <ReportsPanel onPlanUpdated={vi.fn()} planResult={planResult} />
+        <ReportsPanel onCreatePlan={vi.fn()} onPlanUpdated={vi.fn()} planResult={planResult} />
       </NextIntlClientProvider>
     );
 
@@ -151,7 +170,7 @@ describe("reports panel", () => {
         locale="en"
         messages={enMessages as unknown as AbstractIntlMessages}
       >
-        <ReportsPanel onPlanUpdated={onPlanUpdated} planResult={planResult} />
+        <ReportsPanel onCreatePlan={vi.fn()} onPlanUpdated={onPlanUpdated} planResult={planResult} />
       </NextIntlClientProvider>
     );
 
@@ -221,7 +240,7 @@ describe("reports panel", () => {
         locale="en"
         messages={enMessages as unknown as AbstractIntlMessages}
       >
-        <ReportsPanel onPlanUpdated={onPlanUpdated} planResult={planResult} />
+        <ReportsPanel onCreatePlan={vi.fn()} onPlanUpdated={onPlanUpdated} planResult={planResult} />
       </NextIntlClientProvider>
     );
 
@@ -251,7 +270,7 @@ describe("reports panel", () => {
         locale="en"
         messages={enMessages as unknown as AbstractIntlMessages}
       >
-        <ReportsPanel onPlanUpdated={vi.fn()} planResult={planResult} />
+        <ReportsPanel onCreatePlan={vi.fn()} onPlanUpdated={vi.fn()} planResult={planResult} />
       </NextIntlClientProvider>
     );
 

@@ -84,6 +84,7 @@ class UserResponse(BaseModel):
     avatar_url: str | None
     role: AuthenticatedUserRole
     needs_role: bool
+    is_demo: bool
     locale: Literal["uz", "ru", "en"]
     auth_provider: str
     email_verified: bool
@@ -93,7 +94,7 @@ class UserResponse(BaseModel):
 
 class TokenResponse(BaseModel):
     access_token: str
-    refresh_token: str
+    refresh_token: str | None
     expires_in: int
     token_type: Literal["bearer"] = "bearer"
     user: UserResponse

@@ -564,16 +564,23 @@ export function BillingPage({
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    {t("manage.invoices.empty")}
-                  </p>
+                  <div className="mt-3 space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      {t("manage.invoices.empty")}
+                    </p>
+                    <Button asChild size="sm" variant="outline">
+                      <a href="#billing-checkout">
+                        {t("manage.invoices.viewPlans")}
+                      </a>
+                    </Button>
+                  </div>
                 )}
               </div>
             </>
           ) : null}
         </Card>
       ) : null}
-      <Card className="mt-7 p-6 sm:p-8">
+      <Card className="mt-7 p-6 sm:p-8" id="billing-checkout">
         <h2 className="text-xl font-semibold">{t("checkout.title")}</h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           {t("checkout.description")}

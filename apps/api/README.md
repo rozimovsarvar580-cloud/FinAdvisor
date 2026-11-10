@@ -7,6 +7,15 @@ Create a virtual environment, install the finance engine with
 `pip install -e ".[dev]"`. Run `uvicorn finadvisor_api.main:app --reload` from
 `apps/api`. API tests run with `pytest`.
 
+Apply database migrations, then seed or refresh the read-only sample account with
+`python -m finadvisor_api.seed_demo` from `apps/api`. The seed is idempotent and
+creates illustrative restaurant plan, accounting, and investor-listing data; it
+refuses to take over an existing non-demo account. The landing-page demo button
+uses this account without a password. Authenticated resource write requests are
+denied for its API token.
+All seeded business figures are synthetic sample data, not verified market facts
+or an investment offer.
+
 Set `DATABASE_URL` and `JWT_SECRET` from the repository's `.env` file before
 starting the service. Apply database migrations from the repository root with
 `alembic -c apps/api/alembic.ini upgrade head`.
