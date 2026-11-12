@@ -9,6 +9,7 @@ import { Header } from "@/components/layout/header";
 import { AnalyticsConsentBanner } from "@/components/legal/analytics-consent-banner";
 import { DemoModeBanner } from "@/components/landing/demo-mode-banner";
 import { FirstRunGuide } from "@/components/onboarding/first-run-guide";
+import { SupportFeedbackButton } from "@/components/support/support-feedback-button";
 import { ThemeProvider } from "@/components/theme-provider";
 import { isSupportedLocale } from "@/lib/locales";
 import { buildMetadata, buildProductStructuredData } from "@/lib/site-metadata";
@@ -71,6 +72,7 @@ export default async function LocaleLayout({
             <DemoModeBanner />
             <Header />
             <FirstRunGuide />
+            <SupportFeedbackButton />
             {children}
             <Footer />
             <AnalyticsConsentBanner />

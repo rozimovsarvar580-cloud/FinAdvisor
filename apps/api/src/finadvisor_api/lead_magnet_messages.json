@@ -1,0 +1,86 @@
+{
+  "en": {
+    "title": "Sample bank-ready business plan structure",
+    "subtitle": "A practical template for organizing information before a lender conversation",
+    "disclaimer": "Illustrative template only. This is not a verified business plan, a loan offer, or a promise of bank approval. Provide evidence for every claim and use verified, current financial and legal information.",
+    "completion_note": "Complete the sections with your own documented information. Financial projections should be prepared from your inputs using the FinAdvisor finance engine and checked before submission.",
+    "sections": [
+      {
+        "title": "1. Project overview",
+        "prompt": "Describe the business, its location, ownership, concept, requested financing purpose, and planned opening or expansion timeline."
+      },
+      {
+        "title": "2. Market and customers",
+        "prompt": "Identify the target customers, explain how you will validate demand, list evidence and sources, and describe competitors without unsupported market claims."
+      },
+      {
+        "title": "3. Operations and team",
+        "prompt": "Describe the site, operating schedule, suppliers, equipment, staffing responsibilities, permits to verify, and the key operating risks and responses."
+      },
+      {
+        "title": "4. Financial plan",
+        "prompt": "List startup costs, funding sources, operating assumptions, revenue and expense projections, cash needs, and repayment capacity. Link each amount to its source and date."
+      },
+      {
+        "title": "5. Supporting evidence",
+        "prompt": "Attach relevant ownership and registration records, quotations, lease or site evidence, supplier information, and any documents requested by the lender."
+      }
+    ]
+  },
+  "ru": {
+    "title": "Структура примера бизнес-плана для банка",
+    "subtitle": "Практический шаблон для подготовки к разговору с кредитором",
+    "disclaimer": "Только иллюстративный шаблон. Это не проверенный бизнес-план, не предложение займа и не гарантия одобрения банком. Подтверждайте каждое утверждение и используйте проверенную актуальную финансовую и юридическую информацию.",
+    "completion_note": "Заполните разделы собственными документально подтверждёнными сведениями. Финансовые прогнозы следует подготовить на основе ваших данных с помощью финансового движка FinAdvisor и проверить до подачи.",
+    "sections": [
+      {
+        "title": "1. Краткое описание проекта",
+        "prompt": "Опишите бизнес, его местоположение, владельцев, концепцию, цель запрашиваемого финансирования и сроки открытия или расширения."
+      },
+      {
+        "title": "2. Рынок и клиенты",
+        "prompt": "Определите целевых клиентов, объясните, как проверите спрос, укажите подтверждения и источники, опишите конкурентов без неподтверждённых рыночных утверждений."
+      },
+      {
+        "title": "3. Операции и команда",
+        "prompt": "Опишите помещение, график работы, поставщиков, оборудование, обязанности сотрудников, разрешения для проверки, ключевые операционные риски и меры реагирования."
+      },
+      {
+        "title": "4. Финансовый план",
+        "prompt": "Перечислите стартовые расходы, источники финансирования, операционные предположения, прогнозы выручки и расходов, потребность в денежных средствах и способность погашения. Укажите источник и дату каждой суммы."
+      },
+      {
+        "title": "5. Подтверждающие документы",
+        "prompt": "Приложите документы о владении и регистрации, коммерческие предложения, сведения об аренде или помещении, информацию о поставщиках и документы, запрошенные кредитором."
+      }
+    ]
+  },
+  "uz": {
+    "title": "Bank uchun biznes-reja namunasi tuzilishi",
+    "subtitle": "Kreditor bilan suhbatdan oldin ma’lumotlarni tartibga solish uchun amaliy namuna",
+    "disclaimer": "Faqat ko‘rgazmali namuna. Bu tekshirilgan biznes-reja, kredit taklifi yoki bank tasdig‘i kafolati emas. Har bir da’voni dalillar bilan tasdiqlang va tekshirilgan, dolzarb moliyaviy hamda huquqiy ma’lumotlardan foydalaning.",
+    "completion_note": "Bo‘limlarni o‘zingizning hujjatlar bilan tasdiqlangan ma’lumotlaringiz asosida to‘ldiring. Moliyaviy prognozlar o‘z ma’lumotlaringiz asosida FinAdvisor moliya mexanizmi yordamida tuzilib, topshirishdan oldin tekshirilishi kerak.",
+    "sections": [
+      {
+        "title": "1. Loyiha haqida qisqacha",
+        "prompt": "Biznes, uning joylashuvi, egalari, konsepsiyasi, so‘ralayotgan mablag‘ maqsadi va ochilish yoki kengayish muddatini tavsiflang."
+      },
+      {
+        "title": "2. Bozor va mijozlar",
+        "prompt": "Maqsadli mijozlarni aniqlang, talabni qanday tekshirishingizni tushuntiring, dalillar va manbalarni ko‘rsating hamda asossiz bozor da’volarisiz raqobatchilarni tavsiflang."
+      },
+      {
+        "title": "3. Faoliyat va jamoa",
+        "prompt": "Joy, ish jadvali, yetkazib beruvchilar, uskunalar, xodimlar vazifalari, tekshirilishi kerak bo‘lgan ruxsatlar, asosiy faoliyat xatarlari va choralarni tavsiflang."
+      },
+      {
+        "title": "4. Moliyaviy reja",
+        "prompt": "Boshlang‘ich xarajatlar, mablag‘ manbalari, faoliyat taxminlari, tushum va xarajat prognozlari, pulga ehtiyoj va to‘lov qobiliyatini ko‘rsating. Har bir summaning manbasi va sanasini yozing."
+      },
+      {
+        "title": "5. Tasdiqlovchi hujjatlar",
+        "prompt": "Mulk va ro‘yxatdan o‘tish hujjatlari, narx takliflari, ijara yoki joy bo‘yicha dalillar, yetkazib beruvchi ma’lumotlari va kreditor so‘ragan hujjatlarni ilova qiling."
+      }
+    ]
+  }
+}

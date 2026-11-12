@@ -19,13 +19,16 @@ export function Footer() {
       title: footer("company"),
       links: [
         { label: nav("about"), href: "/about" },
-        { label: footer("contact"), href: "mailto:hello@finadvisor.uz" }
+        { label: footer("contact"), href: "/contact" }
       ]
     },
     {
       title: footer("resources"),
       links: [
-        { label: footer("help"), href: "mailto:hello@finadvisor.uz" },
+        { label: footer("help"), href: "/faq" },
+        { label: footer("changelog"), href: "/changelog" },
+        { label: footer("statusPage"), href: "/status" },
+        { label: footer("investorBrief"), href: "/investor" },
         { label: footer("terms"), href: "/terms" },
         { label: footer("privacy"), href: "/privacy" },
         { label: footer("refund"), href: "/refund" },

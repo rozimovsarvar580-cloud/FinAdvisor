@@ -42,11 +42,25 @@
     ]
   },
   "faq": {
-    "title": "Savol-javob",
+    "title": "Yordam markazi",
+    "description": "Rejalashtirish, hisoblar, hisob-kitoblar va yordam haqidagi keng tarqalgan savollarga javoblar.",
+    "contact": "Yordam xizmatiga murojaat qilish",
     "items": [
-      ["Hisob-kitoblarni kim bajaradi?", "Finance-engine hisoblaydi; AI faqat tushuntiradi."],
-      ["AI maslahat moliyaviy maslahatmi?", "Yo‘q, natijalar qaror qabul qilishga yordamchi vosita."],
-      ["Qaysi tillar bor?", "O‘zbek, rus va ingliz tillari."]
+      ["FinAdvisor kimlar uchun?", "FinAdvisor kichik biznes egalari, buxgalterlar va investorlar uchun mo‘ljallangan. Rejalashtirish vositalari hozircha O‘zbekistondagi restoran biznesiga qaratilgan."],
+      ["Moliyaviy hisob-kitoblarni kim bajaradi?", "Hisob-kitoblarni siz kiritgan ma’lumotlar asosida moliya mexanizmi bajaradi. AI berilgan natijalarni tushuntirishi mumkin, ammo raqamlarni hisoblamaydi yoki o‘ylab topmaydi."],
+      ["Biznes-reja bank krediti olinishini kafolatlaydimi?", "Yo‘q. Reja ma’lumotlarni ko‘rib chiqish uchun tartibga solishga yordam beradi, ammo moliyalashtirish haqida har bir kreditor mustaqil qaror qiladi."],
+      ["Reja tuzishdan oldin nimalarni tayyorlash kerak?", "Biznes turi va joylashuvi, menyu yoki xizmat tavsifi, xodimlar, uskunalar, faoliyat xarajatlari va moliyalashtirish maqsadlarini tayyorlang. Summalar uchun hujjatli manbalardan foydalaning."],
+      ["FinAdvisor shaxsiy moliyaviy, soliq yoki yuridik maslahat beradimi?", "Yo‘q. FinAdvisor rejalashtirish vositasi bo‘lib, malakali moliyaviy, soliq yoki yuridik mutaxassis maslahatining o‘rnini bosmaydi."],
+      ["Interfeys qaysi tillarda mavjud?", "Interfeys o‘zbek, rus va ingliz tillarida mavjud. Sayt sarlavhasidan tilni tanlang."],
+      ["Obuna narxlari qancha?", "Joriy haftalik narxlar: Free — $0, Pro — $10 va Business — $20. Obuna to‘lovlari USDda ko‘rsatiladi."],
+      ["Oylik va yillik narxlar yakuniymi?", "Yo‘q. Oylik va yillik narxlar mahsulot qarori qabul qilinguncha vaqtinchalik qiymatlardir. Narxlar sahifasida ular shunday belgilangan."],
+      ["Qancha rejani saqlash mumkin?", "Reja limitlari obuna turiga bog‘liq va xizmat tomonidan tekshiriladi. Joriy taqqoslashni narxlar sahifasidan ko‘ring."],
+      ["Buxgalter ish maydonidan foydalana oladimi?", "Ha. Buxgalter roli biriktirilgan biznesning hisob ma’lumotlariga kirish imkonini beradi. Ruxsatlarni xizmat tekshiradi."],
+      ["Investorlar bozori qanday ishlaydi?", "Biznes egasi loyiha e’lonini joylashtirishni o‘zi tanlaydi. Investorlar e’lon qilingan ma’lumotlarni ko‘rib, platforma orqali egasi bilan bog‘lanishi mumkin."],
+      ["Bozordagi e’lonlar mustaqil tekshiriladimi?", "Yo‘q. E’lonlar va moliyalashtirish so‘rovlari biznes egalari tomonidan beriladi va mustaqil tekshirilmaydi. Investitsiya natijasi kafolatlanmaydi."],
+      ["Soliq qoidalari va stavkalari doim dolzarbmi?", "Soliq ma’lumotlari manbasi va tekshiruv holati bilan ko‘rsatiladi. Tekshirilmagan ma’lumotlar taxmin sifatida belgilanadi; amaldagi talablarni malakali mutaxassis bilan aniqlang."],
+      ["Hisob va biznes ma’lumotlarim qanday ishlatiladi?", "FinAdvisor so‘ralgan mahsulot funksiyalarini taqdim etish uchun ma’lumotlarni qayta ishlaydi. Maxfiylik ma’lumotnomasi loyihasini ko‘ring; u hali yuridik ko‘rib chiqishni talab qiladi."],
+      ["Yordam yoki fikr-mulohaza uchun qanday murojaat qilaman?", "Yordam shakli orqali murojaat yuboring yoki tizimga kirgandan so‘ng mahsulotdagi fikr-mulohaza tugmasidan foydalaning."]
     ]
   }
 }

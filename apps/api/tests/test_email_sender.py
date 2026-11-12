@@ -125,6 +125,8 @@ def test_localized_templates_cover_all_transactional_email_types() -> None:
                 if template == "receipt"
                 else {"investor": "Investor", "business": "Cafe", "message": "Hello"}
                 if template == "investor_contact_request"
+                else {"name": "Owner", "email": "owner@example.test", "category": "general", "message": "Please help"}
+                if template == "support_contact_request"
                 else {"link": "https://example.test"}
             )
             message = email_sender._build_message(
@@ -159,6 +161,37 @@ def test_payment_retry_email_is_localized_and_includes_exact_amount(
     assert smtp.message is not None
     assert smtp.message["Subject"] == "Повторная попытка оплаты подписки"
     assert "10.00 USD" in smtp.message.get_content()
+
+
+def test_support_email_uses_configured_recipient_reply_to_and_localized_template(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    settings = load_settings(
+        {
+            "EMAIL_PROVIDER": "smtp",
+            "EMAIL_HOST": "mail.example",
+            "EMAIL_FROM": "team@example.test",
+            "SUPPORT_EMAIL": "help@example.test",
+            "NEXTAUTH_URL": "https://app.example",
+        }
+    )
+    smtp = FakeSMTP("mail.example", 587, 10)
+    monkeypatch.setattr(email_sender, "get_settings", lambda: settings)
+    monkeypatch.setattr(email_sender.smtplib, "SMTP", lambda *args, **kwargs: smtp)
+
+    email_sender.send_support_contact_email(
+        "ru",
+        "Restaurant Owner",
+        "owner@example.test",
+        "feedback",
+        "Please add an export option.",
+    )
+
+    assert smtp.message is not None
+    assert smtp.message["To"] == "help@example.test"
+    assert smtp.message["Reply-To"] == "owner@example.test"
+    assert smtp.message["Subject"] == "Новое обращение в поддержку FinAdvisor"
+    assert "Please add an export option." in smtp.message.get_content()
 
 
 def test_auth_email_requires_configured_provider(

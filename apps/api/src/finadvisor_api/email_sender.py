@@ -13,6 +13,7 @@ from finadvisor_api.config import Settings, get_settings
 EmailTemplate = Literal[
     "verify", "reset", "welcome", "payment_retry", "receipt",
     "payment_failed", "subscription_ended", "investor_contact_request",
+    "support_contact_request",
 ]
 _MESSAGES = json.loads(
     files("finadvisor_api")
@@ -190,6 +191,30 @@ def send_investor_contact_request_email(
         recipient, locale, "investor_contact_request",
         investor=investor, business=business, message=message,
     )
+
+
+def send_support_contact_email(
+    locale: str,
+    name: str,
+    email: str,
+    category: str,
+    message_body: str,
+) -> None:
+    settings = get_settings()
+    message = _build_message(
+        settings.support_email,
+        locale,
+        "support_contact_request",
+        settings.email_from or "FinAdvisor",
+        {
+            "name": name,
+            "email": email,
+            "category": category,
+            "message": message_body,
+        },
+    )
+    message["Reply-To"] = email
+    get_email_sender(settings).send(message)
 
 
 def send_marketplace_email(recipient: str, locale: str, subject: str, body: str) -> None:

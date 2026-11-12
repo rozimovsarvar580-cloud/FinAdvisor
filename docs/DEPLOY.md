@@ -72,11 +72,14 @@ Optional variables accepted by the stack include:
   web build arguments, client code, or logs.
 - `INTERNAL_API_KEY`, `SENTRY_DSN`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `FACEBOOK_CLIENT_ID`, and
   `FACEBOOK_CLIENT_SECRET`.
-- `EMAIL_PROVIDER`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USERNAME`, `EMAIL_PASSWORD`, `EMAIL_FROM`, and
-  `RESEND_API_KEY`.
+- `EMAIL_PROVIDER`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USERNAME`, `EMAIL_PASSWORD`, `EMAIL_FROM`,
+  `RESEND_API_KEY`, and `SUPPORT_EMAIL`.
 - `PAYMENT_PROVIDER`, `PAYMENT_PUBLIC_KEY`, `PAYMENT_SECRET_KEY`, and `PAYMENT_WEBHOOK_SECRET`.
 
 Unset optional integrations remain disabled or unavailable according to their application configuration.
+Set `EMAIL_PROVIDER` to `smtp` or `resend` and configure its sender credentials to enable support
+contact delivery; `SUPPORT_EMAIL` optionally overrides the recipient and defaults to
+`hello@finadvisor.uz`. Contact submissions are emailed to support and are not stored by the API.
 For staging, use provider sandbox credentials. Configure callback and webhook URLs with the staging
 domains where the provider requires them. Do not treat staging checkout or email as production delivery.
 
@@ -85,6 +88,11 @@ Before the first deployment, check the Compose file without printing environment
 ```sh
 docker compose -f docker-compose.prod.yml config --quiet
 ```
+
+Before calling a release production-ready, run `node scripts/launch-gate.mjs` from a shell with the
+production environment variables set. The gate checks the tax-rule verification flags, unresolved
+legal/decision markers in shipped web source, production configuration, payment provider, AI key, and
+Sentry DSN. It reads values only from the process environment and reports variable names, never values.
 
 ## 4. Configure GitHub Actions
 

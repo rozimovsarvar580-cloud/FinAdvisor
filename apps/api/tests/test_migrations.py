@@ -21,7 +21,7 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
 
     assert sum(revision.down_revision is None for revision in revisions) == 1
     assert all(not isinstance(revision.down_revision, tuple) for revision in revisions)
-    assert script.get_heads() == ["20261027_21"]
+    assert script.get_heads() == ["20261027_23"]
 
     engine = create_engine(f"sqlite:///{database_path.as_posix()}")
     try:
@@ -85,6 +85,22 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
             user_columns = {
                 column["name"] for column in inspect(connection).get_columns("users")
             }
+            lead_columns = {
+                column["name"]
+                for column in inspect(connection).get_columns("sample_plan_leads")
+            }
+            lead_indexes = {
+                index["name"]
+                for index in inspect(connection).get_indexes("sample_plan_leads")
+            }
+            investor_lead_columns = {
+                column["name"]
+                for column in inspect(connection).get_columns("investor_brief_leads")
+            }
+            investor_lead_indexes = {
+                index["name"]
+                for index in inspect(connection).get_indexes("investor_brief_leads")
+            }
             assert "provider_checkout_id" in invoice_columns
             assert "uq_invoices_provider_checkout_id" in invoice_constraints
             assert "pending_plan" in subscription_columns
@@ -104,5 +120,29 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
                 "ix_analytics_consents_visitor_created",
             } <= consent_indexes
             assert "is_demo" in user_columns
+            assert {
+                "id",
+                "email",
+                "consented",
+                "consent_version",
+                "locale",
+                "created_at",
+            } <= lead_columns
+            assert {
+                "ix_sample_plan_leads_email",
+                "ix_sample_plan_leads_email_created",
+            } <= lead_indexes
+            assert {
+                "id",
+                "email",
+                "consented",
+                "consent_version",
+                "locale",
+                "created_at",
+            } <= investor_lead_columns
+            assert {
+                "ix_investor_brief_leads_email",
+                "ix_investor_brief_leads_email_created",
+            } <= investor_lead_indexes
     finally:
         engine.dispose()

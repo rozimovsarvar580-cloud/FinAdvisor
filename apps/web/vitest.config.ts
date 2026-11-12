@@ -7,7 +7,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url))
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@legacy-messages": fileURLToPath(
+        new URL("../../packages/i18n/messages", import.meta.url)
+      )
     }
   },
   test: {

@@ -42,6 +42,11 @@ verified email can link an OAuth account to an existing user. The separate
 Configure `EMAIL_PROVIDER=console` for development or `smtp` / `resend` for
 delivery, with `EMAIL_FROM`, `NEXTAUTH_URL`, and provider credentials as needed.
 
+`POST /investor-brief/download` returns the investor brief as an inline PDF
+generated from `docs/INVESTOR.md`. It requires an explicit email-and-document
+consent and records the email, locale, consent-text version, and request time.
+The request is not a marketing subscription.
+
 `POST /pricing/commission` accepts an annual revenue string and returns a
 progressive commission breakdown calculated by `packages/finance-engine`.
 

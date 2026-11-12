@@ -38,5 +38,8 @@ describe("buildSitemapEntries", () => {
     expect(entries.length).toBeGreaterThan(6);
     expect(entries.some((entry) => entry.url.includes("/uz/"))).toBe(true);
     expect(entries.some((entry) => entry.url.includes("/ru/pricing"))).toBe(true);
+    expect(entries.some((entry) => entry.url.includes("/en/changelog"))).toBe(true);
+    expect(entries.some((entry) => entry.url.includes("/uz/status"))).toBe(true);
+    expect(entries.some((entry) => entry.url.includes("/ru/investor"))).toBe(true);
   });
 });

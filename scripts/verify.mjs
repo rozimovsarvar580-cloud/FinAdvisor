@@ -92,6 +92,7 @@ if (has("apps/web/package.json")) {
   if (has("apps/web/scripts/test-locales.mjs")) add("web:locales", "node scripts/test-locales.mjs", "apps/web");
 }
 add("web:tokens:test", "node --test scripts/check-tokens.test.mjs", ".");
+add("launch-gate:test", "node --test scripts/launch-gate.test.mjs", ".");
 add("secrets:test", "node --test scripts/private-key-scan.test.mjs", ".");
 add("tasks:test", "node --test scripts/task-checks.test.mjs", ".");
 add("web:tokens", "node scripts/check-tokens.mjs", ".");

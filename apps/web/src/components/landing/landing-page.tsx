@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { CountUp } from "@/components/motion/count-up";
 import { DemoLoginButton } from "@/components/landing/demo-login-button";
 import { LandingDashboardPreview } from "@/components/landing/landing-dashboard-preview";
+import { SamplePlanDownloadForm } from "@/components/landing/sample-plan-download-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Modal } from "@/components/ui/modal";
@@ -126,6 +127,7 @@ export function LandingPage() {
                   <p className="pt-2 text-xs leading-5 text-muted-foreground">
                     {t("hero.samplePlan.note")}
                   </p>
+                  <SamplePlanDownloadForm />
                 </div>
               </Modal>
             </div>

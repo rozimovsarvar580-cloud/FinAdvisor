@@ -170,6 +170,40 @@ class AnalyticsConsent(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class SamplePlanLead(Base):
+    __tablename__ = "sample_plan_leads"
+    __table_args__ = (
+        CheckConstraint("consented = true", name="ck_sample_plan_leads_consented"),
+        Index("ix_sample_plan_leads_email_created", "email", "created_at"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    email: Mapped[str] = mapped_column(String(320), nullable=False, index=True)
+    consented: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    consent_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    locale: Mapped[str] = mapped_column(String(5), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+
+class InvestorBriefLead(Base):
+    __tablename__ = "investor_brief_leads"
+    __table_args__ = (
+        CheckConstraint("consented = true", name="ck_investor_brief_leads_consented"),
+        Index("ix_investor_brief_leads_email_created", "email", "created_at"),
+    )
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    email: Mapped[str] = mapped_column(String(320), nullable=False, index=True)
+    consented: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    consent_version: Mapped[str] = mapped_column(String(32), nullable=False)
+    locale: Mapped[str] = mapped_column(String(5), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+
 class AgentDevice(Base):
     __tablename__ = "agent_devices"
 

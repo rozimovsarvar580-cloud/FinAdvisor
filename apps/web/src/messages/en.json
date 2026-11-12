@@ -230,6 +230,13 @@
       "samplePlan": {
         "title": "Business plan sample",
         "description": "Preview the key sections that can make up your plan.",
+        "emailLabel": "Email address",
+        "consent": "I agree to provide my email to record this sample-plan request.",
+        "privacyLink": "Privacy notice",
+        "download": "Download free sample PDF",
+        "loading": "Preparing download...",
+        "success": "Your sample plan is ready and has been downloaded.",
+        "failure": "The sample plan could not be downloaded. Please try again.",
         "sections": {
           "overview": "Project overview",
           "market": "Market and customers",
@@ -833,8 +840,86 @@
       "privacy": "Privacy policy",
       "terms": "Terms of service",
       "refund": "Refund policy",
-      "aiDisclaimer": "AI disclaimer"
+      "aiDisclaimer": "AI disclaimer",
+      "changelog": "Changelog",
+      "statusPage": "Service status",
+      "investorBrief": "Investor brief"
     }
+  },
+  "support": {
+    "contactTitle": "Contact support",
+    "contactDescription": "Send your question or feedback to the FinAdvisor support team.",
+    "feedbackButton": "Send feedback",
+    "feedbackTitle": "Share product feedback",
+    "feedbackDescription": "Tell us what would make your work with FinAdvisor better.",
+    "nameLabel": "Name",
+    "emailLabel": "Email address",
+    "categoryLabel": "Topic",
+    "categories": {
+      "general": "General question",
+      "technical": "Technical issue",
+      "billing": "Billing",
+      "feedback": "Product feedback"
+    },
+    "messageLabel": "How can we help?",
+    "consent": "I agree to send these details to FinAdvisor so the support team can respond.",
+    "privacyLink": "Privacy notice",
+    "submit": "Send message",
+    "sending": "Sending...",
+    "success": "Your message has been delivered to support.",
+    "failure": "Your message could not be delivered. Please try again later.",
+    "close": "Close feedback form"
+  },
+  "changelog": {
+    "title": "Product changelog",
+    "description": "A record of notable FinAdvisor product updates.",
+    "release": "Release",
+    "releaseTitle": "Demo access and production deployment",
+    "changes": [
+      "Added a read-only demo workspace so visitors can explore the product.",
+      "Added a container-based production deployment workflow."
+    ]
+  },
+  "statusPage": {
+    "title": "Service status",
+    "description": "Current readiness of the FinAdvisor backend services.",
+    "operational": "All monitored backend services are ready.",
+    "degraded": "One or more monitored backend services need attention.",
+    "unavailable": "The readiness service could not be reached.",
+    "scope": "This page checks API readiness, including the database, Redis, and migrations. It does not report historical uptime or third-party provider status.",
+    "services": {
+      "database": "Database",
+      "redis": "Redis",
+      "migrations": "Database migrations"
+    },
+    "states": {
+      "operational": "Ready",
+      "issue": "Needs attention",
+      "unknown": "Unknown"
+    }
+  },
+  "investorBrief": {
+    "title": "Investor brief",
+    "description": "A draft overview of FinAdvisor based on documented product information. Market, financial, team, and fundraising claims still require verification.",
+    "summaryTitle": "Public summary",
+    "audienceTitle": "Starting audience",
+    "audienceText": "Small businesses in Uzbekistan, starting with restaurants. Market size and customer demand have not yet been verified.",
+    "productTitle": "Product approach",
+    "productText": "Business planning, deterministic financial calculations, accounting, and investor workflows in one platform.",
+    "modelTitle": "Business model",
+    "modelText": "Subscriptions plus a progressive commission on revenue recorded through the Business desktop agent. Prices and legal terms require verification.",
+    "pdfTitle": "Full investor brief",
+    "pdfLanguage": "The investor brief PDF is currently available in English.",
+    "emailLabel": "Email address",
+    "consent": "I agree to provide my email so this request and consent can be recorded and the investor brief made available. This is not a marketing signup.",
+    "privacyLink": "Privacy notice",
+    "submit": "View investor brief",
+    "loading": "Preparing the brief...",
+    "success": "The investor brief is ready below.",
+    "failure": "The investor brief could not be prepared. Please try again later.",
+    "viewTitle": "FinAdvisor investor brief PDF",
+    "download": "Download PDF",
+    "open": "Open PDF in a new tab"
   },
   "legal": {
     "terms": {
@@ -873,11 +958,11 @@
       "sections": {
         "data": {
           "title": "1. Information that may be processed",
-          "body": "This may include account and contact details, business and plan information entered by users, support communications, and basic technical or security event data. TODO(LEGAL): Verify the exact data inventory, cookies, analytics, and sensitive-data handling."
+          "body": "This may include account and contact details, business and plan information entered by users, support communications, and basic technical or security event data. A sample-plan or investor-brief request records the submitted email, locale, consent-text version, and request time. TODO(LEGAL): Verify the exact data inventory, cookies, analytics, and sensitive-data handling."
         },
         "use": {
           "title": "2. How information may be used",
-          "body": "Information may be used to provide account access and requested planning features, maintain security, respond to support requests, and meet legal obligations. TODO(LEGAL): Confirm purposes and lawful bases for each processing activity."
+          "body": "Information may be used to provide account access and requested planning features, maintain security, respond to support requests, record a requested sample-plan or investor-brief request, and meet legal obligations. These request forms do not enroll visitors in marketing messages. TODO(LEGAL): Confirm purposes and lawful bases for each processing activity."
         },
         "sharing": {
           "title": "3. Service providers and sharing",

@@ -14,6 +14,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR /app
 COPY --from=build /install /usr/local
 COPY apps/api /app
+COPY docs/INVESTOR.md /app/docs/INVESTOR.md
 
 RUN groupadd --system api && \
     useradd --system --gid api --home-dir /app api && \

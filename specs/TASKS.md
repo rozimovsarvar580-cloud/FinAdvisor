@@ -406,21 +406,21 @@ engine = `packages/finance-engine`.
 ## Stage 13 - Launch and growth
 - [x] 13.1 Demo data and demo account
   - done: seed script creates a demo restaurant plan, accountant data and investor listing; demo login on the landing page (read-only)
-- [ ] 13.2 Onboarding
+- [x] 13.2 Onboarding
   - done: first-run checklist and short product tour for each role; empty states lead to the next action
-- [ ] 13.3 Lead magnet
+- [x] 13.3 Lead magnet
   - done: free downloadable sample bank-ready plan (PDF) on the landing page, captured with consent
-- [ ] 13.4 Support
+- [x] 13.4 Support
   - done: contact form with email delivery, help center with 15 FAQs in 3 languages, in-app feedback button
-- [ ] 13.5 Changelog and status
+- [x] 13.5 Changelog and status
   - done: public changelog page and a status page link in the footer
-- [ ] 13.6 Investor document
+- [x] 13.6 Investor document
   - done: `docs/INVESTOR.md` in investor order (problem, solution, market, product, revenue model, competition, architecture and security, team, roadmap, financials, ask, use of funds) plus 20 likely investor questions with draft answers based only on facts in this repo; every market or financial figure is `TODO(VERIFY)`
   - exists: docs/INVESTOR.md
   - contains: docs/INVESTOR.md :: TODO(VERIFY)
-- [ ] 13.7 Investor PDF on the site
+- [x] 13.7 Investor PDF on the site
   - done: investor deck/summary PDF generated from the same sources, downloadable and viewable on a page of the site (access rule from DECISIONS)
-- [ ] 13.8 Launch gate script
+- [x] 13.8 Launch gate script
   - done: `scripts/launch-gate.mjs` exits non-zero while any of these is true: tax rules with `verified: false`, `TODO(LEGAL)` or `TODO(DECISION` markers in shipped pages, missing production env vars, payment provider set to fake, AI key missing, Sentry DSN missing
   - exists: scripts/launch-gate.mjs
 - [ ] 13.9 Final release candidate

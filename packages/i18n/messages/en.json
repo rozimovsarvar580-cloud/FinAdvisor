@@ -42,11 +42,25 @@
     ]
   },
   "faq": {
-    "title": "FAQ",
+    "title": "Help center",
+    "description": "Answers to common questions about planning, accounts, calculations, and support.",
+    "contact": "Contact support",
     "items": [
-      ["Who performs calculations?", "The finance engine calculates; AI only explains."],
-      ["Is the AI answer financial advice?", "No, the results are decision-support information."],
-      ["Which languages are available?", "Uzbek, Russian, and English."]
+      ["Who is FinAdvisor for?", "FinAdvisor is for small-business owners, accountants, and investors. The planning tools currently focus on restaurant businesses in Uzbekistan."],
+      ["Who performs financial calculations?", "The finance engine performs calculations from the information you provide. AI can explain supplied results but does not calculate or invent figures."],
+      ["Does a business plan guarantee a bank loan?", "No. A plan helps organize information for review, but each lender independently decides whether to offer financing."],
+      ["What should I prepare before creating a plan?", "Prepare the business format and location, menu or service description, staffing, equipment, operating costs, and financing goals. Use documented sources for amounts."],
+      ["Is FinAdvisor personalized financial, tax, or legal advice?", "No. FinAdvisor is a planning tool and does not replace advice from qualified financial, tax, or legal professionals."],
+      ["Which interface languages are available?", "The interface is available in Uzbek, Russian, and English. Choose a language from the site header."],
+      ["How much do subscriptions cost?", "The current weekly prices are Free at $0, Pro at $10, and Business at $20. Subscription prices are in USD."],
+      ["Are monthly and yearly prices final?", "No. Monthly and yearly prices are placeholders pending the product decision. The pricing page marks these amounts accordingly."],
+      ["How many plans can I save?", "Plan limits depend on the subscription tier and are enforced by the service. Check the pricing page for the current plan comparison."],
+      ["Can an accountant use the workspace?", "Yes. The accountant role provides accounting access for the assigned business. Account permissions are enforced by the service."],
+      ["How does the investor marketplace work?", "Business owners can choose to publish a project listing. Investors can browse published information and contact an owner through the platform."],
+      ["Are marketplace listings independently verified?", "No. Listing content and funding requests are supplied by business owners and are not independently verified. No investment outcome is guaranteed."],
+      ["Are tax rules and rates guaranteed to be current?", "Tax information is shown with its source and verification status. Unverified information is presented as an estimate; confirm current requirements with a qualified professional."],
+      ["How is my account and business information handled?", "FinAdvisor processes information to provide requested product features. See the draft privacy notice for the current data description; it still requires legal review."],
+      ["How can I get help or share feedback?", "Use the contact form to reach support, or use the feedback button while signed in to the product."]
     ]
   }
 }

@@ -7,7 +7,8 @@
     "receipt": {"subject": "To'lov kvitansiyasi", "body": "{amount} {currency} miqdoridagi to'lovingiz qabul qilindi. Hisob-faktura: {invoice}."},
     "payment_failed": {"subject": "Obuna to'lovi amalga oshmadi", "body": "{amount} {currency} miqdoridagi obuna to'lovingiz amalga oshmadi. To'lov usulingizni tekshiring."},
     "subscription_ended": {"subject": "Obunangiz tugadi", "body": "Obunangiz yakunlandi. Hisobingiz Free rejaga o'tkazildi."},
-    "investor_contact_request": {"subject": "Yangi investor so'rovi", "body": "{investor} investori {business} biznesingiz bilan bog'lanishni so'radi:\n\n{message}"}
+    "investor_contact_request": {"subject": "Yangi investor so'rovi", "body": "{investor} investori {business} biznesingiz bilan bog'lanishni so'radi:\n\n{message}"},
+    "support_contact_request": {"subject": "Yangi FinAdvisor yordam so'rovi", "body": "{name} ({email}) {category} mavzusida xabar yubordi:\n\n{message}"}
   },
   "ru": {
     "verify": {"subject": "Подтвердите адрес электронной почты", "body": "Откройте ссылку, чтобы подтвердить адрес электронной почты:\n\n{link}"},
@@ -17,7 +18,8 @@
     "receipt": {"subject": "Квитанция об оплате", "body": "Получен платеж на сумму {amount} {currency}. Счет: {invoice}."},
     "payment_failed": {"subject": "Не удалось оплатить подписку", "body": "Не удалось списать {amount} {currency} за подписку. Проверьте способ оплаты."},
     "subscription_ended": {"subject": "Подписка завершена", "body": "Ваша подписка завершена. Ваш аккаунт переведен на бесплатный план."},
-    "investor_contact_request": {"subject": "Новый запрос инвестора", "body": "Инвестор {investor} запросил связь с вами по поводу бизнеса «{business}»:\n\n{message}"}
+    "investor_contact_request": {"subject": "Новый запрос инвестора", "body": "Инвестор {investor} запросил связь с вами по поводу бизнеса «{business}»:\n\n{message}"},
+    "support_contact_request": {"subject": "Новое обращение в поддержку FinAdvisor", "body": "{name} ({email}) отправил(а) сообщение по теме «{category}»:\n\n{message}"}
   },
   "en": {
     "verify": {"subject": "Verify your email address", "body": "Open this link to verify your email address:\n\n{link}"},
@@ -27,6 +29,7 @@
     "receipt": {"subject": "Payment receipt", "body": "Your payment of {amount} {currency} was received. Invoice: {invoice}."},
     "payment_failed": {"subject": "Subscription payment failed", "body": "We could not collect {amount} {currency} for your subscription. Please check your payment method."},
     "subscription_ended": {"subject": "Your subscription has ended", "body": "Your subscription has ended. Your account has moved to the Free plan."},
-    "investor_contact_request": {"subject": "New investor contact request", "body": "Investor {investor} requested to contact you about {business}:\n\n{message}"}
+    "investor_contact_request": {"subject": "New investor contact request", "body": "Investor {investor} requested to contact you about {business}:\n\n{message}"},
+    "support_contact_request": {"subject": "New FinAdvisor support request", "body": "{name} ({email}) sent a {category} message:\n\n{message}"}
   }
 }

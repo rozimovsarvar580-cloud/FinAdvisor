@@ -34,7 +34,9 @@ from finadvisor_api.commission import router as commission_router
 from finadvisor_api.config import settings
 from finadvisor_api.database import engine
 from finadvisor_api.documents import router as documents_router
+from finadvisor_api.investor_brief import router as investor_brief_router
 from finadvisor_api.investor_verification import router as investor_verification_router
+from finadvisor_api.lead_magnet import router as lead_magnet_router
 from finadvisor_api.legacy.audit import audit_middleware
 from finadvisor_api.legacy.errors import http_exception_handler, validation_exception_handler
 from finadvisor_api.legacy.rate_limit import rate_limit_middleware
@@ -54,6 +56,7 @@ from finadvisor_api.legacy.routers.wizard import router as wizard_router
 from finadvisor_api.marketplace import router as marketplace_router
 from finadvisor_api.plans import router as plans_router
 from finadvisor_api.pricing import router as pricing_router
+from finadvisor_api.support import router as support_router
 
 if settings.sentry_dsn:
     import sentry_sdk
@@ -118,6 +121,9 @@ app.include_router(commission_router)
 app.include_router(documents_router)
 app.include_router(marketplace_router)
 app.include_router(investor_verification_router)
+app.include_router(investor_brief_router)
+app.include_router(lead_magnet_router)
+app.include_router(support_router)
 app.include_router(calculations_router)
 app.include_router(plans_router)
 app.include_router(pricing_router)

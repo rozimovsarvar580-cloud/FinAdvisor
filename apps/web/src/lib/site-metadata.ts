@@ -93,7 +93,10 @@ export function buildSitemapEntries() {
     "/desktop-agent",
     "/login",
     "/signup",
-    "/faq"
+    "/faq",
+    "/changelog",
+    "/status",
+    "/investor"
   ];
 
   return routes.flatMap((route) =>

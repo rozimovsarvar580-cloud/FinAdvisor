@@ -45,6 +45,7 @@ finadvisor_api = [
   "fonts/OFL.txt",
   "data/*.yaml",
   "knowledge_seed.json",
+  "lead_magnet_messages.json",
   "pricing_catalog.json"
 ]
 

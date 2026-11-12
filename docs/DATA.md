@@ -45,3 +45,19 @@ from the privacy-preferences control.
 The application currently stores the consent choice and visitor identifier in browser local storage. It
 does not load a third-party analytics script in the consent component. Verify cookie/storage disclosure
 and analytics retention before publication (`TODO(LEGAL)`).
+
+## Sample-plan requests
+
+The public sample-plan download records the submitted email address, locale, consent-text version, and
+request time only after the visitor explicitly checks the sample-request consent box. The email is used
+to record the requested download; this flow does not enroll the visitor in marketing messages. A qualified
+reviewer must confirm the legal basis, retention period, and access/deletion process before launch
+(`TODO(LEGAL)`).
+
+## Investor-brief requests
+
+The investor-brief page requires explicit consent before providing the PDF. The API records the
+submitted email address, locale, consent-text version, and request time, then returns the PDF
+generated from `docs/INVESTOR.md`. The request does not subscribe the visitor to marketing messages.
+A qualified reviewer must confirm the legal basis, retention period, and access/deletion process
+before launch (`TODO(LEGAL)`).

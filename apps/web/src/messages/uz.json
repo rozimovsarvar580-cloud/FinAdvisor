@@ -230,6 +230,13 @@
       "samplePlan": {
         "title": "Biznes-reja namunasi",
         "description": "Rejangizda bo‘lishi mumkin bo‘lgan asosiy bo‘limlarni ko‘ring.",
+        "emailLabel": "Elektron pochta manzili",
+        "consent": "Ushbu reja namunasiga so‘rovni qayd etish uchun elektron pochta manzilimdan foydalanishga roziman.",
+        "privacyLink": "Maxfiylik haqida ma’lumot",
+        "download": "Bepul PDF namunani yuklab olish",
+        "loading": "Yuklab olish tayyorlanmoqda...",
+        "success": "Reja namunasi tayyor va yuklab olindi.",
+        "failure": "Reja namunasini yuklab bo‘lmadi. Qayta urinib ko‘ring.",
         "sections": {
           "overview": "Loyiha haqida qisqacha ma’lumot",
           "market": "Bozor va mijozlar",
@@ -833,8 +840,86 @@
       "privacy": "Maxfiylik siyosati",
       "terms": "Foydalanish shartlari",
       "refund": "Pulni qaytarish qoidalari",
-      "aiDisclaimer": "AI haqida ogohlantirish"
+      "aiDisclaimer": "AI haqida ogohlantirish",
+      "changelog": "O‘zgarishlar tarixi",
+      "statusPage": "Xizmatlar holati",
+      "investorBrief": "Investorlar uchun ma’lumot"
     }
+  },
+  "support": {
+    "contactTitle": "Yordam xizmatiga murojaat",
+    "contactDescription": "Savolingiz yoki fikr-mulohazangizni FinAdvisor yordam jamoasiga yuboring.",
+    "feedbackButton": "Fikr bildirish",
+    "feedbackTitle": "Mahsulot haqida fikr",
+    "feedbackDescription": "FinAdvisor’dan foydalanishni qanday yaxshilash mumkinligini yozing.",
+    "nameLabel": "Ism",
+    "emailLabel": "Elektron pochta manzili",
+    "categoryLabel": "Mavzu",
+    "categories": {
+      "general": "Umumiy savol",
+      "technical": "Texnik muammo",
+      "billing": "To‘lov",
+      "feedback": "Mahsulot haqida fikr"
+    },
+    "messageLabel": "Qanday yordam bera olamiz?",
+    "consent": "Yordam jamoasi javob berishi uchun ushbu ma’lumotlarni FinAdvisor’ga yuborishga roziman.",
+    "privacyLink": "Maxfiylik haqida ma’lumot",
+    "submit": "Xabar yuborish",
+    "sending": "Yuborilmoqda...",
+    "success": "Xabar yordam jamoasiga yetkazildi.",
+    "failure": "Xabarni yetkazib bo‘lmadi. Keyinroq qayta urinib ko‘ring.",
+    "close": "Fikr-mulohaza shaklini yopish"
+  },
+  "changelog": {
+    "title": "Mahsulot o‘zgarishlari",
+    "description": "FinAdvisor mahsulotidagi muhim yangilanishlar tarixi.",
+    "release": "Versiya",
+    "releaseTitle": "Demo kirish va ishlab chiqarishga joylashtirish",
+    "changes": [
+      "Mehmonlarga mahsulotni sinab ko‘rish imkonini beruvchi, faqat o‘qish uchun demo muhit qo‘shildi.",
+      "Konteynerlar asosida ishlab chiqarishga joylashtirish jarayoni qo‘shildi."
+    ]
+  },
+  "statusPage": {
+    "title": "Xizmatlar holati",
+    "description": "FinAdvisor server xizmatlarining joriy tayyorlik holati.",
+    "operational": "Kuzatilayotgan barcha server xizmatlari tayyor.",
+    "degraded": "Bir yoki bir nechta server xizmatiga e’tibor kerak.",
+    "unavailable": "Tayyorlik holatini tekshirish xizmatiga ulanib bo‘lmadi.",
+    "scope": "Bu sahifa ma’lumotlar bazasi, Redis va migratsiyalarni o‘z ichiga olgan API tayyorligini tekshiradi. Tarixiy ishlash va uchinchi tomon provayderlari holati ko‘rsatilmaydi.",
+    "services": {
+      "database": "Ma’lumotlar bazasi",
+      "redis": "Redis keshi",
+      "migrations": "Ma’lumotlar bazasi migratsiyalari"
+    },
+    "states": {
+      "operational": "Tayyor",
+      "issue": "E’tibor kerak",
+      "unknown": "Noma’lum"
+    }
+  },
+  "investorBrief": {
+    "title": "Investorlar uchun ma’lumot",
+    "description": "FinAdvisor mahsuloti haqida hujjatlashtirilgan ma’lumotlarga asoslangan loyiha sharhi. Bozor, moliya, jamoa va mablag‘ jalb qilish haqidagi da’volar tekshirilishi kerak.",
+    "summaryTitle": "Qisqacha ma’lumot",
+    "audienceTitle": "Boshlang‘ich auditoriya",
+    "audienceText": "O‘zbekistondagi kichik bizneslar, dastlab restoranlar. Bozor hajmi va mijozlar talabi hali tasdiqlanmagan.",
+    "productTitle": "Mahsulot yondashuvi",
+    "productText": "Biznes-rejalash, aniq moliyaviy hisob-kitoblar, buxgalteriya jarayonlari va investorlar bilan ishlash yagona platformada.",
+    "modelTitle": "Biznes modeli",
+    "modelText": "Obunalar va Business ish stoli agentida qayd etilgan tushumdan bosqichma-bosqich komissiya. Narxlar va huquqiy shartlar tekshirilishi kerak.",
+    "pdfTitle": "Investorlar uchun to‘liq ma’lumot",
+    "pdfLanguage": "Investorlar uchun PDF hozircha ingliz tilida.",
+    "emailLabel": "Elektron pochta manzili",
+    "consent": "So‘rov va roziligim qayd etilishi hamda investorlar uchun ma’lumot taqdim etilishi uchun elektron pochtamni berishga roziman. Bu marketing xabarlariga obuna emas.",
+    "privacyLink": "Maxfiylik haqida ma’lumot",
+    "submit": "Investorlar ma’lumotini ko‘rish",
+    "loading": "Ma’lumot tayyorlanmoqda...",
+    "success": "Investorlar uchun ma’lumot quyida tayyor.",
+    "failure": "Investorlar ma’lumotini tayyorlab bo‘lmadi. Keyinroq qayta urinib ko‘ring.",
+    "viewTitle": "FinAdvisor investorlar uchun PDF ma’lumoti",
+    "download": "PDF yuklab olish",
+    "open": "PDF’ni yangi oynada ochish"
   },
   "legal": {
     "terms": {
@@ -873,11 +958,11 @@
       "sections": {
         "data": {
           "title": "1. Qayta ishlanishi mumkin bo‘lgan ma’lumotlar",
-          "body": "Bunga hisob va aloqa ma’lumotlari, foydalanuvchi kiritgan biznes va reja ma’lumotlari, yordam xizmatiga yozishmalar hamda asosiy texnik yoki xavfsizlik hodisalari kirishi mumkin. TODO(LEGAL): Ma’lumotlar ro‘yxati, cookie, tahlil vositalari va maxsus ma’lumotlar bilan ishlashni tekshirish."
+          "body": "Bunga hisob va aloqa ma’lumotlari, foydalanuvchi kiritgan biznes va reja ma’lumotlari, yordam xizmatiga yozishmalar hamda asosiy texnik yoki xavfsizlik hodisalari kirishi mumkin. Biznes-reja namunasi yoki investorlar ma’lumotini so‘rashda ko‘rsatilgan elektron pochta manzili, til, rozilik matni versiyasi va so‘rov vaqti qayd etiladi. TODO(LEGAL): Ma’lumotlar ro‘yxati, cookie, tahlil vositalari va maxsus ma’lumotlar bilan ishlashni tekshirish."
         },
         "use": {
           "title": "2. Ma’lumotlardan foydalanish",
-          "body": "Ma’lumotlar hisobga kirish va so‘ralgan rejalashtirish funksiyalarini taqdim etish, xavfsizlikni saqlash, murojaatlarga javob berish va qonuniy majburiyatlarni bajarish uchun ishlatilishi mumkin. TODO(LEGAL): Har bir qayta ishlash maqsadi va qonuniy asosini tasdiqlash."
+          "body": "Ma’lumotlar hisobga kirish va so‘ralgan rejalashtirish funksiyalarini taqdim etish, xavfsizlikni saqlash, murojaatlarga javob berish, biznes-reja namunasi yoki investorlar ma’lumoti so‘rovini qayd etish va qonuniy majburiyatlarni bajarish uchun ishlatilishi mumkin. Bu shakllar foydalanuvchini marketing xabarlariga obuna qilmaydi. TODO(LEGAL): Har bir qayta ishlash maqsadi va qonuniy asosini tasdiqlash."
         },
         "sharing": {
           "title": "3. Xizmat ko‘rsatuvchilar va ma’lumot almashish",

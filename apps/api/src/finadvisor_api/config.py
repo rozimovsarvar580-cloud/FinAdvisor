@@ -24,6 +24,7 @@ class Settings:
     email_username: str | None
     email_password: str | None
     email_from: str | None
+    support_email: str
     resend_api_key: str | None
     payment_provider: str
     payment_public_key: str | None
@@ -139,6 +140,8 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         email_username=_optional(values, "EMAIL_USERNAME"),
         email_password=_optional(values, "EMAIL_PASSWORD"),
         email_from=_optional(values, "EMAIL_FROM"),
+        support_email=values.get("SUPPORT_EMAIL", "hello@finadvisor.uz").strip()
+        or "hello@finadvisor.uz",
         resend_api_key=_optional(values, "RESEND_API_KEY"),
         payment_provider=values.get("PAYMENT_PROVIDER", "disabled").strip().lower(),
         payment_public_key=_optional(values, "PAYMENT_PUBLIC_KEY"),

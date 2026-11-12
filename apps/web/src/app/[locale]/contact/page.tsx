@@ -1,11 +1,23 @@
-import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+"use client";
 
-const locales = ["uz", "ru", "en"] as const;
-export function generateStaticParams() { return locales.map((locale) => ({ locale })); }
-export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  if (!locales.includes(locale as (typeof locales)[number])) notFound();
-  const t = await getTranslations({ locale, namespace: "routeCopy" });
-  return <main style={{ maxWidth: 640 }}><h1>{t("contact.title")}</h1><form style={{ display: "grid", gap: 12 }}><label>{t("contact.name")}<input required /></label><label>{t("contact.email")}<input type="email" required /></label><label>{t("contact.message")}<textarea required /></label><button type="submit">{t("contact.send")}</button></form><p>{t("contact.contactInfo", { telegram: "@finadvisor", email: "hello@finadvisor.uz" })}</p></main>;
+import { useTranslations } from "next-intl";
+
+import { SupportContactForm } from "@/components/support/support-contact-form";
+
+export default function ContactPage() {
+  const t = useTranslations("support");
+
+  return (
+    <main className="mx-auto max-w-3xl px-page py-section">
+      <header className="mb-8">
+        <h1 className="text-3xl font-semibold tracking-tight">{t("contactTitle")}</h1>
+        <p className="mt-3 text-base leading-7 text-muted-foreground">
+          {t("contactDescription")}
+        </p>
+      </header>
+      <div className="rounded-xl border border-border bg-card p-5 shadow-sm sm:p-8">
+        <SupportContactForm />
+      </div>
+    </main>
+  );
 }
