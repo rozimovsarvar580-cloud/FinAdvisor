@@ -23,10 +23,14 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-function request(path: string, cookies?: Record<string, string>) {
+function request(
+  path: string,
+  cookies?: Record<string, string>,
+  clientIp = `${Math.random()}`
+) {
   return new NextRequest(`http://localhost${path}`, {
     headers: {
-      "x-forwarded-for": `${Math.random()}`,
+      "x-forwarded-for": clientIp,
       ...(cookies
         ? {
             cookie: Object.entries(cookies)
@@ -39,6 +43,15 @@ function request(path: string, cookies?: Record<string, string>) {
 }
 
 describe("onboarding route protection", () => {
+  it("allows repeated localized page requests from the same client", async () => {
+    for (let index = 0; index < 121; index += 1) {
+      const response = await middleware(request("/en", undefined, "127.0.0.1"));
+      expect(response?.status).toBe(200);
+    }
+
+    expect(i18nHandler).not.toHaveBeenCalled();
+  });
+
   it("redirects unauthenticated users to the localized sign-in page", async () => {
     getToken.mockResolvedValue(null);
 
@@ -63,6 +76,25 @@ describe("onboarding route protection", () => {
     getToken.mockResolvedValue({ needsRole: true });
 
     const response = await middleware(request("/en/onboarding/role"));
+
+    expect(response?.status).toBe(200);
+    expect(response?.headers.get("x-middleware-request-x-next-intl-locale")).toBe(
+      "en"
+    );
+  });
+
+  it("forwards the locale for localized routes without rewriting back to themselves", async () => {
+    const response = await middleware(request("/en/about"));
+
+    expect(response?.headers.get("x-middleware-request-x-next-intl-locale")).toBe(
+      "en"
+    );
+    expect(response?.headers.get("x-middleware-rewrite")).toBeNull();
+    expect(i18nHandler).not.toHaveBeenCalled();
+  });
+
+  it("uses next-intl routing for an unlocalized path", async () => {
+    const response = await middleware(request("/"));
 
     expect(response?.status).toBe(200);
     expect(i18nHandler).toHaveBeenCalledOnce();
@@ -101,6 +133,8 @@ describe("admin route protection", () => {
     const response = await middleware(request("/uz/admin"));
 
     expect(response?.status).toBe(200);
-    expect(i18nHandler).toHaveBeenCalledOnce();
+    expect(response?.headers.get("x-middleware-request-x-next-intl-locale")).toBe(
+      "uz"
+    );
   });
 });

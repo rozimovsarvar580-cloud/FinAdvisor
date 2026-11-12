@@ -191,7 +191,11 @@ def readiness_check() -> JSONResponse:
     try:
         Redis.from_url(settings.redis_url, socket_connect_timeout=1).ping()
     except RedisError:
-        checks["redis"] = "error"
+        checks["redis"] = (
+            "fallback"
+            if settings.environment not in {"prod", "production"}
+            else "error"
+        )
 
     try:
         migration_config = Config(str(Path(__file__).resolve().parents[2] / "alembic.ini"))
@@ -203,7 +207,8 @@ def readiness_check() -> JSONResponse:
     except (CommandError, SQLAlchemyError, OSError, ValueError):
         checks["migrations"] = "error"
 
-    ready = all(status == "ok" for status in checks.values())
+    redis_ready = checks["redis"] in {"ok", "fallback"}
+    ready = checks["database"] == "ok" and redis_ready and checks["migrations"] == "ok"
     return JSONResponse(
         status_code=200 if ready else 503,
         content={"status": "ok" if ready else "not_ready", "checks": checks},

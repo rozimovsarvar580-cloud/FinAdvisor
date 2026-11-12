@@ -19,6 +19,9 @@ or an investment offer.
 Set `DATABASE_URL` and `JWT_SECRET` from the repository's `.env` file before
 starting the service. Apply database migrations from the repository root with
 `alembic -c apps/api/alembic.ini upgrade head`.
+The `/ready` endpoint still requires a migrated database; in non-production
+environments, it accepts the in-process rate-limit fallback when Redis is
+unavailable. Production readiness requires Redis.
 
 For AI features, copy `apps/api/ai.config.example.json` to
 `apps/api/ai.config.json` and set the server-side provider, API key, and model.
