@@ -445,3 +445,249 @@ engine = `packages/finance-engine`.
 - [ ] H14 Private beta: 10 real restaurant owners/accountants use the product; collect and triage feedback
 - [ ] H15 Talk to banks/microfinance lenders and investors; record what they ask for in `docs/INVESTOR.md`
 - [ ] H16 Production acceptance: a real small payment end to end, a refund, a backup restore drill, and a manual pass on mobile
+
+
+
+
+
+
+# Task additions (inserted into specs/TASKS.md by scripts/add-tasks.mjs; do not edit TASKS.md by hand)
+
+=== URGENT ===
+## Stage U - Urgent UI fixes (from screenshots)
+- [ ] U1 Password field with the show/hide icon INSIDE the input
+  - done: new shared `PasswordField` in `apps/web/src/components/auth/password-field.tsx`; the show/hide control is an eye / eye-off ICON BUTTON placed inside the input on the right (no separate "Show password" text next to the field); `type` toggles password/text; the button has a translated aria-label and aria-pressed, is keyboard reachable, keeps focus on the input, causes no layout shift, has hover and focus styles in light and dark; used by login, signup, reset-password and change-password forms; keep the existing visual style of the forms
+  - exists: apps/web/src/components/auth/password-field.tsx
+  - cmd: cd apps/web && npx vitest run password-field
+- [ ] U2 Login form order: "Forgot password?" directly below the password field
+  - done: order is Email, Password (icon toggle inside), "Forgot password?" link directly below the password field aligned right, then Remember me, then the Log in button, then "Or continue with" and the social buttons; the same tidy order on signup where it applies; tab order follows the visual order; a test asserts the DOM order; keep the existing visual style
+  - cmd: cd apps/web && npx vitest run login-form
+- [ ] U3 Fix "Your choice could not be saved. Please try again." in Analytics preferences
+  - done: reproduce first with a failing test, then find the root cause (check the consent endpoint/route, API base URL and CORS, auth required for anonymous visitors, missing table or migration, cookie/storage write, unhandled network errors); Accept and Reject both save for anonymous and signed-in users and the choice survives a reload; if the API is unreachable fall back to a first-party cookie and sync later instead of showing an error; error text translated; the banner never covers page content or buttons at 375, 768 and 1280 px (in the screenshot a rounded bar overlaps the bottom of the features grid: check whether it is this banner); regression tests on both sides
+  - max_fails: 6
+  - exists: apps/api/tests/test_consent_api.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_consent_api.py -q
+  - cmd: cd apps/web && npx vitest run consent
+- [ ] U4 Replace glyph icons on feature cards with real SVG icons
+  - done: feature cards (and any other place using unicode glyph characters as icons) use consistent SVG icons (lucide-react if installed, else inline SVG) with the same size and stroke, token colors in both themes, aria-hidden; cards keep the current style and equal heights
+- [ ] U5 Repo hygiene: local database and build artifacts
+  - done: `finadvisor.db`, other local `*.db`/`*.sqlite` files and `*.tsbuildinfo` are git-ignored and removed from the git index (`git rm --cached`), not deleted from disk; docs say how to recreate the dev database (migrations or seed script)
+  - cmd: node -e "const r=require('child_process').execSync('git ls-files').toString();process.exit(/finadvisor\.db|tsbuildinfo/.test(r)?1:0)"
+
+=== STAGES ===
+## Stage 14 - All business types (industry-agnostic core)
+- [ ] 14.1 Audit restaurant-specific code
+  - done: `specs/audit-industry.md` lists every place where restaurant is hard-coded (engine, API schemas, wizard, AI prompts, bank checklist, PDFs/Excel, i18n files, emails, desktop agent, tests) with a decision for each (generalize, keep as sector template, delete); no code changes
+  - exists: specs/audit-industry.md
+- [ ] 14.2 Sector registry (data, not code)
+  - done: versioned YAML definitions, one per sector, loaded by finance-engine: id, names in uz/ru/en, revenue model type, typical cost categories, typical staff roles, inventory/COGS behavior, KPIs, questions to ask the user, optional licenses/regulations to check; initial sectors: restaurant_cafe, retail_shop, online_store, beauty_salon, auto_service, fitness_studio, education_center, food_production, delivery_logistics, it_services, accommodation, construction_repair, generic_other; sector files contain STRUCTURE and labels only; any benchmark, license or regulation entry has `source_url`, `verified: false` and `TODO(VERIFY)`; numbers are never invented
+  - exists: packages/finance-engine/tests/test_sectors.py
+  - cmd: {{PY}} -m pytest packages/finance-engine/tests/test_sectors.py -q
+- [ ] 14.3 Driver-based financial model for any business
+  - done: finance-engine supports revenue models capacity_utilization (seats/chairs/rooms x turns or occupancy x average ticket), unit_sales (units x price), hourly_service (staff hours x rate x utilization), recurring (subscribers x ARPU with churn) and project_based (projects x average value x conversion), combinable per plan; COGS per unit or percent; opex categories; headcount by role; capex; working capital; seasonality curve; tax regime from the tax YAML; same outputs as today (monthly P&L, cash flow, break-even, loan fit); the current restaurant model becomes the restaurant_cafe template with unchanged results; golden tests for at least 4 different sectors; Decimal only
+  - max_fails: 6
+  - exists: packages/finance-engine/tests/test_multi_sector_model.py
+  - cmd: {{PY}} -m pytest packages/finance-engine/tests/test_multi_sector_model.py -q
+- [ ] 14.4 Sector-aware API
+  - done: `GET /sectors`, `GET /sectors/{id}`; plan creation takes `sector_id` plus free-form `inputs` validated against the sector definition; migration adds sector and inputs to plans and defaults existing plans to restaurant_cafe; backward compatible; tests
+  - exists: apps/api/tests/test_sectors_api.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_sectors_api.py -q
+- [ ] 14.5 Wizard: "What business is it?"
+  - done: first wizard step lets the user pick a sector (cards with icons plus search), "Other" with a short description, and the stage (idea, just starting, already running, want to grow); the next steps are built from the sector definition (roles, costs, revenue drivers) with the user able to add custom roles and cost lines; resumable; uz/ru/en; tests
+  - cmd: cd apps/web && npx vitest run sector
+- [ ] 14.6 AI that works for any sector
+  - done: plan generation, analysis and chat prompts are built from the sector definition and the user's inputs, no restaurant-only language; for "Other" the AI first asks up to 5 clarifying questions and states its assumptions explicitly; the number-consistency eval runs for at least 3 sectors; tests with the fake provider
+  - exists: apps/api/tests/test_ai_multi_sector.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_ai_multi_sector.py -q
+- [ ] 14.7 Bank checklist and investor Q&A per sector
+  - done: `bank_checklist.yaml` keeps a generic base and gains `sector_addons`; sample plans from 3 sectors have expected score ranges; investor questions adapt to the sector
+  - exists: apps/api/tests/test_bank_readiness_sectors.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_bank_readiness_sectors.py -q
+- [ ] 14.8 Exports for every sector
+  - done: PDF, Excel and bank pack derive titles, sections and tables from the plan and sector (no restaurant wording unless the sector is restaurant_cafe); tests for 3 sectors in uz, ru and en
+  - exists: apps/api/tests/test_export_multi_sector.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_export_multi_sector.py -q
+- [ ] 14.9 Wording sweep and guard
+  - done: all landing, pricing, about, wizard, calculators, email, PDF and desktop copy in uz/ru/en is business-neutral ("Plan sections tailored to your business", not "restaurant"); restaurant stays only as one example or sector name; `apps/web/scripts/check-industry-wording.mjs` fails when "restaurant" (and ru/uz equivalents) appears in locale files outside an allowlist of sector keys and examples; wired into `scripts/verify.config.json` extraSteps
+  - exists: apps/web/scripts/check-industry-wording.mjs
+  - cmd: node apps/web/scripts/check-industry-wording.mjs
+- [ ] 14.10 Accounting and desktop agent for goods and services
+  - done: items can be goods or services; inventory is optional (service businesses have no stock); custom expense and income categories; units and service durations; migration and tests; desktop screens adapt to the business type
+  - exists: apps/api/tests/test_accounting_generic.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_accounting_generic.py -q
+- [ ] 14.11 Sector coverage matrix
+  - done: a parametrized test runs wizard inputs -> engine -> fake AI plan -> PDF/Excel for EVERY sector in the registry and fails if any sector breaks; a Playwright e2e covers 3 sectors
+  - exists: apps/api/tests/test_sector_matrix.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_sector_matrix.py -q
+- [ ] 14.12 Marketplace by sector
+  - done: listings carry a sector; investors filter and search by sector; tests
+
+## Stage 15 - AI advisors (finance, market, competitors, customers, growth)
+- [ ] 15.1 Advisor data model and API skeleton
+  - done: tables advisor_reports (user, plan, type, input, output JSON, sources JSON, assumptions JSON, created_at) and advisor_sessions with migrations; endpoints to create, list and read reports; owner-scoped (no IDOR); counted by the AI usage limits (4.12) with advisor limits from DECISIONS D16
+  - exists: apps/api/tests/test_advisor_api.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_advisor_api.py -q
+- [ ] 15.2 Advisor report schema and renderer
+  - done: Pydantic `AdvisorReport` with summary, findings, recommendations (title, why, priority, expected impact, effort, concrete steps, metric to track), assumptions, sources (url, title, retrieved_at), confidence and disclaimers; markdown and PDF renderers in uz/ru/en; tests
+  - exists: apps/api/tests/test_advisor_schema.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_advisor_schema.py -q
+- [ ] 15.3 Business context builder
+  - done: assembles a compact, size-limited JSON context for prompts from the plan, sector definition, user inputs and accounting data when available; flags missing data explicitly so the advisor asks instead of guessing; strips PII; tests
+  - exists: apps/api/tests/test_advisor_context.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_advisor_context.py -q
+- [ ] 15.4 AI financial advisor (chat and what-if)
+  - done: the advisor answers questions about the user's own numbers (cash flow, margins, pricing, debt, taxes, hiring); the LLM may request what-if scenarios but ONLY finance-engine computes them and the results are shown with their inputs; it lists assumptions, asks for missing data, never invents figures, never promises outcomes; streaming; tests with the fake provider
+  - max_fails: 6
+  - exists: apps/api/tests/test_financial_advisor.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_financial_advisor.py -q
+- [ ] 15.5 Financial health check
+  - done: finance-engine scores liquidity runway, gross margin, break-even buffer, debt service coverage, payroll ratio and rent ratio with Decimal math; sector benchmark ranges are placeholders marked `TODO(VERIFY)` and `verified: false`; API endpoint; AI explanation in plain language; golden tests
+  - exists: packages/finance-engine/tests/test_health_check.py
+  - cmd: {{PY}} -m pytest packages/finance-engine/tests/test_health_check.py -q
+- [ ] 15.6 Budget vs actual and 13-week cash-flow forecast
+  - done: engine and API compare planned and real numbers (from accounting data, falling back to plan assumptions) and forecast 13 weeks of cash with best, expected and worst cases; golden tests
+  - exists: packages/finance-engine/tests/test_cashflow_forecast.py
+  - cmd: {{PY}} -m pytest packages/finance-engine/tests/test_cashflow_forecast.py -q
+- [ ] 15.7 Pricing and margin analysis
+  - done: per product or service margin, price-change what-if, break-even volume and a minimum viable price; engine, API and tests
+  - exists: packages/finance-engine/tests/test_pricing_margin.py
+  - cmd: {{PY}} -m pytest packages/finance-engine/tests/test_pricing_margin.py -q
+- [ ] 15.8 Financial management advice
+  - done: combines health check, budget vs actual, forecast and pricing results into a prioritized action list (cut or renegotiate costs, adjust prices, build a cash reserve, loan strategy, tax calendar reminders read from the sourced tax YAML) as an `AdvisorReport`; every recommendation cites the number that triggered it; tests
+  - exists: apps/api/tests/test_financial_management_advice.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_financial_management_advice.py -q
+- [ ] 15.9 Finance tab UI
+  - done: health score card, cash-flow chart with scenarios, budget vs actual table, pricing tool and the advisor chat in one tab; example questions; loading, empty and error states; uz/ru/en; light and dark; mobile
+- [ ] 15.10 ResearchProvider (web research, pluggable)
+  - done: `ResearchProvider` interface (search, fetch_page) with a fake for tests; a real implementation selected by a `research` section in `apps/api/ai.config.json` ({provider, api_key}); results cached, rate-limited and stored with url and retrieved_at; uses official search/APIs only (no scraping of sites that forbid it); `GET /admin/research-status` returns only connected yes/no; the key is never logged or exposed; tests
+  - exists: apps/api/tests/test_research_provider.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_research_provider.py -q
+- [ ] 15.11 Market research brief (entering or growing in a market)
+  - done: input = sector, location, target customer, offer; output = market overview, demand drivers, customer segments, channels, price ranges seen, regulations to check, risks, opportunities; every external fact or number carries a source (url, retrieved_at) or is labeled as an assumption by a post-processor that enforces this; without a research provider it works from user-provided data and says so; tests
+  - max_fails: 6
+  - exists: apps/api/tests/test_market_brief.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_market_brief.py -q
+- [ ] 15.12 Competitors: data model and discovery
+  - done: competitors table and CRUD (name, url, location, offer, price points, strengths, weaknesses, notes, source refs); "suggest competitors" uses the ResearchProvider and the user confirms before anything is saved; tests
+  - exists: apps/api/tests/test_competitors_api.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_competitors_api.py -q
+- [ ] 15.13 Competitor comparison and "build something better" advice
+  - done: comparison matrix of the user's business vs competitors (price, quality, service, location, channels, features) built from user-entered or sourced data; gap analysis and differentiation advice; a prioritized improvement backlog for the product or service (impact, effort, metric); claims about competitors are cited or marked as user-provided; tests
+  - exists: apps/api/tests/test_competitor_advice.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_competitor_advice.py -q
+- [ ] 15.14 Marketing and go-to-market advisor
+  - done: positioning and value proposition, target segments, channel suggestions, marketing budget split computed by finance-engine from user-supplied assumptions (CAC, conversion), 30/60/90-day plan, KPIs; ideas for winning market share are framed as hypotheses to test with a cheap pilot; never promises results; tests including a check that outputs contain no guarantee language
+  - exists: apps/api/tests/test_marketing_advisor.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_marketing_advisor.py -q
+- [ ] 15.15 Customer feedback collector
+  - done: the owner creates a short survey (AI drafts questions, owner edits) in uz/ru/en and shares a public link and QR code; anonymous responses with a privacy notice, spam protection and rate limits; response dashboard; tests
+  - exists: apps/api/tests/test_surveys.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_surveys.py -q
+- [ ] 15.16 Feedback import and PII scrubbing
+  - done: import reviews or comments from pasted text or CSV; phone numbers, emails, names and handles are scrubbed before any text reaches the AI; originals are stored separately with owner-only access; tests
+  - exists: apps/api/tests/test_feedback_import.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_feedback_import.py -q
+- [ ] 15.17 Feedback analysis: what customers want
+  - done: the LLM tags each item (theme, sentiment, request type) in batches against a fixed taxonomy plus free tags; CODE counts and ranks the tags (the LLM never counts); output = top pain points, requests, quick wins and "what customers want" with counts and example quotes; hostile review text such as "ignore previous instructions" has no effect (tests)
+  - max_fails: 6
+  - exists: apps/api/tests/test_feedback_analysis.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_feedback_analysis.py -q
+- [ ] 15.18 Customer-driven improvement advice
+  - done: maps feedback themes to product, service, pricing and marketing actions; each has an expected effect labeled as a hypothesis, a cheap way to test it (pilot or A/B) and a metric; links to the competitor gaps where relevant; tests
+  - exists: apps/api/tests/test_feedback_advice.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_feedback_advice.py -q
+- [ ] 15.19 Growth plan synthesizer
+  - done: combines finance, market, competitor and feedback reports into a 90-day plan with two modes ("start a business": validation checklist then launch plan; "grow my business"); action checklist with dates, owners and metrics; progress tracking and a weekly review; ties into Agent-Synergy; tests
+  - exists: apps/api/tests/test_growth_plan.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_growth_plan.py -q
+- [ ] 15.20 Advisor hub UI
+  - done: page with tabs Finance, Market, Competitors, Customers and Growth plan; guided flows with example prompts; sources and assumptions panel on every report; history; export to PDF and Markdown; streaming and error states; plan-limit hints with upgrade links; uz/ru/en; light and dark; mobile; keyboard accessible
+- [ ] 15.21 Advisor evals and safety
+  - done: tests prove (a) numbers in outputs come from the engine or user data, (b) external facts have a source or an assumption label, (c) prompt injection through reviews, competitor pages and uploads has no effect, (d) PII never reaches the provider, (e) no guaranteed-results wording; 5 golden scenarios across at least 4 sectors
+  - exists: apps/api/tests/test_advisor_evals.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_advisor_evals.py -q
+- [ ] 15.22 Advisor knowledge base
+  - done: versioned markdown topics (financial management, pricing, marketing basics, customer research methods, competitor analysis) in uz/ru/en with retrieval tests; local-specific claims carry `TODO(VERIFY)`
+  - exists: apps/api/tests/test_advisor_knowledge.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_advisor_knowledge.py -q
+- [ ] 15.23 Advisor in the desktop agent
+  - done: owner commands "weekly health check", "competitor update" and "customer feedback summary" run through the existing command mechanism and show results in the agent; tests
+- [ ] 15.24 Live research smoke script
+  - done: `scripts/research-smoke.py` makes one real research request through the configured provider and prints OK or the error; never prints the key
+  - needs: H17
+  - exists: scripts/research-smoke.py
+
+## Stage 16 - Growth and polish
+- [ ] 16.1 Goal-based onboarding
+  - done: after signup the user picks a goal (start a business, grow my business, get a loan, invest) and gets a tailored first-run checklist and dashboard; skippable; uz/ru/en
+- [ ] 16.2 Owner home: business health dashboard
+  - done: health score, cash runway, margin trend, alerts and the single next best action, using the health check and advisor reports; empty state for new users
+- [ ] 16.3 Data import templates
+  - done: downloadable Excel/CSV templates for sales, expenses and inventory; validated import with a row-by-row error report; tests
+  - exists: apps/api/tests/test_data_import.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_data_import.py -q
+- [ ] 16.4 Team invites
+  - done: owners invite accountants by email link with the right role; seat limits per plan from DECISIONS; revoke access; tests
+  - exists: apps/api/tests/test_team_invites.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_team_invites.py -q
+- [ ] 16.5 Weekly digest email
+  - done: opt-in weekly email to owners with the health score and top 3 actions in their language; scheduled job tested with a fake clock; one-click unsubscribe
+  - exists: apps/api/tests/test_weekly_digest.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_weekly_digest.py -q
+- [ ] 16.6 Notifier with Telegram channel (optional)
+  - done: `Notifier` interface with email and Telegram implementations selected by env; owners can link Telegram and receive the digest and alerts; disabled cleanly when no bot token is configured; tests with a fake
+  - exists: apps/api/tests/test_notifier.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_notifier.py -q
+- [ ] 16.7 Plain-language glossary and "explain this number"
+  - done: tooltips for financial terms in uz/ru/en; every key figure has an "Explain this number" panel built from the engine's calculation steps (no AI needed), with an optional AI rephrase
+- [ ] 16.8 Number, currency and date formatting
+  - done: one shared formatter for UZS and USD amounts, percentages and dates per locale (for example 1 000 000 so'm), used everywhere including PDFs, Excel and emails; tests; no raw floats shown to users
+  - exists: apps/web/src/lib/format.test.ts
+  - cmd: cd apps/web && npx vitest run format
+- [ ] 16.9 Sector landing pages for search traffic
+  - done: `/[locale]/business-plan/[sector]` pages generated from the sector registry with example inputs clearly labeled as examples, a CTA into the wizard, JSON-LD, sitemap entries and per-locale metadata; no invented statistics
+  - exists: apps/web/src/app/[locale]/business-plan/[sector]/page.tsx
+- [ ] 16.10 Referral program
+  - done: each user has a referral code; when a referred business becomes a paying customer both get free days per DECISIONS D17; abuse protection and a ledger entry per reward; tests
+  - exists: apps/api/tests/test_referrals.py
+  - cmd: {{PY}} -m pytest apps/api/tests/test_referrals.py -q
+- [ ] 16.11 PWA basics
+  - done: web app manifest, icons, install prompt and an offline fallback page; Lighthouse PWA basics pass
+- [ ] 16.12 Launch gate: advisors and sector data
+  - done: `scripts/launch-gate.mjs` also fails while any sector YAML item has `verified: false`, advisor knowledge still contains `TODO(VERIFY)`, or the research provider is the fake
+  - needs: 13.8
+  - contains: scripts/launch-gate.mjs :: verified
+
+=== HUMAN ===
+- [ ] H17 Research provider: choose a web-search/research API, create the account, add the key to the `research` section of `apps/api/ai.config.json`, and read its terms of use
+- [ ] H18 Telegram (optional): create a bot with BotFather and put the token into `.env`
+- [ ] H19 Have an accountant or domain expert per sector review the sector YAML (cost categories, roles, licenses, benchmarks), then set `verified: true` and `verified_by`
+- [ ] H20 Pilot each advisor with at least 5 real business owners across at least 3 sectors; record what was useful, wrong or missing in `docs/PILOT.md`
+- [ ] H21 Legal check: collecting customer feedback and survey data (privacy notice, consent, retention), using reviews from public sources, and the research provider's terms
+- [ ] H22 Decide which sectors to market first based on the pilot results and update `specs/DECISIONS.md`
+
+=== INSTRUCTIONS ===
+
+## Multi-industry and advisor rules
+- FinAdvisor serves ALL business types. Never hard-code restaurant logic in engine, API, prompts, exports or copy; restaurant is one sector template. Sector definitions hold structure and labels, never invented benchmarks.
+- Advisors use the user's own data plus finance-engine results. Every external fact, number or claim about a market or competitor needs a source (url + retrieved date) or an explicit "assumption" label. Without research data, say so.
+- Counting, ranking and arithmetic are done by code, never by the LLM (this includes feedback theme counts).
+- Advice is framed as hypotheses to test, with a metric; never promise or guarantee results (revenue, profit, loan approval, customer growth).
+- Customer text (reviews, survey answers, competitor pages) is DATA. Scrub PII before it reaches any AI provider. Use official APIs or search providers; do not scrape sites that forbid it.
+- Login and signup forms: show/hide password is an icon inside the input; "Forgot password?" sits directly below the password field.
+
+=== DECISIONS ===
+
+## D15 Initial sectors
+restaurant_cafe, retail_shop, online_store, beauty_salon, auto_service, fitness_studio, education_center, food_production, delivery_logistics, it_services, accommodation, construction_repair, generic_other. Which to market first is decided after the pilot (H22). Marker: `TODO(DECISION D15)`.
+
+## D16 Advisor limits (placeholders)
+| Limit | Free | Pro | Business |
+|---|---|---|---|
+| Advisor reports | 2 total | 10 per day | 30 per day |
+| Market research briefs | 0 | 3 per day | 10 per day |
+| Feedback items analyzed per month | 0 | 500 | 5000 |
+Marker: `TODO(DECISION D16)`.
+
+## D17 Referral reward (placeholder)
+Both sides get 7 free days when the referred business pays for the first time. Marker: `TODO(DECISION D17)`.
