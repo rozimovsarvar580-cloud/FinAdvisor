@@ -19,4 +19,6 @@ __pycache__/
 .ruff_cache/
 *.py[cod]
 *.db
+*.sqlite
+*.tsbuildinfo
 *.log

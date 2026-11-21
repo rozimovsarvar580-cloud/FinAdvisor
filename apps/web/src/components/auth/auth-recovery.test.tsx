@@ -97,7 +97,10 @@ describe("reset password form", () => {
     vi.stubGlobal("fetch", fetchMock);
     renderWithMessages(<ResetPasswordForm token="valid-token" />);
 
-    fireEvent.change(screen.getByLabelText("New password"), {
+    const newPassword = screen.getByLabelText("New password");
+    fireEvent.click(screen.getAllByRole("button", { name: "Show password" })[0]);
+    expect(newPassword.getAttribute("type")).toBe("text");
+    fireEvent.change(newPassword, {
       target: { value: "StrongPass123!" }
     });
     fireEvent.change(screen.getByLabelText("Confirm new password"), {

@@ -9,6 +9,7 @@ import { CommissionCalculator } from "@/components/pricing/commission-calculator
 import { PlanSelectButton } from "@/components/pricing/plan-select-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Icon } from "@/components/ui/icon";
 import {
   Table,
   TableBody,
@@ -132,9 +133,10 @@ export function PricingPage() {
                       className="flex gap-3 text-sm"
                       key={featureKey}
                     >
-                      <span aria-hidden="true" className="text-primary">
-                        ✓
-                      </span>
+                      <Icon
+                        className="h-4 w-4 shrink-0 text-primary"
+                        name="check"
+                      />
                       <span>{t(`plans.${plan.id}.features.${featureKey}`)}</span>
                     </li>
                   ))}

@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
 import { SupportContactForm } from "@/components/support/support-contact-form";
+import { Icon } from "@/components/ui/icon";
 
 export function SupportFeedbackButton() {
   const t = useTranslations("support");
@@ -45,7 +46,7 @@ export function SupportFeedbackButton() {
             onClick={() => setOpen(false)}
             type="button"
           >
-            ×
+            <Icon className="h-4 w-4" name="close" />
           </button>
           <div className="mt-5">
             <SupportContactForm

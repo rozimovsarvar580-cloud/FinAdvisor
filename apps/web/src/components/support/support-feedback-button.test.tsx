@@ -32,6 +32,10 @@ describe("support feedback button", () => {
     fireEvent.click(screen.getByRole("button", { name: "Send feedback" }));
 
     expect(screen.getByRole("heading", { name: "Share product feedback" })).toBeTruthy();
+    expect(
+      screen.getByRole("button", { name: "Close feedback form" }).querySelector("svg")
+        ?.getAttribute("aria-hidden")
+    ).toBe("true");
     expect(screen.getByLabelText("Name")).toHaveProperty("value", "Owner");
     expect(screen.getByLabelText("Email address")).toHaveProperty("value", "owner@example.com");
 

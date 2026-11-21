@@ -19,6 +19,20 @@ or an investment offer.
 Set `DATABASE_URL` and `JWT_SECRET` from the repository's `.env` file before
 starting the service. Apply database migrations from the repository root with
 `alembic -c apps/api/alembic.ini upgrade head`.
+For a local SQLite development database, run from `apps/api` and set
+`DATABASE_URL` to `sqlite:///./finadvisor.db` before migrating:
+
+```powershell
+$env:DATABASE_URL = "sqlite:///./finadvisor.db"
+alembic -c alembic.ini upgrade head
+python -m finadvisor_api.seed_demo
+```
+
+The database file is created in `apps/api` when the API is launched from that
+directory. The migration command creates a fresh database if it does not
+exist; run the seed command only if you want the illustrative demo account.
+On macOS or Linux, set the same `DATABASE_URL` in the shell before running the
+two commands.
 The `/ready` endpoint still requires a migrated database; in non-production
 environments, it accepts the in-process rate-limit fallback when Redis is
 unavailable. Production readiness requires Redis.

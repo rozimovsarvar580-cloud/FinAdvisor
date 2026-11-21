@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
 import { Link } from "@/i18n/navigation";
 import { LocaleSwitcher } from "./locale-switcher";
 import { ThemeToggle } from "./theme-toggle";
@@ -125,7 +126,10 @@ export function Header() {
             size="icon"
             variant="outline"
           >
-            <span aria-hidden="true">{menuOpen ? "×" : "☰"}</span>
+            <Icon
+              className="h-5 w-5"
+              name={menuOpen ? "close" : "menu"}
+            />
           </Button>
         </div>
       </div>

@@ -455,22 +455,22 @@ engine = `packages/finance-engine`.
 
 === URGENT ===
 ## Stage U - Urgent UI fixes (from screenshots)
-- [ ] U1 Password field with the show/hide icon INSIDE the input
+- [x] U1 Password field with the show/hide icon INSIDE the input
   - done: new shared `PasswordField` in `apps/web/src/components/auth/password-field.tsx`; the show/hide control is an eye / eye-off ICON BUTTON placed inside the input on the right (no separate "Show password" text next to the field); `type` toggles password/text; the button has a translated aria-label and aria-pressed, is keyboard reachable, keeps focus on the input, causes no layout shift, has hover and focus styles in light and dark; used by login, signup, reset-password and change-password forms; keep the existing visual style of the forms
   - exists: apps/web/src/components/auth/password-field.tsx
   - cmd: cd apps/web && npx vitest run password-field
-- [ ] U2 Login form order: "Forgot password?" directly below the password field
+- [x] U2 Login form order: "Forgot password?" directly below the password field
   - done: order is Email, Password (icon toggle inside), "Forgot password?" link directly below the password field aligned right, then Remember me, then the Log in button, then "Or continue with" and the social buttons; the same tidy order on signup where it applies; tab order follows the visual order; a test asserts the DOM order; keep the existing visual style
   - cmd: cd apps/web && npx vitest run login-form
-- [ ] U3 Fix "Your choice could not be saved. Please try again." in Analytics preferences
+- [x] U3 Fix "Your choice could not be saved. Please try again." in Analytics preferences
   - done: reproduce first with a failing test, then find the root cause (check the consent endpoint/route, API base URL and CORS, auth required for anonymous visitors, missing table or migration, cookie/storage write, unhandled network errors); Accept and Reject both save for anonymous and signed-in users and the choice survives a reload; if the API is unreachable fall back to a first-party cookie and sync later instead of showing an error; error text translated; the banner never covers page content or buttons at 375, 768 and 1280 px (in the screenshot a rounded bar overlaps the bottom of the features grid: check whether it is this banner); regression tests on both sides
   - max_fails: 6
   - exists: apps/api/tests/test_consent_api.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_consent_api.py -q
   - cmd: cd apps/web && npx vitest run consent
-- [ ] U4 Replace glyph icons on feature cards with real SVG icons
+- [x] U4 Replace glyph icons on feature cards with real SVG icons
   - done: feature cards (and any other place using unicode glyph characters as icons) use consistent SVG icons (lucide-react if installed, else inline SVG) with the same size and stroke, token colors in both themes, aria-hidden; cards keep the current style and equal heights
-- [ ] U5 Repo hygiene: local database and build artifacts
+- [x] U5 Repo hygiene: local database and build artifacts
   - done: `finadvisor.db`, other local `*.db`/`*.sqlite` files and `*.tsbuildinfo` are git-ignored and removed from the git index (`git rm --cached`), not deleted from disk; docs say how to recreate the dev database (migrations or seed script)
   - cmd: node -e "const r=require('child_process').execSync('git ls-files').toString();process.exit(/finadvisor\.db|tsbuildinfo/.test(r)?1:0)"
 
@@ -653,7 +653,7 @@ engine = `packages/finance-engine`.
   - cmd: {{PY}} -m pytest apps/api/tests/test_referrals.py -q
 - [ ] 16.11 PWA basics
   - done: web app manifest, icons, install prompt and an offline fallback page; Lighthouse PWA basics pass
-- [ ] 16.12 Launch gate: advisors and sector data
+- [x] 16.12 Launch gate: advisors and sector data
   - done: `scripts/launch-gate.mjs` also fails while any sector YAML item has `verified: false`, advisor knowledge still contains `TODO(VERIFY)`, or the research provider is the fake
   - needs: 13.8
   - contains: scripts/launch-gate.mjs :: verified

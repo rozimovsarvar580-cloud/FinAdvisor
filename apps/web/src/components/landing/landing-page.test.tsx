@@ -103,6 +103,12 @@ describe("landing page", () => {
       ).toBeTruthy();
     }
     expect(messages.landing.features.items).toHaveLength(8);
+    const featureIcons = container.querySelectorAll("#features svg");
+    expect(featureIcons).toHaveLength(messages.landing.features.items.length);
+    for (const icon of featureIcons) {
+      expect(icon.getAttribute("aria-hidden")).toBe("true");
+      expect(icon.getAttribute("stroke-width")).toBe("1.8");
+    }
 
     expect(
       screen.getByRole("heading", {

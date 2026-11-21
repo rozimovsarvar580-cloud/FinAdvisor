@@ -97,7 +97,10 @@ describe("profile settings", () => {
     renderProfileSettings();
     await screen.findByText("No social accounts are connected.");
 
-    fireEvent.change(screen.getByLabelText("Current password"), {
+    const currentPassword = screen.getByLabelText("Current password");
+    fireEvent.click(screen.getAllByRole("button", { name: "Show password" })[0]);
+    expect(currentPassword.getAttribute("type")).toBe("text");
+    fireEvent.change(currentPassword, {
       target: { value: "CurrentPass123!" }
     });
     fireEvent.change(screen.getByLabelText("New password"), {

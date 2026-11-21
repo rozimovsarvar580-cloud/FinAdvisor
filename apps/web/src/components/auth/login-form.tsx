@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { Input } from "@/components/ui/input";
 import type { SocialProviderAvailability } from "@/lib/social-providers";
+import { PasswordField } from "./password-field";
 import { SocialSignInButtons } from "./social-sign-in-buttons";
 
 const loginSchema = z.object({
@@ -33,7 +34,6 @@ export function LoginForm({
   const t = useTranslations("auth");
   const errors = useTranslations("errors");
   const [serverError, setServerError] = useState<string>();
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {
     register,
     handleSubmit,
@@ -94,33 +94,21 @@ export function LoginForm({
         </div>
 
         <div className="space-y-2">
-          <div className="flex items-center justify-between gap-3">
-            <label className="text-sm font-medium" htmlFor="login-password">
-              {t("password")}
-            </label>
+          <label className="text-sm font-medium" htmlFor="login-password">
+            {t("password")}
+          </label>
+          <PasswordField
+            autoComplete="current-password"
+            id="login-password"
+            {...register("password")}
+          />
+          <div className="flex justify-end">
             <Link
-              className="text-sm font-medium text-primary hover:underline"
+              className="text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               href="/forgot-password"
             >
               {t("forgotPassword")}
             </Link>
-          </div>
-          <div className="flex gap-2">
-            <Input
-              autoComplete="current-password"
-              className="min-w-0 flex-1"
-              id="login-password"
-              type={isPasswordVisible ? "text" : "password"}
-              {...register("password")}
-            />
-            <Button
-              aria-label={t(isPasswordVisible ? "hidePassword" : "showPassword")}
-              onClick={() => setIsPasswordVisible((visible) => !visible)}
-              type="button"
-              variant="ghost"
-            >
-              {t(isPasswordVisible ? "hidePassword" : "showPassword")}
-            </Button>
           </div>
           {formErrors.password?.message ? (
             <p className="text-sm text-destructive" role="alert">

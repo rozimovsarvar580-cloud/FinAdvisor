@@ -71,6 +71,9 @@ describe("header interactions", () => {
     render(<Header />);
 
     const menuToggle = screen.getByRole("button", { name: "nav:openMenu" });
+    expect(menuToggle.querySelector("svg")?.getAttribute("aria-hidden")).toBe(
+      "true"
+    );
     const primaryNavigation = screen.getByRole("navigation", {
       name: "nav:primaryNavigation"
     });
@@ -85,6 +88,7 @@ describe("header interactions", () => {
 
     fireEvent.click(menuToggle);
     expect(menuToggle.getAttribute("aria-expanded")).toBe("true");
+    expect(menuToggle.querySelector("svg")).not.toBeNull();
     expect(menuToggle.getAttribute("aria-controls")).toBe("mobile-navigation");
     const mobileNavigation = screen.getByRole("navigation", {
       name: "nav:mobileNavigation"
@@ -159,6 +163,7 @@ describe("header interactions", () => {
       name: "common:theme"
     }) as HTMLButtonElement;
     expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(toggle.querySelector("svg")?.getAttribute("aria-hidden")).toBe("true");
     expect(toggle.className).toContain("hover:bg-primary/10");
     expect(toggle.className).toContain("focus-visible:ring-2");
     expect(toggle.disabled).toBe(false);
@@ -172,6 +177,7 @@ describe("header interactions", () => {
 
     mocks.resolvedTheme = "dark";
     rerender(<ThemeToggle />);
+    expect(toggle.querySelector("svg")).not.toBeNull();
     fireEvent.click(toggle);
     expect(mocks.setTheme).toHaveBeenLastCalledWith("light");
     expect(document.documentElement.classList.contains("theme-transition")).toBe(true);

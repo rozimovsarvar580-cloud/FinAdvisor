@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { getPasswordStrength } from "@/lib/password-strength";
 import type { SocialProviderAvailability } from "@/lib/social-providers";
+import { PasswordField } from "./password-field";
 import { SocialSignInButtons } from "./social-sign-in-buttons";
 
 const signupSchema = z.object({
@@ -40,7 +41,6 @@ export function SignupForm({
   const t = useTranslations("auth");
   const errors = useTranslations("errors");
   const [serverError, setServerError] = useState<string>();
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const {
     register,
     handleSubmit,
@@ -157,23 +157,11 @@ export function SignupForm({
               {t("strength")}: {strengthLabel}
             </span>
           </div>
-          <div className="flex gap-2">
-            <Input
-              autoComplete="new-password"
-              className="min-w-0 flex-1"
-              id="signup-password"
-              type={isPasswordVisible ? "text" : "password"}
-              {...register("password")}
-            />
-            <Button
-              aria-label={t(isPasswordVisible ? "hidePassword" : "showPassword")}
-              onClick={() => setIsPasswordVisible((visible) => !visible)}
-              type="button"
-              variant="ghost"
-            >
-              {t(isPasswordVisible ? "hidePassword" : "showPassword")}
-            </Button>
-          </div>
+          <PasswordField
+            autoComplete="new-password"
+            id="signup-password"
+            {...register("password")}
+          />
           <div
             aria-label={t("strength")}
             aria-valuemax={4}

@@ -100,9 +100,10 @@ export function CommissionCalculator() {
         <ul className="mt-5 space-y-2 text-sm text-muted-foreground">
           {(["first", "second", "third"] as const).map((tier) => (
             <li className="flex items-start gap-2" key={tier}>
-              <span aria-hidden="true" className="text-primary">
-                •
-              </span>
+              <span
+                aria-hidden="true"
+                className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary"
+              />
               {t(`commission.tiers.${tier}`)}
             </li>
           ))}

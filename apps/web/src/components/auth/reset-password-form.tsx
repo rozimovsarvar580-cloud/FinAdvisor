@@ -7,8 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
+import { PasswordField } from "./password-field";
 
 const resetPasswordSchema = z
   .object({
@@ -89,10 +89,9 @@ export function ResetPasswordForm({ token }: { token: string }) {
             <label className="text-sm font-medium" htmlFor="reset-password">
               {t("password")}
             </label>
-            <Input
+            <PasswordField
               autoComplete="new-password"
               id="reset-password"
-              type="password"
               {...register("password")}
             />
             {formErrors.password?.message ? (
@@ -108,10 +107,9 @@ export function ResetPasswordForm({ token }: { token: string }) {
             >
               {t("confirmation")}
             </label>
-            <Input
+            <PasswordField
               autoComplete="new-password"
               id="reset-password-confirmation"
-              type="password"
               {...register("confirmation")}
             />
             {formErrors.confirmation?.message ? (

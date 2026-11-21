@@ -17,6 +17,9 @@ export default defineConfig({
     environment: "jsdom",
     environmentMatchGlobs: [["src/**/*.test.ts", "node"]],
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+    pool: "threads",
+    maxWorkers: 1,
+    minWorkers: 1,
     setupFiles: ["./src/test/setup.ts"]
   }
 });

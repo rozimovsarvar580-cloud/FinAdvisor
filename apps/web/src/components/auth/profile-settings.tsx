@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useRouter } from "@/i18n/navigation";
+import { PasswordField } from "./password-field";
 
 type UserRole = "tadbirkor" | "buxgalter" | "investor" | "admin";
 type Locale = "uz" | "ru" | "en";
@@ -363,12 +364,11 @@ export function ProfileSettings() {
             <label className="text-sm font-medium" htmlFor="current-password">
               {t("currentPassword")}
             </label>
-            <Input
+            <PasswordField
               autoComplete="current-password"
               id="current-password"
               onChange={(event) => setCurrentPassword(event.target.value)}
               required
-              type="password"
               value={currentPassword}
             />
           </div>
@@ -376,13 +376,12 @@ export function ProfileSettings() {
             <label className="text-sm font-medium" htmlFor="new-password">
               {t("newPassword")}
             </label>
-            <Input
+            <PasswordField
               autoComplete="new-password"
               id="new-password"
               minLength={8}
               onChange={(event) => setNewPassword(event.target.value)}
               required
-              type="password"
               value={newPassword}
             />
           </div>
@@ -393,13 +392,12 @@ export function ProfileSettings() {
             >
               {t("confirmPassword")}
             </label>
-            <Input
+            <PasswordField
               autoComplete="new-password"
               id="confirm-password"
               minLength={8}
               onChange={(event) => setConfirmPassword(event.target.value)}
               required
-              type="password"
               value={confirmPassword}
             />
           </div>

@@ -10,11 +10,27 @@ import { LandingDashboardPreview } from "@/components/landing/landing-dashboard-
 import { SamplePlanDownloadForm } from "@/components/landing/sample-plan-download-form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Icon, type IconName } from "@/components/ui/icon";
 import { Modal } from "@/components/ui/modal";
 import { Link } from "@/i18n/navigation";
 
-const problemIcons = ["◈", "◉", "▤", "◎", "◇"];
-const featureIcons = ["▦", "◉", "⌁", "▣", "◫", "↗", "◷", "✓"];
+const problemIcons: IconName[] = [
+  "wallet",
+  "users",
+  "bank",
+  "fileCheck",
+  "coins"
+];
+const featureIcons: IconName[] = [
+  "document",
+  "chart",
+  "wallet",
+  "users",
+  "target",
+  "shuffle",
+  "sparkles",
+  "download"
+];
 const stepIcons = ["01", "02", "03", "04"];
 const faqKeys = ["q1", "q2", "q3", "q4", "q5"] as const;
 
@@ -95,7 +111,7 @@ export function LandingPage() {
               <Button asChild size="lg">
                 <Link href="/signup">
                   {t("hero.primaryCta")}
-                  <span aria-hidden="true">→</span>
+                  <Icon className="ml-1 h-4 w-4" name="arrowRight" />
                 </Link>
               </Button>
               <DemoLoginButton />
@@ -193,10 +209,9 @@ export function LandingPage() {
               <Reveal key={index}>
                 <Card className="h-full p-6 motion-safe:transition-transform motion-safe:duration-200 motion-safe:hover:-translate-y-1 motion-reduce:transition-none">
                   <span
-                    aria-hidden="true"
                     className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-xl text-primary"
                   >
-                    {icon}
+                    <Icon className="h-5 w-5" name={icon} />
                   </span>
                   <h3 className="mt-5 font-semibold">
                     {t(`problem.cards.${index}.title`)}
@@ -256,10 +271,9 @@ export function LandingPage() {
               <Reveal key={index}>
                 <Card className="h-full p-6 transition-colors hover:border-primary/40">
                   <span
-                    aria-hidden="true"
                     className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-lg text-primary"
                   >
-                    {icon}
+                    <Icon className="h-5 w-5" name={icon} />
                   </span>
                   <h3 className="mt-4 font-semibold">
                     {t(`features.items.${index}.title`)}
@@ -303,9 +317,10 @@ export function LandingPage() {
                         className="flex gap-2 text-sm text-muted-foreground"
                         key={item}
                       >
-                        <span aria-hidden="true" className="text-primary">
-                          ✓
-                        </span>
+                        <Icon
+                          className="h-4 w-4 shrink-0 text-primary"
+                          name="check"
+                        />
                         {t(`pricing.plans.${plan}.benefits.${item}`)}
                       </li>
                     ))}
@@ -318,7 +333,7 @@ export function LandingPage() {
             <Button asChild variant="outline">
               <Link href="/pricing">
                 {t("pricing.cta")}
-                <span aria-hidden="true">→</span>
+                <Icon className="ml-1 h-4 w-4" name="arrowRight" />
               </Link>
             </Button>
           </div>
@@ -359,7 +374,7 @@ export function LandingPage() {
             <Button asChild className="mt-7" variant="outline">
               <Link href="/desktop-agent">
                 {t("desktop.cta")}
-                <span aria-hidden="true">→</span>
+                <Icon className="ml-1 h-4 w-4" name="arrowRight" />
               </Link>
             </Button>
           </Reveal>
@@ -369,11 +384,8 @@ export function LandingPage() {
                 {(["windowsMacos", "deviceHistory", "statementSync"] as const).map(
                   (key) => (
                     <li className="flex items-start gap-3" key={key}>
-                      <span
-                        aria-hidden="true"
-                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm text-primary"
-                      >
-                        ✓
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Icon className="h-3.5 w-3.5" name="check" />
                       </span>
                       <span className="text-sm leading-6">{t(`desktop.benefits.${key}`)}</span>
                     </li>
@@ -411,7 +423,10 @@ export function LandingPage() {
                       aria-hidden="true"
                       className="text-lg text-primary transition-transform motion-reduce:transition-none"
                     >
-                      +
+                      <Icon
+                        className="h-4 w-4 text-primary transition-transform motion-reduce:transition-none"
+                        name="plus"
+                      />
                     </span>
                   </Accordion.Trigger>
                 </Accordion.Header>
@@ -438,7 +453,7 @@ export function LandingPage() {
           <Button asChild className="mt-8" size="lg">
             <Link href="/signup">
               {t("cta.button")}
-              <span aria-hidden="true">→</span>
+              <Icon className="ml-1 h-4 w-4" name="arrowRight" />
             </Link>
           </Button>
         </Reveal>

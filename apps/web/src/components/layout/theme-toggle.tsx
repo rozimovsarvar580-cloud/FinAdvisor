@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
 
 export function ThemeToggle({ testId }: { testId?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
@@ -24,9 +25,10 @@ export function ThemeToggle({ testId }: { testId?: string }) {
       size="icon"
       variant="ghost"
     >
-      <span aria-hidden="true" className="text-lg">
-        ◐
-      </span>
+      <Icon
+        className="h-5 w-5"
+        name={resolvedTheme === "dark" ? "sun" : "moon"}
+      />
     </Button>
   );
 }

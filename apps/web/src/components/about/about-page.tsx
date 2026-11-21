@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Icon } from "@/components/ui/icon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -67,7 +68,7 @@ export function AboutPage() {
             <Button asChild className="mt-8" size="lg">
               <Link href="/signup">
                 {t("hero.cta")}
-                <span aria-hidden="true">→</span>
+                <Icon className="ml-1 h-4 w-4" name="arrowRight" />
               </Link>
             </Button>
           </AboutReveal>
@@ -114,21 +115,15 @@ export function AboutPage() {
                     {t("story.exampleTitle")}
                   </h3>
                 </div>
-                <span
-                  aria-hidden="true"
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-2xl text-primary"
-                >
-                  ◈
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                  <Icon className="h-6 w-6" name="briefcase" />
                 </span>
               </div>
               <ul className="mt-5 space-y-4">
                 {(["costs", "team", "demand"] as const).map((item) => (
                   <li className="flex gap-3" key={item}>
-                    <span
-                      aria-hidden="true"
-                      className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs text-primary"
-                    >
-                      ✓
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <Icon className="h-3.5 w-3.5" name="check" />
                     </span>
                     <div>
                       <p className="text-sm font-semibold">
