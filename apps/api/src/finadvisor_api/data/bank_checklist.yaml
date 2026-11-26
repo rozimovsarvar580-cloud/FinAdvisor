@@ -90,3 +90,96 @@ criteria:
       - лицензия
       - разрешение
       - регистрация
+sector_addon_weight: 20
+sector_addons:
+  restaurant_cafe:
+    - key: service_capacity
+      weight: 10
+      keywords: [seat utilization, table turnover, dining capacity, o'rinlar bandligi, stol aylanishi, загрузка мест, оборачиваемость столов]
+    - key: ingredient_cost_control
+      weight: 10
+      keywords: [food cost, ingredient cost, food waste, oziq-ovqat tannarxi, mahsulot xarajati, пищевые затраты, стоимость ингредиентов]
+  retail_shop:
+    - key: stock_management
+      weight: 10
+      keywords: [inventory turnover, stock levels, stock management, zaxira aylanishi, tovar zaxirasi, оборачиваемость запасов, товарные остатки]
+    - key: supplier_cost_control
+      weight: 10
+      keywords: [supplier terms, purchase cost, supplier costs, yetkazib beruvchi shartlari, xarid qiymati, условия поставщиков, закупочная стоимость]
+  online_store:
+    - key: order_fulfillment
+      weight: 10
+      keywords: [order fulfillment, fulfillment process, delivery operations, buyurtmalarni bajarish, yetkazib berish jarayoni, обработка заказов, доставка]
+    - key: returns_and_channels
+      weight: 10
+      keywords: [return rate, sales channels, online returns, qaytarish darajasi, savdo kanallari, процент возвратов, каналы продаж]
+  beauty_salon:
+    - key: appointment_capacity
+      weight: 10
+      keywords: [appointment capacity, booking utilization, service hours, qabul quvvati, band qilingan vaqt, загрузка записи, часы обслуживания]
+    - key: repeat_customer_retention
+      weight: 10
+      keywords: [repeat customers, customer retention, rebooking, doimiy mijozlar, mijozlarni saqlab qolish, постоянные клиенты, повторная запись]
+  auto_service:
+    - key: workshop_capacity
+      weight: 10
+      keywords: [workshop capacity, service bays, repair hours, ustaxona quvvati, ta'mirlash soatlari, загрузка мастерской, ремонтные часы]
+    - key: parts_management
+      weight: 10
+      keywords: [parts inventory, parts availability, spare parts, ehtiyot qismlar zaxirasi, qismlar mavjudligi, запасы деталей, наличие запчастей]
+  fitness_studio:
+    - key: member_retention
+      weight: 10
+      keywords: [member retention, membership churn, repeat attendance, a'zolarni saqlab qolish, a'zolikdan chiqish, удержание участников, отток абонементов]
+    - key: class_capacity
+      weight: 10
+      keywords: [class capacity, session occupancy, training schedule, mashg'ulot sig'imi, guruh bandligi, вместимость занятий, расписание тренировок]
+  education_center:
+    - key: enrollment_retention
+      weight: 10
+      keywords: [student retention, enrollment, course completion, o'quvchilarni saqlab qolish, qabul, удержание учеников, набор учащихся]
+    - key: teaching_capacity
+      weight: 10
+      keywords: [class size, teaching hours, instructor capacity, guruh hajmi, o'qitish soatlari, размер группы, учебные часы]
+  food_production:
+    - key: production_yield
+      weight: 10
+      keywords: [production yield, batch output, production capacity, ishlab chiqarish chiqimi, partiya hajmi, выход продукции, объем партии]
+    - key: input_cost_control
+      weight: 10
+      keywords: [ingredient costs, material usage, production waste, xomashyo xarajati, ishlab chiqarish chiqindisi, затраты на сырье, производственные отходы]
+  delivery_logistics:
+    - key: route_capacity
+      weight: 10
+      keywords: [route capacity, delivery volume, route planning, yo'nalish quvvati, yetkazib berish hajmi, пропускная способность маршрута, планирование маршрутов]
+    - key: fleet_cost_control
+      weight: 10
+      keywords: [fuel costs, fleet maintenance, vehicle costs, yoqilg'i xarajatlari, transport vositalari xarajati, расходы на топливо, обслуживание автопарка]
+  it_services:
+    - key: project_pipeline
+      weight: 10
+      keywords: [project pipeline, sales pipeline, contract backlog, loyiha portfeli, savdo imkoniyatlari, портфель проектов, воронка продаж]
+    - key: billable_capacity
+      weight: 10
+      keywords: [billable utilization, billable hours, delivery capacity, hisob-kitob qilinadigan soatlar, xizmat ko'rsatish quvvati, оплачиваемая загрузка, оплачиваемые часы]
+  accommodation:
+    - key: occupancy
+      weight: 10
+      keywords: [room occupancy, occupancy rate, booking seasonality, xonalar bandligi, bandlik darajasi, загрузка номеров, уровень заполняемости]
+    - key: guest_operations
+      weight: 10
+      keywords: [guest operations, housekeeping, guest service, mehmonlarga xizmat, xona tozalash, обслуживание гостей, уборка номеров]
+  construction_repair:
+    - key: project_controls
+      weight: 10
+      keywords: [project milestones, project schedule, work completion, loyiha bosqichlari, loyiha jadvali, этапы проекта, график проекта]
+    - key: materials_management
+      weight: 10
+      keywords: [materials usage, materials sourcing, site materials, material sarfi, material ta'minoti, расход материалов, поставка материалов]
+  generic_other:
+    - key: service_or_product_delivery
+      weight: 10
+      keywords: [service delivery, product delivery, delivery process, xizmat ko'rsatish, mahsulotni yetkazish, предоставление услуг, доставка продукта]
+    - key: operating_capacity
+      weight: 10
+      keywords: [operating capacity, delivery capacity, available capacity, faoliyat quvvati, mavjud quvvat, операционная мощность, доступная мощность]

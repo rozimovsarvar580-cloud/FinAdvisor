@@ -15,7 +15,7 @@ describe("buildMetadata", () => {
     expect(metadata.alternates?.languages?.en).toContain("/en/pricing");
     expect(metadata.openGraph?.locale).toBe("ru");
     expect(metadata.title).toContain("Управляйте бизнесом уверенно, опираясь на цифры");
-    expect(metadata.description).toContain("Составьте финансовый план ресторана");
+    expect(metadata.description).toContain("Составьте финансовый план для своего бизнеса");
   });
 });
 
@@ -26,7 +26,7 @@ describe("buildProductStructuredData", () => {
     expect(data["@type"]).toBe("SoftwareApplication");
     expect(data.inLanguage).toBe("uz");
     expect(data.url).toContain("/uz");
-    expect(data.description).toContain("Restoraningiz uchun moliyaviy reja");
+    expect(data.description).toContain("Biznesingiz uchun moliyaviy reja");
     expect(data).not.toHaveProperty("offers");
   });
 });

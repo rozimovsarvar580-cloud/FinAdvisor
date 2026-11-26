@@ -67,6 +67,15 @@ select {
   cursor: pointer;
 }
 
+select {
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  background: hsl(var(--surface));
+  color: hsl(var(--foreground));
+}
+
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
@@ -200,6 +209,18 @@ footer {
   display: grid;
   gap: 10px;
   margin-top: 20px;
+}
+
+.accounting-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+#accounting-form {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  align-items: end;
 }
 
 .form-stack label {

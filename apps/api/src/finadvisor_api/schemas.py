@@ -165,6 +165,7 @@ class MarketplaceListingVisibilityRequest(StrictInput):
 class MarketplaceListingResponse(BaseModel):
     id: str
     plan_id: str | None
+    sector_id: str
     business_name: str
     city: str
     stage: Literal["idea", "pilot", "scale"]

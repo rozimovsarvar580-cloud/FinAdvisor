@@ -11,7 +11,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const PlanWizard = dynamic(
-  () => import("./plan-wizard").then((module) => module.PlanWizard),
+  () => import("./sector-plan-wizard").then((module) => module.SectorPlanWizard),
   { loading: () => <PanelLoadingSkeleton /> }
 );
 const CalculatorsPanel = dynamic(

@@ -1,6 +1,12 @@
 export async function GET(request: Request) {
   const apiUrl = process.env.FINADVISOR_API_URL ?? "http://127.0.0.1:8000";
-  const mine = new URL(request.url).searchParams.get("mine") === "true";
+  const incoming = new URL(request.url).searchParams;
+  const mine = incoming.get("mine") === "true";
+  const apiParams = new URLSearchParams();
+  for (const key of ["sector", "q"]) {
+    const value = incoming.get(key);
+    if (value) apiParams.set(key, value);
+  }
   const authorization = request.headers.get("Authorization");
   if (mine && !authorization) {
     return Response.json(
@@ -11,7 +17,7 @@ export async function GET(request: Request) {
 
   try {
     const response = await fetch(
-      `${apiUrl}/marketplace/listings${mine ? "/mine" : ""}`,
+      `${apiUrl}/marketplace/listings${mine ? "/mine" : ""}${apiParams.size ? `?${apiParams}` : ""}`,
       {
         headers: authorization ? { Authorization: authorization } : undefined,
         cache: "no-store"

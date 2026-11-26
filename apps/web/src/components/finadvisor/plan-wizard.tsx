@@ -37,6 +37,8 @@ const restaurantFormatSchema = z.enum([
 
 const planAssumptionsSchema = z.object({
   locale: z.enum(["uz", "ru", "en"]),
+  sector_id: z.string().default("restaurant_cafe"),
+  inputs: z.record(z.unknown()).default({}),
   business_name: z.string(),
   restaurant_format: restaurantFormatSchema,
   location: z.string(),
@@ -223,9 +225,11 @@ const stepKeys = ["format", "menu", "staff", "equipment", "financing"] as const;
 const draftStorageKey = "finadvisor.restaurant-plan-draft";
 
 export function PlanWizard({
-  onGenerated
+  onGenerated,
+  sectorContext = { stage: "idea", otherDescription: "" }
 }: {
   onGenerated: (result: PlanResult) => void;
+  sectorContext?: { stage: string; otherDescription: string };
 }) {
   const t = useTranslations("finadvisor.wizard");
   const errors = useTranslations("errors");
@@ -318,6 +322,11 @@ export function PlanWizard({
     setIsSubmitting(true);
     const payload = {
       locale,
+      sector_id: "restaurant_cafe",
+      inputs: {
+        stage: sectorContext.stage,
+        description: sectorContext.otherDescription
+      },
       business_name: values.businessName,
       restaurant_format: values.restaurantFormat,
       location: values.location,

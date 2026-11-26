@@ -1,3 +1,4 @@
+import json
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
@@ -16,11 +17,14 @@ from finadvisor_api.document_analysis import (
 from finadvisor_api.models import User
 from finadvisor_api.plan_limits import reserve_plan_analysis_upload
 from finadvisor_api.readiness import ReadinessResult, calculate_bank_readiness
+from finadvisor_api.sectors import find_sector, validate_sector_inputs
 
 router = APIRouter(prefix="/plans", tags=["plan-analysis"])
 MAX_ANALYSIS_TEXT_CHARS = 50_000
 
-ANALYSIS_PROMPT = """Review the supplied business-plan text using the supplied checklist.
+ANALYSIS_PROMPT = """Review the supplied business-plan text using the supplied checklist and
+selected sector definition. Tailor recommendations to the supplied business inputs and sector's
+operating model; do not assume the business is a restaurant.
 For each missing criterion, return one concrete fix and a concise draft section.
 Do not calculate or invent figures, facts, market statistics, bank terms, or legal claims.
 Do not include digits or numeric values in fixes or draft sections. Use clear placeholders
@@ -61,6 +65,46 @@ class BankReadinessResponse(BaseModel):
     formula: str
 
 
+def _sector_analysis_context(
+    sector_id: str,
+    locale: Literal["uz", "ru", "en"],
+    serialized_inputs: str,
+) -> dict[str, object]:
+    try:
+        inputs = json.loads(serialized_inputs)
+    except json.JSONDecodeError as error:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="analysis.invalid_sector_inputs",
+        ) from error
+    if not isinstance(inputs, dict):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="analysis.invalid_sector_inputs",
+        )
+    sector = find_sector(sector_id)
+    if sector is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="analysis.invalid_sector",
+        )
+    try:
+        validate_sector_inputs(sector, inputs)
+    except ValueError as error:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="analysis.invalid_sector_inputs",
+        ) from error
+    return {
+        "id": sector.id,
+        "name": sector.names[locale],
+        "revenue_model_type": sector.revenue_model_type,
+        "kpis": list(sector.kpis),
+        "questions": list(sector.questions[locale]),
+        "user_supplied_inputs": inputs,
+    }
+
+
 def _improvements(
     raw_response: str,
     result: ReadinessResult,
@@ -97,6 +141,8 @@ async def analyze_plan(
     user: Annotated[User, Depends(get_current_user)],
     db: Annotated[Session, Depends(get_db)],
     locale: Annotated[Literal["uz", "ru", "en"], Form()] = "en",
+    sector_id: Annotated[str, Form()] = "restaurant_cafe",
+    sector_inputs: Annotated[str, Form()] = "{}",
 ) -> BankReadinessResponse:
     reserve_plan_analysis_upload(db, user)
     content = await file.read(MAX_DOCUMENT_BYTES + 1)
@@ -114,12 +160,14 @@ async def analyze_plan(
             detail="analysis.text_too_long",
         )
 
-    result = calculate_bank_readiness(text)
+    sector_context = _sector_analysis_context(sector_id, locale, sector_inputs)
+    result = calculate_bank_readiness(text, sector_id=sector_id)
     improvements: list[AnalysisImprovement] = []
     if result.missing_criteria:
         context: dict[str, object] = {
             "locale": locale,
             "document_text": text,
+            "sector": sector_context,
             "criteria": [
                 {
                     "key": criterion.key,

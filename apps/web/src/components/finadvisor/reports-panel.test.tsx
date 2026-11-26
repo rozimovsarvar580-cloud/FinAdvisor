@@ -40,6 +40,8 @@ const planResult: PlanResult = {
   },
   assumptions: {
     locale: "en" as const,
+    sector_id: "restaurant_cafe",
+    inputs: {},
     business_name: "Test restaurant",
     restaurant_format: "family",
     location: "Tashkent",

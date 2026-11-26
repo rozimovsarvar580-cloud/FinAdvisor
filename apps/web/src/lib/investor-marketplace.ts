@@ -3,6 +3,7 @@ export type ListingStage = "idea" | "pilot" | "scale";
 export type MarketplaceListing = {
   id: string;
   plan_id: string | null;
+  sector_id: string;
   business_name: string;
   city: string;
   stage: ListingStage;
@@ -27,6 +28,8 @@ export type MarketplaceListingDetail = MarketplaceListing & {
 export type ListingFilters = {
   stage?: ListingStage | "all";
   city?: string;
+  sector?: string;
+  search?: string;
   minFunding?: string;
   maxFunding?: string;
 };
@@ -35,10 +38,18 @@ export function filterListings(
   listings: MarketplaceListing[],
   filters: ListingFilters = {}
 ): MarketplaceListing[] {
-  const { stage, city, minFunding, maxFunding } = filters;
+  const { stage, city, sector, search, minFunding, maxFunding } = filters;
+  const needle = search?.trim().toLocaleLowerCase();
   return listings.filter(
     (listing) => (!stage || stage === "all" || listing.stage === stage)
       && (!city || listing.city.toLocaleLowerCase().includes(city.toLocaleLowerCase()))
+      && (!sector || sector === "all" || listing.sector_id === sector)
+      && (!needle || [
+        listing.business_name,
+        listing.city,
+        listing.summary,
+        listing.sector_id,
+      ].some((value) => value.toLocaleLowerCase().includes(needle)))
       && (!minFunding || compareMoney(listing.funding_target, minFunding) >= 0)
       && (!maxFunding || compareMoney(listing.funding_target, maxFunding) <= 0)
   );

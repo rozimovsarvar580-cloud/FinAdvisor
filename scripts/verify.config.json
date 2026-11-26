@@ -1,0 +1,10 @@
+{
+  "extraSteps": [
+    ["industry-wording", "node apps/web/scripts/check-industry-wording.mjs", "."],
+    [
+      "industry-wording:test",
+      "node --test apps/web/scripts/check-industry-wording.test.mjs",
+      "."
+    ]
+  ]
+}

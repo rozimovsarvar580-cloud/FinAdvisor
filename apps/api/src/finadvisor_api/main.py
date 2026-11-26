@@ -56,6 +56,7 @@ from finadvisor_api.legacy.routers.wizard import router as wizard_router
 from finadvisor_api.marketplace import router as marketplace_router
 from finadvisor_api.plans import router as plans_router
 from finadvisor_api.pricing import router as pricing_router
+from finadvisor_api.sectors import router as sectors_router
 from finadvisor_api.support import router as support_router
 
 if settings.sentry_dsn:
@@ -127,6 +128,7 @@ app.include_router(support_router)
 app.include_router(calculations_router)
 app.include_router(plans_router)
 app.include_router(pricing_router)
+app.include_router(sectors_router)
 for router in (
     accounting_router,
     admin_router,

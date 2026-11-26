@@ -157,7 +157,7 @@ def test_analyze_endpoint_accepts_docx_upload(
 ) -> None:
     content = _docx_bytes(
         "Restaurant market customers team staff financial revenue profit loan funding "
-        "risk mitigation collateral legal license"
+        "risk mitigation collateral legal license seat utilization food cost"
     )
 
     response = analysis_client.post(
@@ -173,7 +173,7 @@ def test_analyze_endpoint_accepts_docx_upload(
 
     assert response.status_code == 200
     assert response.json()["score"] == 100
-    assert len(response.json()["criteria"]) == 7
+    assert len(response.json()["criteria"]) == 9
 
 
 def test_analyze_endpoint_returns_criterion_scores_and_grounded_rewrites(
@@ -209,11 +209,11 @@ def test_analyze_endpoint_returns_criterion_scores_and_grounded_rewrites(
 
     assert response.status_code == 200
     body = response.json()
-    assert body["score"] == 20
+    assert body["score"] == 16
     assert body["criteria"][0] == {
         "key": "market_analysis",
-        "score": 20,
-        "max_score": 20,
+        "score": 16,
+        "max_score": 16,
         "present": True,
     }
     assert {item["key"] for item in body["improvements"]} == set(

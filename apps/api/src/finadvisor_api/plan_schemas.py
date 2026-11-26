@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import Field
+from pydantic import Field, StringConstraints
 
 from finadvisor_api.calc_schemas import (
     CapexItemInput,
@@ -12,9 +12,16 @@ from finadvisor_api.calc_schemas import (
     StrictInput,
 )
 
+ClarificationText = Annotated[
+    str,
+    StringConstraints(strip_whitespace=True, min_length=1, max_length=2_000),
+]
+
 
 class PlanGenerateRequest(StrictInput):
     locale: Literal["uz", "ru", "en"]
+    sector_id: str = Field(default="restaurant_cafe", min_length=1, max_length=64)
+    inputs: dict[str, object] = Field(default_factory=dict)
     business_name: str = Field(min_length=1, max_length=200)
     restaurant_format: Literal["cafe", "family", "fast_casual", "fine_dining"]
     location: str = Field(min_length=1, max_length=300)
@@ -72,10 +79,68 @@ class PlanGenerateResponse(StrictInput):
     assumptions: PlanGenerateRequest
 
 
+class SectorPlanGenerateRequest(StrictInput):
+    locale: Literal["uz", "ru", "en"]
+    business_name: str = Field(min_length=1, max_length=200)
+    location: str = Field(min_length=1, max_length=300)
+    sector_id: str = Field(min_length=1, max_length=64)
+    inputs: dict[str, object] = Field(default_factory=dict)
+    clarification_answers: list[ClarificationText] = Field(
+        default_factory=list,
+        max_length=5,
+    )
+
+
+class SectorPlanCalculations(StrictInput):
+    monthly_revenue: str | None
+    monthly_cost_of_goods: str | None
+    monthly_operating_expenses: str | None
+    monthly_payroll: str | None
+    monthly_operating_profit: str | None
+    annual_operating_profit: str | None
+    break_even_revenue: str | None
+    formula: str | None
+
+
+class SectorGeneratedPlanContent(StrictInput):
+    summary: str = Field(min_length=1, max_length=5_000)
+    sections: list[PlanSection] = Field(min_length=1, max_length=20)
+    clarifying_questions: list[ClarificationText] = Field(max_length=5)
+    stated_assumptions: list[ClarificationText] = Field(min_length=1, max_length=20)
+
+
+class SectorPlanGenerateResponse(StrictInput):
+    summary: str
+    sections: list[PlanSection]
+    markdown: str
+    calculations: SectorPlanCalculations
+    assumptions: SectorPlanGenerateRequest
+    clarifying_questions: list[ClarificationText]
+    stated_assumptions: list[ClarificationText]
+
+
 class SavedPlanSummary(StrictInput):
     id: str
     business_name: str
     location: str
+    sector_id: str
+    inputs: dict[str, object]
+    created_at: datetime
+
+
+class SectorPlanCreateRequest(StrictInput):
+    business_name: str = Field(min_length=1, max_length=200)
+    location: str = Field(min_length=1, max_length=300)
+    sector_id: str = Field(min_length=1, max_length=64)
+    inputs: dict[str, object] = Field(default_factory=dict)
+
+
+class SectorPlanCreateResponse(StrictInput):
+    id: str
+    business_name: str
+    location: str
+    sector_id: str
+    inputs: dict[str, object]
     created_at: datetime
 
 

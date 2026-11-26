@@ -21,7 +21,7 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
 
     assert sum(revision.down_revision is None for revision in revisions) == 1
     assert all(not isinstance(revision.down_revision, tuple) for revision in revisions)
-    assert script.get_heads() == ["20261027_23"]
+    assert script.get_heads() == ["20261027_26"]
 
     engine = create_engine(f"sqlite:///{database_path.as_posix()}")
     try:
@@ -97,6 +97,18 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
                 column["name"]
                 for column in inspect(connection).get_columns("investor_brief_leads")
             }
+            plan_columns = {
+                column["name"]
+                for column in inspect(connection).get_columns("saved_business_plans")
+            }
+            accounting_columns = {
+                column["name"]
+                for column in inspect(connection).get_columns("accounting_records")
+            }
+            accounting_preferences = {
+                column["name"]
+                for column in inspect(connection).get_columns("accounting_preferences")
+            }
             investor_lead_indexes = {
                 index["name"]
                 for index in inspect(connection).get_indexes("investor_brief_leads")
@@ -144,5 +156,13 @@ def test_migrations_form_one_chain_and_upgrade_fresh_sqlite(
                 "ix_investor_brief_leads_email",
                 "ix_investor_brief_leads_email_created",
             } <= investor_lead_indexes
+            assert {"sector_id", "inputs"} <= plan_columns
+            assert {
+                "item_type",
+                "unit",
+                "service_duration_minutes",
+                "tracks_inventory",
+            } <= accounting_columns
+            assert {"owner_id", "business_type"} <= accounting_preferences
     finally:
         engine.dispose()

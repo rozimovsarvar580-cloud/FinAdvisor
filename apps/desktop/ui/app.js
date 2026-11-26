@@ -9,8 +9,10 @@ const state = {
   email: "",
   dashboard: { devices: [], commands: [] },
   loggedIn: false,
-  busy: false
-  ,chat: { messages: [], conversationId: null, busy: false }
+  busy: false,
+  chat: { messages: [], conversationId: null, busy: false },
+  accounting: { businessType: "goods", screen: "inventory" },
+  syncStatus: { online: true, queued: 0 }
 };
 
 function invoke(command, args = {}) {
@@ -55,7 +57,7 @@ function render() {
               <span>${escapeHtml(t.connectedAs)} <strong>${escapeHtml(state.email)}</strong></span>
               <button id="logout" class="button button-secondary" type="button">${escapeHtml(t.signOut)}</button>
             </div>
-            ${renderDashboard(state.dashboard, state.locale, state.busy, { online: true, queued: 0 }, state.chat)}`
+            ${renderDashboard(state.dashboard, state.locale, state.busy, state.syncStatus, state.chat, state.accounting.businessType, state.accounting.screen)}`
           : `
             <section class="panel login-panel">
               <h2>${escapeHtml(t.loginTitle)}</h2>
@@ -104,19 +106,72 @@ function errorMessage(error) {
 }
 
 async function refreshDashboard() {
+  const preferences = await invoke("get_accounting_preferences");
+  state.accounting.businessType = preferences.business_type;
+  if (preferences.business_type === "services" && state.accounting.screen === "inventory") {
+    state.accounting.screen = "catalog";
+  }
   state.dashboard = await invoke("load_dashboard");
   render();
 }
 
-app.addEventListener("change", (event) => {
+app.addEventListener("change", async (event) => {
   if (event.target.id === "locale") {
     state.locale = event.target.value;
     localStorage.setItem("finadvisor-agent-locale", state.locale);
     render();
   }
+  if (event.target.name === "item_type") {
+    const durationField = app.querySelector("[data-duration-field]");
+    if (durationField) durationField.hidden = event.target.value !== "service";
+  }
+  if (event.target.id === "accounting-business-type") {
+    try {
+      state.busy = true;
+      render();
+      const preferences = await invoke("update_accounting_preferences", {
+        businessType: event.target.value
+      });
+      state.accounting.businessType = preferences.business_type;
+      if (preferences.business_type === "services" && state.accounting.screen === "inventory") {
+        state.accounting.screen = "catalog";
+      } else if (preferences.business_type !== "services" && state.accounting.screen === "sales") {
+        state.accounting.screen = "inventory";
+      }
+      state.busy = false;
+      render();
+    } catch (error) {
+      state.busy = false;
+      render();
+      setStatus(errorMessage(error));
+    }
+  }
 });
 
 app.addEventListener("click", async (event) => {
+  const accountingScreen = event.target.closest("[data-accounting-screen]");
+  if (accountingScreen) {
+    state.accounting.screen = accountingScreen.dataset.accountingScreen;
+    render();
+    return;
+  }
+
+  if (event.target.closest("[data-sync-accounting]")) {
+    try {
+      state.busy = true;
+      render();
+      state.syncStatus = await invoke("sync_offline_queue");
+      state.busy = false;
+      render();
+      setStatus(`${getMessages(state.locale)[state.syncStatus.online ? "syncOnline" : "syncOffline"]} · ${getMessages(state.locale).queuedRecords}: ${state.syncStatus.queued}`);
+    } catch (error) {
+      state.busy = false;
+      render();
+      setStatus(errorMessage(error));
+    }
+    return;
+  }
+
   if (event.target.closest("#toggle-theme")) {
     state.theme = ({ system: "light", light: "dark", dark: "system" })[state.theme] ?? "system";
     localStorage.setItem("finadvisor-agent-theme", state.theme);
@@ -158,7 +213,28 @@ app.addEventListener("submit", async (event) => {
   event.preventDefault();
   const form = event.target;
 
-  if (form.id === "login-form") {
+  if (form.id === "accounting-form") {
+    const formData = new FormData(form);
+    const data = Object.fromEntries([...formData.entries()]
+      .filter(([, value]) => String(value).trim() !== "")
+      .map(([key, value]) => [key, String(value)]));
+    try {
+      state.busy = true;
+      render();
+      state.syncStatus = await invoke("queue_offline_record", {
+        clientId: crypto.randomUUID(),
+        resource: form.dataset.resource,
+        data
+      });
+      state.busy = false;
+      render();
+      setStatus(getMessages(state.locale).accountingQueued);
+    } catch (error) {
+      state.busy = false;
+      render();
+      setStatus(errorMessage(error));
+    }
+  } else if (form.id === "login-form") {
     const formData = new FormData(form);
     state.apiBaseUrl = String(formData.get("apiBaseUrl"));
     try {

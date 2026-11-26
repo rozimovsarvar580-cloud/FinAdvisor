@@ -476,46 +476,46 @@ engine = `packages/finance-engine`.
 
 === STAGES ===
 ## Stage 14 - All business types (industry-agnostic core)
-- [ ] 14.1 Audit restaurant-specific code
+- [x] 14.1 Audit restaurant-specific code
   - done: `specs/audit-industry.md` lists every place where restaurant is hard-coded (engine, API schemas, wizard, AI prompts, bank checklist, PDFs/Excel, i18n files, emails, desktop agent, tests) with a decision for each (generalize, keep as sector template, delete); no code changes
   - exists: specs/audit-industry.md
-- [ ] 14.2 Sector registry (data, not code)
+- [x] 14.2 Sector registry (data, not code)
   - done: versioned YAML definitions, one per sector, loaded by finance-engine: id, names in uz/ru/en, revenue model type, typical cost categories, typical staff roles, inventory/COGS behavior, KPIs, questions to ask the user, optional licenses/regulations to check; initial sectors: restaurant_cafe, retail_shop, online_store, beauty_salon, auto_service, fitness_studio, education_center, food_production, delivery_logistics, it_services, accommodation, construction_repair, generic_other; sector files contain STRUCTURE and labels only; any benchmark, license or regulation entry has `source_url`, `verified: false` and `TODO(VERIFY)`; numbers are never invented
   - exists: packages/finance-engine/tests/test_sectors.py
   - cmd: {{PY}} -m pytest packages/finance-engine/tests/test_sectors.py -q
-- [ ] 14.3 Driver-based financial model for any business
+- [x] 14.3 Driver-based financial model for any business
   - done: finance-engine supports revenue models capacity_utilization (seats/chairs/rooms x turns or occupancy x average ticket), unit_sales (units x price), hourly_service (staff hours x rate x utilization), recurring (subscribers x ARPU with churn) and project_based (projects x average value x conversion), combinable per plan; COGS per unit or percent; opex categories; headcount by role; capex; working capital; seasonality curve; tax regime from the tax YAML; same outputs as today (monthly P&L, cash flow, break-even, loan fit); the current restaurant model becomes the restaurant_cafe template with unchanged results; golden tests for at least 4 different sectors; Decimal only
   - max_fails: 6
   - exists: packages/finance-engine/tests/test_multi_sector_model.py
   - cmd: {{PY}} -m pytest packages/finance-engine/tests/test_multi_sector_model.py -q
-- [ ] 14.4 Sector-aware API
+- [x] 14.4 Sector-aware API
   - done: `GET /sectors`, `GET /sectors/{id}`; plan creation takes `sector_id` plus free-form `inputs` validated against the sector definition; migration adds sector and inputs to plans and defaults existing plans to restaurant_cafe; backward compatible; tests
   - exists: apps/api/tests/test_sectors_api.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_sectors_api.py -q
-- [ ] 14.5 Wizard: "What business is it?"
+- [x] 14.5 Wizard: "What business is it?"
   - done: first wizard step lets the user pick a sector (cards with icons plus search), "Other" with a short description, and the stage (idea, just starting, already running, want to grow); the next steps are built from the sector definition (roles, costs, revenue drivers) with the user able to add custom roles and cost lines; resumable; uz/ru/en; tests
   - cmd: cd apps/web && npx vitest run sector
-- [ ] 14.6 AI that works for any sector
+- [x] 14.6 AI that works for any sector
   - done: plan generation, analysis and chat prompts are built from the sector definition and the user's inputs, no restaurant-only language; for "Other" the AI first asks up to 5 clarifying questions and states its assumptions explicitly; the number-consistency eval runs for at least 3 sectors; tests with the fake provider
   - exists: apps/api/tests/test_ai_multi_sector.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_ai_multi_sector.py -q
-- [ ] 14.7 Bank checklist and investor Q&A per sector
+- [x] 14.7 Bank checklist and investor Q&A per sector
   - done: `bank_checklist.yaml` keeps a generic base and gains `sector_addons`; sample plans from 3 sectors have expected score ranges; investor questions adapt to the sector
   - exists: apps/api/tests/test_bank_readiness_sectors.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_bank_readiness_sectors.py -q
-- [ ] 14.8 Exports for every sector
+- [x] 14.8 Exports for every sector
   - done: PDF, Excel and bank pack derive titles, sections and tables from the plan and sector (no restaurant wording unless the sector is restaurant_cafe); tests for 3 sectors in uz, ru and en
   - exists: apps/api/tests/test_export_multi_sector.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_export_multi_sector.py -q
-- [ ] 14.9 Wording sweep and guard
+- [x] 14.9 Wording sweep and guard
   - done: all landing, pricing, about, wizard, calculators, email, PDF and desktop copy in uz/ru/en is business-neutral ("Plan sections tailored to your business", not "restaurant"); restaurant stays only as one example or sector name; `apps/web/scripts/check-industry-wording.mjs` fails when "restaurant" (and ru/uz equivalents) appears in locale files outside an allowlist of sector keys and examples; wired into `scripts/verify.config.json` extraSteps
   - exists: apps/web/scripts/check-industry-wording.mjs
   - cmd: node apps/web/scripts/check-industry-wording.mjs
-- [ ] 14.10 Accounting and desktop agent for goods and services
+- [x] 14.10 Accounting and desktop agent for goods and services
   - done: items can be goods or services; inventory is optional (service businesses have no stock); custom expense and income categories; units and service durations; migration and tests; desktop screens adapt to the business type
   - exists: apps/api/tests/test_accounting_generic.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_accounting_generic.py -q
-- [ ] 14.11 Sector coverage matrix
+- [x] 14.11 Sector coverage matrix
   - done: a parametrized test runs wizard inputs -> engine -> fake AI plan -> PDF/Excel for EVERY sector in the registry and fails if any sector breaks; a Playwright e2e covers 3 sectors
   - exists: apps/api/tests/test_sector_matrix.py
   - cmd: {{PY}} -m pytest apps/api/tests/test_sector_matrix.py -q

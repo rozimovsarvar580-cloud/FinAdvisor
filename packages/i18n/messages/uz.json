@@ -46,7 +46,7 @@
     "description": "Rejalashtirish, hisoblar, hisob-kitoblar va yordam haqidagi keng tarqalgan savollarga javoblar.",
     "contact": "Yordam xizmatiga murojaat qilish",
     "items": [
-      ["FinAdvisor kimlar uchun?", "FinAdvisor kichik biznes egalari, buxgalterlar va investorlar uchun mo‘ljallangan. Rejalashtirish vositalari hozircha O‘zbekistondagi restoran biznesiga qaratilgan."],
+      ["FinAdvisor kimlar uchun?", "FinAdvisor kichik biznes egalari, buxgalterlar va investorlar uchun mo‘ljallangan. Rejalashtirish vositalari turli biznes sohalarini qo‘llab-quvvatlaydi."],
       ["Moliyaviy hisob-kitoblarni kim bajaradi?", "Hisob-kitoblarni siz kiritgan ma’lumotlar asosida moliya mexanizmi bajaradi. AI berilgan natijalarni tushuntirishi mumkin, ammo raqamlarni hisoblamaydi yoki o‘ylab topmaydi."],
       ["Biznes-reja bank krediti olinishini kafolatlaydimi?", "Yo‘q. Reja ma’lumotlarni ko‘rib chiqish uchun tartibga solishga yordam beradi, ammo moliyalashtirish haqida har bir kreditor mustaqil qaror qiladi."],
       ["Reja tuzishdan oldin nimalarni tayyorlash kerak?", "Biznes turi va joylashuvi, menyu yoki xizmat tavsifi, xodimlar, uskunalar, faoliyat xarajatlari va moliyalashtirish maqsadlarini tayyorlang. Summalar uchun hujjatli manbalardan foydalaning."],

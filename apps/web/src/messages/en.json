@@ -35,7 +35,7 @@
           },
           {
             "title": "Record daily activity",
-            "description": "Start keeping your restaurant's daily revenue and expense records.",
+            "description": "Start keeping daily business revenue and expense records.",
             "action": "Open daily accounting"
           },
           {
@@ -47,7 +47,7 @@
         "tour": [
           {
             "title": "Build a business plan",
-            "description": "Describe your restaurant and review the financial calculations and assumptions.",
+            "description": "Describe your business and review the financial calculations and assumptions.",
             "action": "Go to the plan builder"
           },
           {
@@ -140,7 +140,7 @@
     "tagline": "Clear financial decisions for your business",
     "socialImage": {
       "title": "Financial plans for growth",
-      "audience": "Restaurants • banks • investors"
+      "audience": "Small businesses • banks • investors"
     }
   },
   "businessPage": {
@@ -156,7 +156,7 @@
     "hero": {
       "badge": "For Uzbekistan's small businesses",
       "title": "Run your business with confidence and clear numbers",
-      "description": "Build a financial plan for your restaurant, understand costs and revenue, and prepare a bank-ready business plan.",
+      "description": "Build a financial plan for your business, understand costs and revenue, and prepare a bank-ready business plan.",
       "primaryCta": "Start your plan",
       "secondaryCta": "View sample PDF",
       "demoCta": "Try read-only demo",
@@ -321,7 +321,7 @@
           "owner": {
             "label": "Business owner",
             "title": "A clearer plan for business owners",
-            "description": "Shape a restaurant idea into a structured financial plan, review costs and staffing needs, and understand possible next steps."
+            "description": "Shape a business idea into a structured financial plan, review costs and staffing needs, and understand possible next steps."
           },
           "accountant": {
             "label": "Accountant",
@@ -431,7 +431,7 @@
       "items": [
         {
           "title": "Tell us about your business",
-          "description": "Share your restaurant format, location, menu, and team."
+          "description": "Share your business model, location, products or services, and team."
         },
         {
           "title": "Build a financial model",
@@ -454,7 +454,7 @@
       "items": [
         {
           "title": "Business plan",
-          "description": "Plan sections tailored to your restaurant."
+          "description": "Plan sections tailored to your business."
         },
         {
           "title": "Financial calculations",
@@ -546,7 +546,7 @@
       "items": {
         "q1": {
           "question": "Who is FinAdvisor for?",
-          "answer": "Entrepreneurs starting or growing a small business in Uzbekistan. We are beginning with restaurant projects."
+          "answer": "Entrepreneurs starting or growing small businesses in Uzbekistan. FinAdvisor supports sector-specific planning across business types."
         },
         "q2": {
           "question": "Does AI calculate financial results by itself?",
@@ -903,7 +903,7 @@
     "description": "A draft overview of FinAdvisor based on documented product information. Market, financial, team, and fundraising claims still require verification.",
     "summaryTitle": "Public summary",
     "audienceTitle": "Starting audience",
-    "audienceText": "Small businesses in Uzbekistan, starting with restaurants. Market size and customer demand have not yet been verified.",
+    "audienceText": "Small businesses in Uzbekistan. Market size and customer demand have not yet been verified.",
     "productTitle": "Product approach",
     "productText": "Business planning, deterministic financial calculations, accounting, and investor workflows in one platform.",
     "modelTitle": "Business model",
@@ -1060,6 +1060,8 @@
     "invalidRevenue": "Enter a non-negative amount with up to two decimal places.",
     "draftInvalid": "The saved draft is invalid. Start a new plan",
     "draftUnavailable": "The draft could not be saved on this device",
+    "sectorListUnavailable": "Business types could not be loaded. Try again.",
+    "sectorDraftFailed": "The business draft could not be saved. Check your details and try again.",
     "planAIUnavailable": "The AI planning service is unavailable. Try again later",
     "planGenerationFailed": "The business plan could not be created. Check your inputs",
     "planEditFailed": "The business plan changes could not be saved. Please try again",
@@ -1100,22 +1102,22 @@
       "desktopAgent": "Desktop agent"
     },
     "wizard": {
-      "eyebrow": "Restaurant template",
+      "eyebrow": "Restaurant example",
       "title": "Create a business plan",
       "draftSaved": "Draft saves automatically",
       "progress": "Step {current} of {total}",
-      "businessName": "Restaurant name",
-      "restaurantFormat": "Restaurant format",
+      "businessName": "Business name",
+      "restaurantFormat": "Business format",
       "formats": {
         "cafe": "Cafe",
-        "family": "Family restaurant",
+        "family": "Family dining",
         "fast_casual": "Fast casual",
         "fine_dining": "Fine dining"
       },
       "location": "Address or area",
       "seats": "Number of seats",
-      "menuSummary": "Brief menu description",
-      "averageCheck": "Average check (UZS)",
+      "menuSummary": "Brief product or service description",
+      "averageCheck": "Average transaction (UZS)",
       "dailyCustomers": "Customers per day",
       "operatingDays": "Operating days per month",
       "variableCostPercent": "Variable costs (%)",
@@ -1129,7 +1131,7 @@
       },
       "equipmentCost": "Equipment cost (UZS)",
       "otherStartupCost": "Other startup costs (UZS)",
-      "equipmentLabel": "Restaurant equipment",
+      "equipmentLabel": "Startup equipment",
       "loanAmount": "Loan amount (UZS)",
       "annualInterestRate": "Annual interest rate (%)",
       "loanTermMonths": "Loan term in months",
@@ -1143,11 +1145,11 @@
       "steps": {
         "format": {
           "short": "Format",
-          "title": "Location and restaurant format"
+          "title": "Location and business format"
         },
         "menu": {
-          "short": "Menu",
-          "title": "Menu and expected demand"
+          "short": "Offering",
+          "title": "Offering and expected demand"
         },
         "staff": {
           "short": "Staff",
@@ -1161,6 +1163,63 @@
           "short": "Finance",
           "title": "Financing and target profit"
         }
+      },
+      "sector": {
+        "eyebrow": "Business setup",
+        "title": "What business is it?",
+        "loading": "Loading business types...",
+        "retry": "Retry",
+        "selectedSector": "Selected business type: {name}",
+        "changeSector": "Change business type",
+        "sectorStep": "Business type",
+        "businessRevenueStep": "Business and revenue",
+        "rolesStep": "Team",
+        "costsStep": "Operating costs",
+        "searchLabel": "Search business types",
+        "searchPlaceholder": "Search by business type",
+        "noResults": "No business types match this search.",
+        "stageLabel": "Business stage",
+        "stages": {
+          "idea": "Idea",
+          "starting": "Just starting",
+          "operating": "Already operating",
+          "growing": "Want to grow"
+        },
+        "otherDescription": "Briefly describe your business",
+        "otherDescriptionPlaceholder": "What products or services will the business offer?",
+        "sectorRequired": "Choose a business type to continue.",
+        "businessName": "Business name",
+        "location": "City or area",
+        "revenueFields": {
+          "capacityUnits": "Seats, rooms, or service units",
+          "turnsOrOccupancy": "Turns or occupancy per day",
+          "operatingDaysPerMonth": "Operating days per month",
+          "utilizationPercent": "Expected utilization (%)",
+          "averageTicket": "Average ticket (UZS)",
+          "unitsPerMonth": "Units sold per month",
+          "pricePerUnit": "Price per unit (UZS)",
+          "staffHoursPerMonth": "Billable staff hours per month",
+          "hourlyRate": "Rate per hour (UZS)",
+          "startingSubscribers": "Starting subscribers or members",
+          "averageRevenuePerUser": "Average revenue per subscriber (UZS)",
+          "monthlyChurnPercent": "Monthly churn (%)",
+          "projectOpportunities": "Project opportunities per month",
+          "averageProjectValue": "Average project value (UZS)",
+          "conversionPercent": "Expected conversion (%)"
+        },
+        "roleLabel": "Role: {role}",
+        "employeeCount": "Team size",
+        "monthlySalary": "Monthly pay per person (UZS)",
+        "customRole": "New role name",
+        "addRole": "Add role",
+        "costCategoryLabel": "Cost category: {category}",
+        "monthlyCost": "Monthly amount (UZS)",
+        "customCost": "Custom cost",
+        "customCostName": "Cost name",
+        "addCost": "Add cost",
+        "saveDraft": "Save business draft",
+        "saving": "Saving draft...",
+        "draftCreated": "Draft saved. Reference: {id}"
       }
     },
     "calculators": {
@@ -1415,14 +1474,17 @@
   "marketplace": {
     "hero": {
       "eyebrow": "Investor marketplace",
-      "title": "Owner-published restaurant projects",
-      "description": "Browse restaurant projects that business owners have chosen to publish. Project details and funding requests are owner-provided."
+      "title": "Owner-published business projects",
+      "description": "Browse business projects that owners have chosen to publish. Project details and funding requests are owner-provided."
     },
     "stats": {
       "listings": "Published projects"
     },
     "filters": {
       "title": "Filter by project stage",
+      "search": "Search listings",
+      "sector": "Sector",
+      "allSectors": "All sectors",
       "city": "City",
       "minimumFunding": "Minimum funding (UZS)",
       "maximumFunding": "Maximum funding (UZS)",
@@ -1442,7 +1504,7 @@
     "loading": "Loading published projects…",
     "disclaimer": "Listings and funding targets are supplied by business owners and are not independently verified. No return, funding, or investment outcome is guaranteed.",
     "form": {
-      "title": "Publish your restaurant project",
+      "title": "Publish your business project",
       "disclaimer": "Only publish information you are authorized to share. The funding target is your stated request, not a verified valuation or investment offer.",
       "businessName": "Project name",
       "city": "City",
@@ -1460,7 +1522,7 @@
       "myListings": "My listings",
       "unpublish": "Unpublish",
       "republish": "Publish again",
-      "ownerPrompt": "Are you a restaurant owner?",
+      "ownerPrompt": "Are you a business owner?",
       "signUp": "Create an account",
       "visibility": {
         "published": "Public",
@@ -1501,7 +1563,7 @@
     },
     "empty": {
       "title": "No published projects yet",
-      "description": "When a restaurant owner publishes a project, it will appear here.",
+      "description": "When a business owner publishes a project, it will appear here.",
       "filteredTitle": "No projects match this stage",
       "filteredDescription": "Choose another project stage to see more published projects.",
       "clearFilters": "Clear filters",
@@ -1955,7 +2017,7 @@
       "review": "Review",
       "newTitle": "Create plan",
       "name": "Plan name",
-      "restaurantName": "Restaurant name",
+      "restaurantName": "Business name",
       "detailsTitle": "Plan: {planId}",
       "currency": "Currency",
       "monthlyRevenue": "Monthly revenue",
@@ -2024,7 +2086,7 @@
     },
     "wizard": {
       "title": "Plan wizard",
-      "profile": "Restaurant profile",
+      "profile": "Business profile",
       "setupCosts": "Setup costs",
       "staffing": "Staffing",
       "scenarioReview": "Scenario review",
@@ -2049,6 +2111,15 @@
     "description": "Description",
     "name": "Product name",
     "unit": "Unit",
+    "item_type": "Item type",
+    "goods": "Goods",
+    "service": "Service",
+    "service_duration_minutes": "Duration (minutes)",
+    "businessType": "Business type",
+    "services": "Services",
+    "mixed": "Goods and services",
+    "loading": "Loading...",
+    "loadError": "Could not load accounting settings.",
     "save": "Save entry",
     "saving": "Saving?",
     "saved": "Entry saved.",

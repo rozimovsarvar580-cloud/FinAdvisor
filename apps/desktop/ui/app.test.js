@@ -61,6 +61,17 @@ test("dashboard shows translated offline queue status", () => {
   assert.match(html, /Queued records: 2/);
 });
 
+test("desktop accounting screens adapt to goods and services businesses", () => {
+  const goods = renderDashboard({ devices: [], commands: [] }, "en", false, undefined, undefined, "goods", "inventory");
+  assert.match(goods, /Stock in and out/);
+  assert.match(goods, /data-resource="stock-movements"/);
+
+  const services = renderDashboard({ devices: [], commands: [] }, "en", false, undefined, undefined, "services", "catalog");
+  assert.doesNotMatch(services, /data-resource="stock-movements"/);
+  assert.match(services, /data-resource="inventory"/);
+  assert.match(services, /Duration \(minutes\)/);
+});
+
 test("owner chat renders translated labels and escapes transcript messages", () => {
   const html = renderDashboard({ devices: [], commands: [] }, "en", false, undefined, {
     messages: [{ role: "user", content: "<script>do bad</script>" }], busy: false

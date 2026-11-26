@@ -1,7 +1,7 @@
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
 from io import BytesIO
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -13,7 +13,12 @@ from sqlalchemy.orm import Session
 
 from finadvisor_api.auth import get_current_user
 from finadvisor_api.database import get_db
-from finadvisor_api.models import AccountingRecord, LedgerEntry, User
+from finadvisor_api.models import (
+    AccountingPreference,
+    AccountingRecord,
+    LedgerEntry,
+    User,
+)
 from finadvisor_api.schemas import LedgerEntryCreateRequest, LedgerEntryResponse
 
 router = APIRouter(prefix="/accounting", tags=["accounting"])
@@ -88,6 +93,10 @@ class AccountingSyncRequest(BaseModel):
     data: dict[str, Any]
 
 
+class AccountingPreferenceRequest(BaseModel):
+    business_type: Literal["goods", "services", "mixed"]
+
+
 def _require_role(user: User, roles: set[str]) -> None:
     if user.role not in roles:
         raise HTTPException(status_code=403, detail="accounting.role_required")
@@ -152,6 +161,35 @@ def create_entry(
     return _entry_response(entry)
 
 
+@router.get("/preferences")
+def get_accounting_preferences(
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> dict[str, str]:
+    _require_role(user, ACCOUNTING_ROLES)
+    preference = db.get(AccountingPreference, user.id)
+    return {"business_type": preference.business_type if preference else "goods"}
+
+
+@router.put("/preferences")
+def update_accounting_preferences(
+    payload: AccountingPreferenceRequest,
+    user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)],
+) -> dict[str, str]:
+    _require_role(user, ACCOUNTING_ROLES)
+    preference = db.get(AccountingPreference, user.id)
+    if preference is None:
+        preference = AccountingPreference(
+            owner_id=user.id, business_type=payload.business_type
+        )
+        db.add(preference)
+    else:
+        preference.business_type = payload.business_type
+    db.commit()
+    return {"business_type": preference.business_type}
+
+
 @router.get("/{resource}")
 def list_resource(
     resource: str,
@@ -164,7 +202,78 @@ def list_resource(
     records = db.scalars(select(AccountingRecord).where(
         AccountingRecord.owner_id == user.id, AccountingRecord.resource == resource
     ).order_by(AccountingRecord.created_at)).all()
-    return {"items": [{"id": r.id, "client_id": r.client_id, "data": r.data} for r in records]}
+    return {
+        "items": [
+            {
+                "id": record.id,
+                "client_id": record.client_id,
+                "data": record.data,
+                **(
+                    {
+                        "item_type": record.item_type,
+                        "unit": record.unit,
+                        "service_duration_minutes": record.service_duration_minutes,
+                        "tracks_inventory": record.tracks_inventory,
+                    }
+                    if resource == "inventory"
+                    else {}
+                ),
+            }
+            for record in records
+        ]
+    }
+
+
+def _catalog_metadata(
+    data: dict[str, Any], business_type: str
+) -> tuple[str | None, str | None, int | None, bool | None]:
+    item_type = data.get("item_type")
+    if item_type is None:
+        item_type = "service" if business_type == "services" else "goods"
+    if item_type not in {"goods", "service"}:
+        raise HTTPException(status_code=422, detail="accounting.item_type_invalid")
+    if business_type == "goods" and item_type != "goods":
+        raise HTTPException(status_code=422, detail="accounting.item_type_business_mismatch")
+    if business_type == "services" and item_type != "service":
+        raise HTTPException(status_code=422, detail="accounting.item_type_business_mismatch")
+
+    unit = data.get("unit")
+    if "item_type" in data and (
+        not isinstance(unit, str) or not unit.strip() or len(unit.strip()) > 32
+    ):
+        raise HTTPException(status_code=422, detail="accounting.unit_invalid")
+    if unit is not None and (
+        not isinstance(unit, str) or not unit.strip() or len(unit.strip()) > 32
+    ):
+        raise HTTPException(status_code=422, detail="accounting.unit_invalid")
+
+    duration = data.get("service_duration_minutes")
+    if duration is not None:
+        if isinstance(duration, bool):
+            raise HTTPException(
+                status_code=422, detail="accounting.service_duration_invalid"
+            )
+        try:
+            service_duration = int(str(duration))
+        except (TypeError, ValueError):
+            raise HTTPException(
+                status_code=422, detail="accounting.service_duration_invalid"
+            ) from None
+        if service_duration <= 0 or item_type != "service":
+            raise HTTPException(
+                status_code=422, detail="accounting.service_duration_invalid"
+            )
+    else:
+        service_duration = None
+    return item_type, unit.strip() if isinstance(unit, str) else None, service_duration, item_type == "goods"
+
+
+def _validate_custom_category(resource: str, data: dict[str, Any]) -> None:
+    if resource not in {"sales", "expenses"} or "category" not in data:
+        return
+    category = data["category"]
+    if not isinstance(category, str) or not category.strip() or len(category.strip()) > 64:
+        raise HTTPException(status_code=422, detail="accounting.category_invalid")
 
 
 @router.post("/sync/{resource}", status_code=status.HTTP_200_OK)
@@ -177,6 +286,14 @@ def sync_resource(
     _require_role(user, {"buxgalter"})
     if resource not in RESOURCES:
         raise HTTPException(status_code=404, detail="accounting.resource_not_found")
+    preference = db.get(AccountingPreference, user.id)
+    business_type = preference.business_type if preference else "goods"
+    if resource == "stock-movements" and business_type == "services":
+        raise HTTPException(status_code=422, detail="accounting.inventory_disabled")
+    _validate_custom_category(resource, payload.data)
+    metadata = (None, None, None, None)
+    if resource == "inventory":
+        metadata = _catalog_metadata(payload.data, business_type)
     record = db.scalar(select(AccountingRecord).where(
         AccountingRecord.owner_id == user.id,
         AccountingRecord.resource == resource,
@@ -187,7 +304,9 @@ def sync_resource(
             raise HTTPException(status_code=409, detail="accounting.client_id_conflict")
         return {"id": record.id, "client_id": record.client_id, "data": record.data}
     record = AccountingRecord(id=f"accounting-{uuid4().hex}", owner_id=user.id,
-        resource=resource, client_id=payload.client_id, data=payload.data)
+        resource=resource, client_id=payload.client_id, data=payload.data,
+        item_type=metadata[0], unit=metadata[1],
+        service_duration_minutes=metadata[2], tracks_inventory=metadata[3])
     db.add(record)
     db.commit()
     db.refresh(record)

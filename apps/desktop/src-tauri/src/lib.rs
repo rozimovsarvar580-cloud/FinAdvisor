@@ -148,6 +148,11 @@ struct OwnerChatReply {
     content: String,
 }
 
+#[derive(Serialize, Deserialize)]
+struct AccountingPreferences {
+    business_type: String,
+}
+
 fn normalize_api_base_url(value: &str) -> Result<String, String> {
     let mut url = Url::parse(value.trim()).map_err(|_| "invalid_api_url".to_string())?;
     let host = url.host_str().unwrap_or_default();
@@ -324,6 +329,44 @@ async fn load_dashboard(
 }
 
 #[tauri::command]
+async fn get_accounting_preferences(
+    state: State<'_, AgentState>,
+    client: State<'_, Client>,
+) -> Result<AccountingPreferences, String> {
+    let session = active_session(&state)?;
+    send_authenticated(
+        &session,
+        client.get(api_v1_url(&session, "/accounting/preferences")),
+    )
+    .await?
+    .json::<AccountingPreferences>()
+    .await
+    .map_err(|_| "invalid_api_response".to_string())
+}
+
+#[tauri::command]
+async fn update_accounting_preferences(
+    state: State<'_, AgentState>,
+    client: State<'_, Client>,
+    business_type: String,
+) -> Result<AccountingPreferences, String> {
+    if !["goods", "services", "mixed"].contains(&business_type.as_str()) {
+        return Err("invalid_input".to_string());
+    }
+    let session = active_session(&state)?;
+    send_authenticated(
+        &session,
+        client
+            .put(api_v1_url(&session, "/accounting/preferences"))
+            .json(&AccountingPreferences { business_type }),
+    )
+    .await?
+    .json::<AccountingPreferences>()
+    .await
+    .map_err(|_| "invalid_api_response".to_string())
+}
+
+#[tauri::command]
 async fn register_device(
     state: State<'_, AgentState>,
     client: State<'_, Client>,
@@ -455,6 +498,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             login,
             load_dashboard,
+            get_accounting_preferences,
+            update_accounting_preferences,
             register_device,
             queue_statement_sync,
             send_owner_chat,

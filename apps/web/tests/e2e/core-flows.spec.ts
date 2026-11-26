@@ -145,7 +145,7 @@ test("creates a plan with a fake AI stream and downloads the PDF export", async 
   await page.waitForFunction(() =>
     window.localStorage.getItem("finadvisor.restaurant-plan-draft")
   );
-  await page.getByLabel("Restaurant name").fill("E2E Cafe");
+  await page.getByLabel("Business name").fill("E2E Cafe");
   await page.getByLabel("Address or area").fill("Tashkent");
   await page.getByLabel("Number of seats").fill("40");
   await page.getByRole("button", { name: "Continue" }).click();
@@ -183,4 +183,47 @@ test("creates a plan with a fake AI stream and downloads the PDF export", async 
   await page.getByRole("button", { name: "Download PDF" }).click();
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toBe("finadvisor-plan-e2e-plan.pdf");
+});
+
+test("sector wizard covers retail, beauty and IT service sectors", async ({
+  page
+}) => {
+  await installAuthenticatedSession(page);
+  await page.route("**/api/sectors", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify([
+        {
+          id: "retail_shop",
+          names: { en: "Retail shop", ru: "Розничный магазин", uz: "Chakana savdo do‘koni" },
+          revenue_model_type: "unit_sales",
+          cost_categories: ["inventory_purchases", "rent"],
+          staff_roles: ["cashier", "stock_clerk"]
+        },
+        {
+          id: "beauty_salon",
+          names: { en: "Beauty salon", ru: "Салон красоты", uz: "Go‘zallik saloni" },
+          revenue_model_type: "hourly_service",
+          cost_categories: ["rent", "consumables"],
+          staff_roles: ["stylist", "receptionist"]
+        },
+        {
+          id: "it_services",
+          names: { en: "IT services", ru: "IT-услуги", uz: "IT xizmatlari" },
+          revenue_model_type: "project_based",
+          cost_categories: ["software", "rent"],
+          staff_roles: ["developer", "manager"]
+        }
+      ])
+    });
+  });
+
+  await page.goto("/en/app/finadvisor");
+  await expect(page.getByRole("heading", { name: "What business is it?" })).toBeVisible();
+
+  for (const sectorName of ["Retail shop", "Beauty salon", "IT services"]) {
+    await page.getByRole("button", { name: sectorName }).click();
+    await expect(page.getByRole("button", { name: sectorName })).toHaveAttribute("aria-pressed", "true");
+  }
 });

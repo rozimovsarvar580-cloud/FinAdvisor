@@ -1,0 +1,326 @@
+schema_version: 1
+sectors:
+  - id: restaurant_cafe
+    names: {en: Restaurant or cafe, ru: Ресторан или кафе, uz: Restoran yoki kafe}
+    revenue_model_type: capacity_utilization
+    cost_categories: [ingredients, rent, utilities, payroll, equipment, delivery_fees, marketing]
+    staff_roles: [owner, cook, server, cashier, manager]
+    inventory_cogs_behavior:
+      inventory_tracking: user_input
+      cogs_basis: percent_of_revenue_or_unit_cost
+      user_supplied_only: true
+    kpis: [revenue, food_cost, payroll_cost, average_check, capacity_utilization, break_even]
+    questions:
+      en:
+        - "What products or services will you offer?"
+        - "Which operating costs and staff roles should the plan include?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие товары или услуги вы будете предлагать?"
+        - "Какие операционные расходы и роли сотрудников нужно включить в план?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi mahsulot yoki xizmatlarni taklif qilasiz?"
+        - "Rejaga qaysi operatsion xarajatlar va xodim rollarini kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: retail_shop
+    names: {en: Retail shop, ru: Розничный магазин, uz: Chakana savdo do‘koni}
+    revenue_model_type: unit_sales
+    cost_categories: [inventory_purchases, rent, utilities, payroll, payment_fees, storage, marketing]
+    staff_roles: [owner, sales_associate, cashier, stock_clerk, manager]
+    inventory_cogs_behavior:
+      inventory_tracking: user_input
+      cogs_basis: unit_cost
+      user_supplied_only: true
+    kpis: [revenue, units_sold, inventory_cost, gross_margin, average_sale, break_even]
+    questions:
+      en:
+        - "Which products will you sell and how will you enter their prices and purchase costs?"
+        - "How will you track stock and returns?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие товары вы будете продавать и как укажете их цены и закупочную стоимость?"
+        - "Как вы будете учитывать запасы и возвраты?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi mahsulotlarni sotasiz va ularning narxi hamda xarid qiymatini qanday kiritasiz?"
+        - "Tovar zaxirasi va qaytarishlarni qanday hisoblaysiz?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: online_store
+    names: {en: Online store, ru: Интернет-магазин, uz: Onlayn do‘kon}
+    revenue_model_type: unit_sales
+    cost_categories: [inventory_purchases, platform_fees, payment_fees, fulfillment, delivery, marketing]
+    staff_roles: [owner, order_manager, support_agent, packer, marketer]
+    inventory_cogs_behavior:
+      inventory_tracking: user_input
+      cogs_basis: unit_cost
+      user_supplied_only: true
+    kpis: [revenue, orders, units_sold, average_order_value, fulfillment_cost, return_rate]
+    questions:
+      en:
+        - "Which products and sales channels will you use?"
+        - "Which payment, fulfillment, delivery, and return costs should be entered?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие товары и каналы продаж вы будете использовать?"
+        - "Какие расходы на оплату, обработку заказов, доставку и возвраты нужно указать?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi mahsulotlar va savdo kanallaridan foydalanasiz?"
+        - "To‘lov, buyurtmani tayyorlash, yetkazib berish va qaytarish xarajatlaridan qaysilarini kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: beauty_salon
+    names: {en: Beauty salon, ru: Салон красоты, uz: Go‘zallik saloni}
+    revenue_model_type: hourly_service
+    cost_categories: [rent, utilities, payroll, consumables, equipment, booking_fees, marketing]
+    staff_roles: [owner, stylist, beautician, receptionist, manager]
+    inventory_cogs_behavior:
+      inventory_tracking: optional
+      cogs_basis: service_inputs
+      user_supplied_only: true
+    kpis: [revenue, appointments, utilization, revenue_per_service, consumables_cost, repeat_customers]
+    questions:
+      en:
+        - "Which services, service durations, and prices should the plan include?"
+        - "Which practitioners, work hours, and consumables should be entered?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие услуги, их длительность и цены нужно включить в план?"
+        - "Какие специалисты, рабочие часы и расходные материалы указать?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Rejaga qaysi xizmatlar, ularning davomiyligi va narxlarini kiritish kerak?"
+        - "Qaysi mutaxassislar, ish soatlari va sarf materiallarini ko‘rsatish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: auto_service
+    names: {en: Auto service, ru: Автосервис, uz: Avtoservis}
+    revenue_model_type: hourly_service
+    cost_categories: [rent, utilities, payroll, parts, consumables, tools, equipment]
+    staff_roles: [owner, mechanic, technician, service_advisor, parts_clerk]
+    inventory_cogs_behavior:
+      inventory_tracking: optional
+      cogs_basis: service_inputs
+      user_supplied_only: true
+    kpis: [revenue, service_jobs, labor_hours, parts_cost, utilization, average_job_value]
+    questions:
+      en:
+        - "Which services, labor inputs, and parts should be included?"
+        - "Which tools, work areas, and staff roles should the plan cover?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие услуги, трудозатраты и запчасти нужно включить?"
+        - "Какие инструменты, рабочие зоны и роли сотрудников охватить в плане?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi xizmatlar, mehnat sarfi va ehtiyot qismlarni kiritish kerak?"
+        - "Rejada qaysi asboblar, ish joylari va xodim rollari bo‘lishi kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: fitness_studio
+    names: {en: Fitness studio, ru: Фитнес-студия, uz: Fitnes studiyasi}
+    revenue_model_type: recurring
+    cost_categories: [rent, utilities, payroll, equipment, maintenance, booking_fees, marketing]
+    staff_roles: [owner, instructor, trainer, receptionist, cleaner]
+    inventory_cogs_behavior:
+      inventory_tracking: optional
+      cogs_basis: service_inputs
+      user_supplied_only: true
+    kpis: [revenue, active_members, membership_revenue, class_utilization, payroll_cost, retention]
+    questions:
+      en:
+        - "Which memberships, classes, and services will you offer?"
+        - "Which facilities, equipment, staff, and operating costs should be entered?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие абонементы, занятия и услуги вы будете предлагать?"
+        - "Какие помещения, оборудование, сотрудников и операционные расходы указать?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi a’zoliklar, mashg‘ulotlar va xizmatlarni taklif qilasiz?"
+        - "Qaysi xonalar, jihozlar, xodimlar va operatsion xarajatlarni kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: education_center
+    names: {en: Education center, ru: Образовательный центр, uz: Ta’lim markazi}
+    revenue_model_type: recurring
+    cost_categories: [rent, utilities, payroll, learning_materials, equipment, platform_fees, marketing]
+    staff_roles: [owner, teacher, tutor, coordinator, administrator]
+    inventory_cogs_behavior:
+      inventory_tracking: optional
+      cogs_basis: service_inputs
+      user_supplied_only: true
+    kpis: [revenue, active_students, enrollment, class_utilization, payroll_cost, retention]
+    questions:
+      en:
+        - "Which courses, formats, and payment arrangements do you plan to offer?"
+        - "Which instructors, learning materials, facilities, and costs should be entered?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие курсы, форматы и варианты оплаты вы планируете предлагать?"
+        - "Какие преподаватели, учебные материалы, помещения и расходы нужно указать?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi kurslar, formatlar va to‘lov tartiblarini taklif qilishni rejalashtiryapsiz?"
+        - "Qaysi o‘qituvchilar, o‘quv materiallari, xonalar va xarajatlarni kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: food_production
+    names: {en: Food production, ru: Производство продуктов питания, uz: Oziq-ovqat ishlab chiqarish}
+    revenue_model_type: unit_sales
+    cost_categories: [ingredients, packaging, facility, utilities, payroll, equipment, distribution]
+    staff_roles: [owner, production_worker, quality_operator, packer, sales_representative]
+    inventory_cogs_behavior:
+      inventory_tracking: user_input
+      cogs_basis: unit_cost
+      user_supplied_only: true
+    kpis: [revenue, units_produced, units_sold, material_cost, production_utilization, waste]
+    questions:
+      en:
+        - "Which products, production inputs, and packaging should the plan cover?"
+        - "Which facilities, equipment, staffing, and distribution costs should be entered?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие продукты, производственные ресурсы и упаковку охватить в плане?"
+        - "Какие помещения, оборудование, персонал и расходы на распространение указать?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Rejada qaysi mahsulotlar, ishlab chiqarish resurslari va qadoqlashni ko‘rib chiqish kerak?"
+        - "Qaysi binolar, jihozlar, xodimlar va tarqatish xarajatlarini kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: delivery_logistics
+    names: {en: Delivery and logistics, ru: Доставка и логистика, uz: Yetkazib berish va logistika}
+    revenue_model_type: unit_sales
+    cost_categories: [vehicle_costs, fuel, maintenance, payroll, packaging, platform_fees, insurance]
+    staff_roles: [owner, driver, courier, dispatcher, operations_manager]
+    inventory_cogs_behavior:
+      inventory_tracking: not_applicable
+      cogs_basis: service_inputs
+      user_supplied_only: true
+    kpis: [revenue, deliveries, distance, cost_per_delivery, vehicle_utilization, on_time_rate]
+    questions:
+      en:
+        - "Which delivery services, routes, and customer groups will you serve?"
+        - "Which vehicles, labor, fuel, maintenance, and platform costs should be entered?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие услуги доставки, маршруты и группы клиентов вы будете обслуживать?"
+        - "Какие транспортные средства, трудозатраты, топливо, обслуживание и расходы платформы указать?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi yetkazib berish xizmatlari, yo‘nalishlar va mijozlar guruhlariga xizmat ko‘rsatasiz?"
+        - "Qaysi transport vositalari, mehnat, yoqilg‘i, texnik xizmat va platforma xarajatlarini kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: it_services
+    names: {en: IT services, ru: ИТ-услуги, uz: IT xizmatlari}
+    revenue_model_type: project_based
+    cost_categories: [payroll, software, cloud_services, equipment, subcontractors, sales, administration]
+    staff_roles: [owner, developer, designer, analyst, project_manager, support_engineer]
+    inventory_cogs_behavior:
+      inventory_tracking: not_applicable
+      cogs_basis: service_inputs
+      user_supplied_only: true
+    kpis: [revenue, projects, billable_hours, delivery_cost, utilization, recurring_revenue]
+    questions:
+      en:
+        - "Which services, project types, and billing arrangements will you offer?"
+        - "Which team roles, software, cloud, and subcontractor costs should be entered?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие услуги, типы проектов и варианты оплаты вы будете предлагать?"
+        - "Какие роли команды, программное обеспечение, облачные сервисы и расходы на подрядчиков указать?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi xizmatlar, loyiha turlari va to‘lov tartiblarini taklif qilasiz?"
+        - "Jamoa rollari, dasturiy ta’minot, bulutli xizmatlar va pudratchi xarajatlaridan qaysilarini kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: accommodation
+    names: {en: Accommodation, ru: Размещение гостей, uz: Mehmonlarni joylashtirish}
+    revenue_model_type: capacity_utilization
+    cost_categories: [property_costs, utilities, payroll, cleaning, supplies, maintenance, booking_fees]
+    staff_roles: [owner, receptionist, housekeeping, maintenance_worker, manager]
+    inventory_cogs_behavior:
+      inventory_tracking: optional
+      cogs_basis: service_inputs
+      user_supplied_only: true
+    kpis: [revenue, occupied_capacity, occupancy, average_booking_value, operating_cost, booking_channel_mix]
+    questions:
+      en:
+        - "Which accommodation options, services, and booking channels will you offer?"
+        - "Which rooms or units, staffing, supplies, and operating costs should be entered?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие варианты размещения, услуги и каналы бронирования вы будете предлагать?"
+        - "Какие помещения или единицы размещения, персонал, расходные материалы и операционные расходы указать?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi joylashtirish turlari, xizmatlar va bron kanallarini taklif qilasiz?"
+        - "Qaysi xonalar yoki birliklar, xodimlar, sarf materiallari va operatsion xarajatlarni kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: construction_repair
+    names: {en: Construction and repair, ru: Строительство и ремонт, uz: Qurilish va ta’mirlash}
+    revenue_model_type: project_based
+    cost_categories: [materials, labor, equipment, transport, subcontractors, site_costs, administration]
+    staff_roles: [owner, project_manager, technician, skilled_worker, site_supervisor]
+    inventory_cogs_behavior:
+      inventory_tracking: optional
+      cogs_basis: project_cost
+      user_supplied_only: true
+    kpis: [revenue, projects, material_cost, labor_cost, project_margin, schedule_variance]
+    questions:
+      en:
+        - "Which project types, stages, and payment arrangements will you use?"
+        - "Which materials, labor, equipment, transport, and subcontractor costs should be entered?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Какие типы проектов, этапы и варианты оплаты вы будете использовать?"
+        - "Какие материалы, трудозатраты, оборудование, транспорт и расходы на подрядчиков указать?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Qaysi loyiha turlari, bosqichlari va to‘lov tartiblaridan foydalanasiz?"
+        - "Qaysi materiallar, mehnat, jihozlar, transport va pudratchi xarajatlarini kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []
+
+  - id: generic_other
+    names: {en: Other business, ru: Другой бизнес, uz: Boshqa biznes}
+    revenue_model_type: project_based
+    cost_categories: [materials_or_inventory, payroll, rent, utilities, equipment, services, administration]
+    staff_roles: [owner, employee, specialist, manager]
+    inventory_cogs_behavior:
+      inventory_tracking: optional
+      cogs_basis: user_defined
+      user_supplied_only: true
+    kpis: [revenue, operating_cost, gross_margin, capacity_utilization, break_even]
+    questions:
+      en:
+        - "What does the business sell or provide, and how does it earn revenue?"
+        - "Which inputs, operating costs, and staff roles should be included?"
+        - "Which permits or registrations, if any, should be verified for this activity?"
+      ru:
+        - "Что продаёт или предоставляет бизнес и как он получает доход?"
+        - "Какие ресурсы, операционные расходы и роли сотрудников нужно включить?"
+        - "Какие разрешения или регистрации, если они нужны, следует проверить для этой деятельности?"
+      uz:
+        - "Biznes nima sotadi yoki qanday xizmat ko‘rsatadi va daromadni qanday oladi?"
+        - "Qaysi resurslar, operatsion xarajatlar va xodim rollarini kiritish kerak?"
+        - "Bu faoliyat uchun zarur bo‘lishi mumkin bo‘lgan qaysi ruxsat yoki ro‘yxatdan o‘tish talablarini tekshirish kerak?"
+    licenses_regulations: []

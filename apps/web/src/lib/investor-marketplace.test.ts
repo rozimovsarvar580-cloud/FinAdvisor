@@ -12,6 +12,7 @@ const listings: MarketplaceListing[] = [
   {
     id: "project-1",
     plan_id: null,
+    sector_id: "restaurant_cafe",
     business_name: "Samarqand Oshxona",
     city: "Samarqand",
     stage: "pilot",
@@ -27,6 +28,7 @@ const listings: MarketplaceListing[] = [
   {
     id: "project-2",
     plan_id: null,
+    sector_id: "retail_shop",
     business_name: "Toshkent Bistro",
     city: "Toshkent",
     stage: "scale",
@@ -49,6 +51,11 @@ describe("filterListings", () => {
 
   it("returns all listings for the all selector", () => {
     expect(filterListings(listings, { stage: "all" })).toHaveLength(2);
+  });
+
+  it("filters and searches by sector", () => {
+    expect(filterListings(listings, { sector: "retail_shop" }).map((listing) => listing.id)).toEqual(["project-2"]);
+    expect(filterListings(listings, { search: "restaurant_cafe" }).map((listing) => listing.id)).toEqual(["project-1"]);
   });
 
   it("combines city and exact decimal funding range filters", () => {

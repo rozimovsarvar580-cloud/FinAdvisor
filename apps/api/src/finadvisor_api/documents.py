@@ -38,8 +38,14 @@ from finadvisor_api.auth import get_current_user
 from finadvisor_api.calc_schemas import StrictInput
 from finadvisor_api.models import User
 from finadvisor_api.plan_limits import require_plan_feature
-from finadvisor_api.plan_schemas import PlanGenerateRequest, PlanGenerateResponse, PlanSection
+from finadvisor_api.plan_schemas import (
+    PlanGenerateRequest,
+    PlanGenerateResponse,
+    PlanSection,
+    SectorPlanGenerateResponse,
+)
 from finadvisor_api.readiness import calculate_bank_readiness
+from finadvisor_api.sectors import find_sector
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 MONTHLY_PROJECTION_MONTHS = 12
@@ -88,21 +94,37 @@ CURRENCY_KEYS = frozenset(
 
 class PlanDocumentRequest(StrictInput):
     locale: Literal["uz", "ru", "en"]
-    plan: PlanGenerateResponse
+    plan: PlanGenerateResponse | SectorPlanGenerateResponse
 
     @model_validator(mode="after")
     def validate_financial_values(self) -> "PlanDocumentRequest":
+        if isinstance(self.plan, SectorPlanGenerateResponse):
+            for key, value in self.plan.calculations.model_dump().items():
+                if key == "formula" or value is None:
+                    continue
+                _validate_finite_decimal(key, value)
+            if (
+                self.plan.calculations.monthly_revenue is None
+                or self.plan.calculations.monthly_operating_profit is None
+            ):
+                raise ValueError("A completed finance-engine projection is required for export")
+            return self
+
         for key in FINANCIAL_KEYS:
             value = getattr(self.plan.calculations, key)
             if value is None:
                 continue
-            try:
-                amount = Decimal(str(value))
-            except InvalidOperation as error:
-                raise ValueError(f"{key} must be a decimal value") from error
-            if not amount.is_finite():
-                raise ValueError(f"{key} must be finite")
+            _validate_finite_decimal(key, value)
         return self
+
+
+def _validate_finite_decimal(key: str, value: object) -> None:
+    try:
+        amount = Decimal(str(value))
+    except InvalidOperation as error:
+        raise ValueError(f"{key} must be a decimal value") from error
+    if not amount.is_finite():
+        raise ValueError(f"{key} must be finite")
 
 
 def _messages(locale: str) -> dict[str, object]:
@@ -252,6 +274,290 @@ def _auxiliary_pdf_setup(
     return output, document, styles
 
 
+def _sector_plan_context(
+    request: PlanDocumentRequest,
+) -> tuple[SectorPlanGenerateResponse, dict[str, object], str]:
+    if not isinstance(request.plan, SectorPlanGenerateResponse):
+        raise TypeError("A sector plan is required")
+    sector = find_sector(request.plan.assumptions.sector_id)
+    if sector is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="documents.invalid_sector",
+        )
+    sector_name = sector.names.get(request.locale)
+    if not sector_name:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="documents.invalid_sector_locale",
+        )
+    return request.plan, _messages(request.locale)["sector_exports"], sector_name
+
+
+def _sector_financial_rows(
+    plan: SectorPlanGenerateResponse,
+    labels: dict[str, object],
+) -> list[list[str]]:
+    metrics = labels["metrics"]
+    keys = (
+        "monthly_revenue",
+        "monthly_cost_of_goods",
+        "monthly_operating_expenses",
+        "monthly_payroll",
+        "monthly_operating_profit",
+        "annual_operating_profit",
+        "break_even_revenue",
+    )
+    rows = [[str(labels["table_metric"]), str(labels["table_value"])]]
+    for key in keys:
+        value = getattr(plan.calculations, key)
+        if value is not None:
+            amount = Decimal(value)
+            rows.append([str(metrics[key]), f"{amount:,.2f} {labels['currency']}"])
+    return rows
+
+
+def _sector_input_text(value: object) -> str:
+    if isinstance(value, (dict, list)):
+        return json.dumps(value, ensure_ascii=False, sort_keys=True)
+    return str(value)
+
+
+def _render_sector_plan_pdf(request: PlanDocumentRequest) -> bytes:
+    plan, labels, sector_name = _sector_plan_context(request)
+    assumptions = plan.assumptions
+    title = f"{labels['title']} - {sector_name}"
+    output, document, styles = _auxiliary_pdf_setup(title)
+    story = [
+        Paragraph(escape(title), styles["FinAdvisorAuxTitle"]),
+        Spacer(1, 15 * mm),
+        Paragraph(escape(assumptions.business_name), styles["FinAdvisorAuxTitle"]),
+        _pdf_table(
+            [
+                [str(labels["table_metric"]), str(labels["table_value"])],
+                [str(labels["sector"]), escape(sector_name)],
+                [str(labels["location"]), escape(assumptions.location)],
+            ],
+            [55 * mm, 105 * mm],
+        ),
+        Paragraph(str(labels["summary"]), styles["FinAdvisorAuxHeading"]),
+        Paragraph(escape(plan.summary).replace("\n", "<br/>"), styles["FinAdvisorAuxBody"]),
+        Paragraph(str(labels["financials"]), styles["FinAdvisorAuxHeading"]),
+        _pdf_table(_sector_financial_rows(plan, labels), [95 * mm, 65 * mm]),
+        Paragraph(str(labels["plan"]), styles["FinAdvisorAuxHeading"]),
+    ]
+    for section in plan.sections:
+        story.extend(
+            [
+                Paragraph(escape(section.title), styles["FinAdvisorAuxHeading"]),
+                Paragraph(
+                    escape(section.content).replace("\n", "<br/>"),
+                    styles["FinAdvisorAuxBody"],
+                ),
+            ]
+        )
+    story.extend(
+        [
+            Paragraph(str(labels["stated_assumptions"]), styles["FinAdvisorAuxHeading"]),
+            *[
+                Paragraph(
+                    escape(assumption).replace("\n", "<br/>"),
+                    styles["FinAdvisorAuxBody"],
+                )
+                for assumption in plan.stated_assumptions
+            ],
+            *(
+                [Paragraph(str(labels["clarifying_questions"]), styles["FinAdvisorAuxHeading"])]
+                + [
+                    Paragraph(
+                        escape(question).replace("\n", "<br/>"),
+                        styles["FinAdvisorAuxBody"],
+                    )
+                    for question in plan.clarifying_questions
+                ]
+                if plan.clarifying_questions
+                else []
+            ),
+            Paragraph(str(labels["input_details"]), styles["FinAdvisorAuxHeading"]),
+            _pdf_table(
+                [
+                    [str(labels["field"]), str(labels["value"])],
+                    *[
+                        [escape(key.replace("_", " ")), escape(_sector_input_text(value))]
+                        for key, value in assumptions.inputs.items()
+                    ],
+                ],
+                [55 * mm, 105 * mm],
+            ),
+            Paragraph(
+                str(_messages(request.locale)["disclaimer"]),
+                styles["FinAdvisorAuxBody"],
+            ),
+        ]
+    )
+    document.build(story)
+    return output.getvalue()
+
+
+def _render_sector_bank_pack_pdf(request: PlanDocumentRequest) -> bytes:
+    plan, labels, sector_name = _sector_plan_context(request)
+    readiness_text = " ".join(
+        [plan.summary]
+        + [f"{section.title} {section.content}" for section in plan.sections]
+        + [_sector_input_text(plan.assumptions.inputs)]
+    )
+    readiness = calculate_bank_readiness(
+        readiness_text,
+        sector_id=plan.assumptions.sector_id,
+    )
+    output, document, styles = _auxiliary_pdf_setup(str(labels["bank_pack_title"]))
+    story = [
+        Paragraph(str(labels["bank_pack_title"]), styles["FinAdvisorAuxTitle"]),
+        Paragraph(escape(plan.assumptions.business_name), styles["FinAdvisorAuxTitle"]),
+        _pdf_table(
+            [
+                [str(labels["table_metric"]), str(labels["table_value"])],
+                [str(labels["sector"]), escape(sector_name)],
+                [str(labels["location"]), escape(plan.assumptions.location)],
+            ],
+            [55 * mm, 105 * mm],
+        ),
+        Paragraph(str(labels["summary"]), styles["FinAdvisorAuxHeading"]),
+        Paragraph(escape(plan.summary).replace("\n", "<br/>"), styles["FinAdvisorAuxBody"]),
+        Paragraph(str(labels["financials"]), styles["FinAdvisorAuxHeading"]),
+        _pdf_table(_sector_financial_rows(plan, labels), [95 * mm, 65 * mm]),
+        Paragraph(str(labels["bank_readiness"]), styles["FinAdvisorAuxHeading"]),
+        Paragraph(f"{readiness.score}/100", styles["FinAdvisorAuxTitle"]),
+        Paragraph(
+            str(labels["readiness_disclaimer"]),
+            styles["FinAdvisorAuxBody"],
+        ),
+        _pdf_table(
+            [
+                [str(labels["evidence_status"]), str(labels["evidence_score"])],
+                [str(labels["evidence_matched"]), str(len(readiness.present_criteria))],
+                [str(labels["evidence_not_matched"]), str(len(readiness.missing_criteria))],
+                [str(labels["checklist_version"]), "1"],
+            ],
+            [95 * mm, 65 * mm],
+        ),
+        Paragraph(str(labels["plan"]), styles["FinAdvisorAuxHeading"]),
+    ]
+    for section in plan.sections:
+        story.extend(
+            [
+                Paragraph(escape(section.title), styles["FinAdvisorAuxHeading"]),
+                Paragraph(
+                    escape(section.content).replace("\n", "<br/>"),
+                    styles["FinAdvisorAuxBody"],
+                ),
+            ]
+        )
+    story.append(Paragraph(str(labels["stated_assumptions"]), styles["FinAdvisorAuxHeading"]))
+    story.extend(
+        Paragraph(escape(assumption).replace("\n", "<br/>"), styles["FinAdvisorAuxBody"])
+        for assumption in plan.stated_assumptions
+    )
+    if plan.clarifying_questions:
+        story.append(
+            Paragraph(str(labels["clarifying_questions"]), styles["FinAdvisorAuxHeading"])
+        )
+        story.extend(
+            Paragraph(escape(question).replace("\n", "<br/>"), styles["FinAdvisorAuxBody"])
+            for question in plan.clarifying_questions
+        )
+    story.append(
+        Paragraph(str(_messages(request.locale)["disclaimer"]), styles["FinAdvisorAuxBody"])
+    )
+    document.build(story)
+    return output.getvalue()
+
+
+def _render_sector_plan_excel(request: PlanDocumentRequest) -> bytes:
+    plan, labels, sector_name = _sector_plan_context(request)
+    workbook = Workbook()
+    summary = workbook.active
+    summary.title = str(labels["sheet_summary"])
+    financials = workbook.create_sheet(str(labels["sheet_financials"]))
+    assumptions = workbook.create_sheet(str(labels["sheet_assumptions"]))
+    plan_sheet = workbook.create_sheet(str(labels["sheet_plan"]))
+    header_fill = PatternFill("solid", fgColor="183B56")
+    header_font = Font(color="FFFFFF", bold=True)
+    summary.append([str(labels["title"]), str(labels["value"])])
+    summary.append([str(labels["business_name"]), _excel_text(plan.assumptions.business_name)])
+    summary.append([str(labels["sector"]), _excel_text(sector_name)])
+    summary.append([str(labels["location"]), _excel_text(plan.assumptions.location)])
+    summary.append([str(labels["summary"]), _excel_text(plan.summary)])
+    for cell in summary[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+    summary.freeze_panes = "A2"
+    summary.column_dimensions["A"].width = 28
+    summary.column_dimensions["B"].width = 80
+
+    financial_rows = _sector_financial_rows(plan, labels)
+    financials.append(financial_rows[0])
+    for key in (
+        "monthly_revenue",
+        "monthly_cost_of_goods",
+        "monthly_operating_expenses",
+        "monthly_payroll",
+        "monthly_operating_profit",
+        "annual_operating_profit",
+        "break_even_revenue",
+    ):
+        value = getattr(plan.calculations, key)
+        if value is not None:
+            financials.append(
+                [str(labels["metrics"][key]), Decimal(value), str(labels["currency"])]
+            )
+            financials.cell(financials.max_row, 2).number_format = MONEY_NUMBER_FORMAT
+    for cell in financials[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+    financials.freeze_panes = "A2"
+    financials.column_dimensions["A"].width = 38
+    financials.column_dimensions["B"].width = 24
+    financials.column_dimensions["C"].width = 12
+
+    assumptions.append([str(labels["field"]), str(labels["value"])])
+    assumptions.append([str(labels["business_name"]), _excel_text(plan.assumptions.business_name)])
+    assumptions.append([str(labels["sector"]), _excel_text(sector_name)])
+    assumptions.append([str(labels["location"]), _excel_text(plan.assumptions.location)])
+    for key, value in plan.assumptions.inputs.items():
+        assumptions.append(
+            [_excel_text(key.replace("_", " ")), _excel_text(_sector_input_text(value))]
+        )
+    assumptions.append([str(labels["stated_assumptions"]), ""])
+    for item in plan.stated_assumptions:
+        assumptions.append([str(labels["stated_assumptions"]), _excel_text(item)])
+    if plan.clarifying_questions:
+        assumptions.append([str(labels["clarifying_questions"]), ""])
+        for item in plan.clarifying_questions:
+            assumptions.append([str(labels["clarifying_questions"]), _excel_text(item)])
+    for cell in assumptions[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+    assumptions.freeze_panes = "A2"
+    assumptions.column_dimensions["A"].width = 36
+    assumptions.column_dimensions["B"].width = 80
+
+    plan_sheet.append([str(labels["section"]), str(labels["description"])])
+    plan_sheet.append([str(labels["summary"]), _excel_text(plan.summary)])
+    for section in plan.sections:
+        plan_sheet.append([_excel_text(section.title), _excel_text(section.content)])
+    for cell in plan_sheet[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+    plan_sheet.freeze_panes = "A2"
+    plan_sheet.column_dimensions["A"].width = 32
+    plan_sheet.column_dimensions["B"].width = 100
+
+    output = BytesIO()
+    workbook.save(output)
+    return output.getvalue()
+
+
 def _matching_sections(
     request: PlanDocumentRequest,
     aliases: tuple[str, ...],
@@ -264,6 +570,8 @@ def _matching_sections(
 
 
 def render_bank_pack_pdf(request: PlanDocumentRequest) -> bytes:
+    if isinstance(request.plan, SectorPlanGenerateResponse):
+        return _render_sector_bank_pack_pdf(request)
     labels = _messages(request.locale)
     assumptions = request.plan.assumptions
     projection = _restaurant_projection(assumptions)
@@ -385,6 +693,11 @@ def render_bank_pack_pdf(request: PlanDocumentRequest) -> bytes:
 
 
 def render_synergy_pdf(request: PlanDocumentRequest) -> bytes:
+    if isinstance(request.plan, SectorPlanGenerateResponse):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="documents.synergy_requires_restaurant_plan",
+        )
     labels = _messages(request.locale)
     assumptions = request.plan.assumptions
     projection = _restaurant_projection(assumptions)
@@ -479,6 +792,8 @@ def render_synergy_pdf(request: PlanDocumentRequest) -> bytes:
 
 
 def render_plan_pdf(request: PlanDocumentRequest) -> bytes:
+    if isinstance(request.plan, SectorPlanGenerateResponse):
+        return _render_sector_plan_pdf(request)
     labels = _messages(request.locale)
     assumptions = request.plan.assumptions
     projection = _restaurant_projection(assumptions)
@@ -841,6 +1156,8 @@ def render_plan_pdf(request: PlanDocumentRequest) -> bytes:
 
 
 def render_plan_excel(request: PlanDocumentRequest) -> bytes:
+    if isinstance(request.plan, SectorPlanGenerateResponse):
+        return _render_sector_plan_excel(request)
     labels = _messages(request.locale)
     assumptions = request.plan.assumptions
     projection = _restaurant_projection(assumptions)

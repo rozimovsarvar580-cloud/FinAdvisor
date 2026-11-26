@@ -62,7 +62,7 @@ describe("plan wizard streaming generation", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Restaurant name")).toHaveProperty(
+      expect(screen.getByLabelText("Business name")).toHaveProperty(
         "value",
         "Restored restaurant"
       );
@@ -100,6 +100,8 @@ describe("plan wizard streaming generation", () => {
       },
       assumptions: {
         locale: "en",
+        sector_id: "restaurant_cafe",
+        inputs: { stage: "idea", description: "" },
         business_name: "Test restaurant",
         restaurant_format: "family",
         location: "Tashkent",

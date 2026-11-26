@@ -18,11 +18,14 @@ from finadvisor_api.database import get_db
 from finadvisor_api.knowledge import KnowledgeResult, search_knowledge
 from finadvisor_api.models import ChatConversation, ChatMessage, User
 from finadvisor_api.plan_schemas import PlanCalculations
+from finadvisor_api.sectors import find_sector, validate_sector_inputs
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 CHAT_PROMPT = """Answer the user's business-planning question in the requested language.
 Focus on the supplied intent and use retrieved reference excerpts as background.
+When sector context is supplied, tailor the explanation to that sector's operating model
+and user-provided inputs; never assume the business is a restaurant.
 Use only the supplied prepared finance-engine results for financial figures. Cite
 reference sources by their supplied names and URLs when relevant, and distinguish
 known information from uncertainty. Never calculate, estimate, invent, or change a
@@ -76,6 +79,8 @@ class ChatRequest(StrictInput):
     locale: Literal["uz", "ru", "en"]
     message: str = Field(min_length=1, max_length=4_000)
     plan_calculations: PlanCalculations | None = None
+    sector_id: str | None = Field(default=None, min_length=1, max_length=64)
+    sector_inputs: dict[str, object] = Field(default_factory=dict)
     conversation_id: UUID | None = Field(default=None, strict=False)
     top_k: int = Field(default=5, ge=1, le=10)
 
@@ -111,7 +116,7 @@ def _chat_context(
     history: list[ChatMessage],
     knowledge: list[KnowledgeResult],
 ) -> dict[str, object]:
-    return {
+    context: dict[str, object] = {
         "locale": payload.locale,
         "intent": intent,
         "question": payload.message,
@@ -133,6 +138,34 @@ def _chat_context(
             for result in knowledge
         ],
     }
+    if payload.sector_id is not None:
+        sector = find_sector(payload.sector_id)
+        if sector is None:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail="chat.invalid_sector",
+            )
+        try:
+            validate_sector_inputs(sector, payload.sector_inputs)
+        except ValueError as error:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail="chat.invalid_sector_inputs",
+            ) from error
+        context["sector"] = {
+            "id": sector.id,
+            "name": sector.names[payload.locale],
+            "revenue_model_type": sector.revenue_model_type,
+            "kpis": list(sector.kpis),
+            "questions": list(sector.questions[payload.locale]),
+        }
+        context["user_supplied_sector_inputs"] = payload.sector_inputs
+    elif payload.sector_inputs:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="chat.invalid_sector_inputs",
+        )
+    return context
 
 
 def _sse(event: str, data: dict[str, object]) -> str:

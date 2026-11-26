@@ -8,9 +8,21 @@ import { AccountantWorkspace } from "./accountant-workspace";
 afterEach(() => vi.unstubAllGlobals());
 describe("accountant workspace", () => {
   it("provides keyboard operable accounting forms with required validation and saves inventory movements", async () => {
-    const fetchMock = vi.fn().mockImplementation((_url: string, init?: RequestInit) => Promise.resolve(init?.method === "POST" ? Response.json({ id: "record" }) : Response.json({ items: [] })));
+    const fetchMock = vi.fn().mockImplementation((url: string, init?: RequestInit) => {
+      if (url === "/api/accounting/preferences" && init?.method === "PUT") {
+        return Promise.resolve(Response.json({ business_type: "goods" }));
+      }
+      if (url === "/api/accounting/preferences") {
+        return Promise.resolve(Response.json({ business_type: "goods" }));
+      }
+      if (init?.method === "POST") {
+        return Promise.resolve(Response.json({ id: "record" }));
+      }
+      return Promise.resolve(Response.json({ items: [] }));
+    });
     vi.stubGlobal("fetch", fetchMock);
     render(<NextIntlClientProvider locale="en" messages={messages as unknown as AbstractIntlMessages}><AccountantWorkspace /></NextIntlClientProvider>);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith("/api/accounting/preferences", { cache: "no-store" }));
     expect(screen.getByRole("button", { name: "Inventory in and out" }).getAttribute("aria-pressed")).toBe("true");
     const product = screen.getByLabelText("Product");
     expect(product.hasAttribute("required")).toBe(true);

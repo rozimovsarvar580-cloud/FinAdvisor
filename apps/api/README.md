@@ -86,22 +86,49 @@ read-only link token; `DELETE /plans/{plan_id}/share` revokes it. The API stores
 only a hash of the token, and `GET /plans/shared/{token}` returns the current
 plan without owner controls and with caching disabled.
 
+The versioned finance-engine sector registry is available through public
+`GET /sectors` and `GET /sectors/{sector_id}`. Authenticated business owners can
+create a sector-specific draft with `POST /plans`, supplying `business_name`,
+`location`, `sector_id`, and free-form JSON `inputs`. The API validates the
+sector and any supplied `revenue_model_type`, `cost_categories`, and
+`staff_roles` against the registry, stores the selection and inputs, and
+includes them in the owner's `GET /plans/mine` results. A draft cannot be
+shared until it has generated plan content.
+Bank-readiness analysis preserves the generic checklist and allocates an
+additional 20 points to the selected sector's checklist; the remaining 80
+points come from the generic criteria, keeping every sector score on a
+100-point scale. Investor Q&A receives the saved sector definition, KPIs, and
+user-supplied sector inputs while retaining the prepared-number validation.
+`POST /plans/generate-sector` generates a sector-aware narrative from registry
+metadata, user inputs, and the Decimal finance-engine projection. For
+`generic_other`, the first request returns up to five clarifying questions and
+explicit assumptions without financial projections; submit the answers in
+`clarification_answers` with the completed numeric inputs to request a plan.
+Uploaded-plan analysis accepts optional `sector_id` and JSON `sector_inputs`
+form fields, while `/chat/stream` accepts optional `sector_id` and
+`sector_inputs` JSON fields to tailor recommendations without changing the
+prepared-finance-results-only rule.
+
 Plan exports are available at `POST /documents/{plan_id}/pdf` and
 `POST /documents/{plan_id}/excel`, with separate `POST
 /documents/{plan_id}/bank-pack` and `POST /documents/{plan_id}/synergy`
 exports. Send `{ "locale": "uz|ru|en", "plan":
-{...} }` using the plan response returned by `POST /plans/generate`; exports
-require an authenticated Pro or Business subscription (Agent-Synergy requires
-Business) and are generated on demand, not persisted by this API. The localized PDF
-includes a cover, summary, market, operations, staffing, risk, and financial
-sections, an engine-derived financial chart, and an appendix with assumptions,
-startup costs, payroll, and any loan schedule. Noto Sans is bundled under the
-SIL Open Font License for Uzbek and Cyrillic text. PDF financial values are
-recomputed from the supplied assumptions by the finance engine. The Excel
-workbook uses openpyxl for localized assumption, startup cost, payroll,
-monthly P&L, loan schedule, and break-even sheets. Its 12-month P&L links the
-finance-engine monthly run-rate across the year without modeling growth or
-seasonality; formula-linked summary cells point to engine results.
+{...} }` using a response from `POST /plans/generate` or
+`POST /plans/generate-sector`; exports require an authenticated Pro or Business
+subscription (Agent-Synergy requires Business) and are generated on demand, not
+persisted by this API. Restaurant plans retain the restaurant-specific PDF and
+Excel layouts. Generic sector plans use localized sector names, narrative
+sections, supplied inputs, and prepared finance-engine results in the PDF and
+four-sheet Excel workbook. The bank pack uses the selected sector's readiness
+checklist; preliminary clarification-only plans without a complete financial
+projection cannot be exported. Agent-Synergy remains available only for legacy
+restaurant plans. Noto Sans is bundled under the SIL Open Font License for
+Uzbek and Cyrillic text. Restaurant PDF and Excel financial values are
+recomputed from the supplied assumptions by the finance engine; generic sector
+exports display prepared finance-engine results without recalculating them.
+The restaurant workbook's 12-month P&L links the finance-engine monthly
+run-rate across the year without modeling growth or seasonality; formula-linked
+summary cells point to engine results.
 
 Billing storage is prepared by the `20261018_11` migration. Subscription and
 invoice amounts are integer minor units in USD; payment records retain their

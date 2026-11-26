@@ -18,6 +18,7 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
     func,
+    text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -244,6 +245,18 @@ class SavedBusinessPlan(Base):
     )
     business_name: Mapped[str] = mapped_column(String(200))
     location: Mapped[str] = mapped_column(String(300))
+    sector_id: Mapped[str] = mapped_column(
+        String(64),
+        nullable=False,
+        default="restaurant_cafe",
+        server_default="restaurant_cafe",
+    )
+    inputs: Mapped[dict[str, object]] = mapped_column(
+        JSON,
+        nullable=False,
+        default=dict,
+        server_default=text("'{}'"),
+    )
     request_payload: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
     generated_plan: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
     share_token_hash: Mapped[str | None] = mapped_column(
@@ -259,6 +272,13 @@ class MarketplaceListing(Base):
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
+    sector_id: Mapped[str] = mapped_column(
+        String(64),
+        nullable=False,
+        default="restaurant_cafe",
+        server_default="restaurant_cafe",
+        index=True,
+    )
     saved_plan_id: Mapped[str | None] = mapped_column(
         ForeignKey("saved_business_plans.id", ondelete="SET NULL"),
         nullable=True,
@@ -376,6 +396,9 @@ class AccountingRecord(Base):
     __table_args__ = (
         UniqueConstraint("owner_id", "resource", "client_id", name="uq_accounting_record_client"),
         CheckConstraint("resource IN ('inventory', 'stock-movements', 'sales', 'expenses', 'employees')", name="ck_accounting_record_resource"),
+        CheckConstraint("item_type IS NULL OR item_type IN ('goods', 'service')", name="ck_accounting_record_item_type"),
+        CheckConstraint("service_duration_minutes IS NULL OR service_duration_minutes > 0", name="ck_accounting_record_service_duration"),
+        CheckConstraint("item_type != 'service' OR tracks_inventory = false", name="ck_accounting_record_service_no_stock"),
         Index("ix_accounting_records_owner_resource", "owner_id", "resource"),
     )
 
@@ -384,7 +407,28 @@ class AccountingRecord(Base):
     resource: Mapped[str] = mapped_column(String(32), nullable=False)
     client_id: Mapped[str] = mapped_column(String(128), nullable=False)
     data: Mapped[dict[str, object]] = mapped_column(JSON, nullable=False)
+    item_type: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    unit: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    service_duration_minutes: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    tracks_inventory: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class AccountingPreference(Base):
+    __tablename__ = "accounting_preferences"
+    __table_args__ = (
+        CheckConstraint(
+            "business_type IN ('goods', 'services', 'mixed')",
+            name="ck_accounting_preferences_business_type",
+        ),
+    )
+
+    owner_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    business_type: Mapped[str] = mapped_column(
+        String(16), nullable=False, default="goods", server_default="goods"
+    )
 
 
 class ChatConversation(Base):

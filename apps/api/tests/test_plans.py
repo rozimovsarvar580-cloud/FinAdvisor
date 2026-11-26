@@ -303,6 +303,8 @@ def test_saved_plan_edits_create_owner_scoped_revisions(
     with api_database() as db:
         saved = db.get(SavedBusinessPlan, created_body["plan_id"])
         assert saved is not None
+        assert saved.sector_id == "restaurant_cafe"
+        assert saved.inputs == {}
         assert saved.generated_plan["version"] == 2
         assert len(saved.generated_plan["calculator_results"]) == 1
         assert [item["summary"] for item in saved.generated_plan["versions"]] == [
@@ -509,6 +511,72 @@ def test_investor_qa_uses_saved_plan_and_returns_grounded_answers(
         captured["context"]["prepared_finance_engine_results"]["monthly_revenue"] == "150000000.00"
     )
     assert "Do not calculate, estimate, invent" in captured["prompt"]
+
+
+def test_investor_qa_adapts_questions_to_saved_sector(
+    monkeypatch: pytest.MonkeyPatch,
+    business_owner: User,
+    api_database,
+) -> None:
+    saved = SavedBusinessPlan(
+        id="plan-retail-investor-qa",
+        owner_id=business_owner.id,
+        business_name="Local shop",
+        location="Tashkent",
+        sector_id="retail_shop",
+        inputs={
+            "revenue_model_type": "unit_sales",
+            "cost_categories": ["inventory_purchases", "rent"],
+            "staff_roles": ["cashier"],
+        },
+        request_payload={
+            "locale": "en",
+            "business_name": "Local shop",
+            "sector_id": "retail_shop",
+        },
+        generated_plan={
+            "summary": "A retail business plan.",
+            "calculations": {"monthly_revenue": "20000.00"},
+        },
+    )
+    with api_database() as db:
+        db.add(business_owner)
+        db.add(saved)
+        db.commit()
+    captured: dict[str, object] = {}
+
+    async def fake_generate(prompt: str, context: dict[str, object]) -> str:
+        captured["prompt"] = prompt
+        captured["context"] = context
+        return json.dumps(
+            {
+                "items": [
+                    {
+                        "question": question,
+                        "answer": "The stored plan does not provide this detail.",
+                    }
+                    for question in (
+                        "How will inventory turnover be monitored?",
+                        "Which supplier terms affect purchases?",
+                        "How will stock levels be managed?",
+                        "What sales channels are planned?",
+                        "Which operating risks need review?",
+                    )
+                ]
+            }
+        )
+
+    monkeypatch.setattr(plans, "generate", fake_generate)
+
+    response = client.post("/plans/plan-retail-investor-qa/investor-qa")
+
+    assert response.status_code == 200
+    context = captured["context"]
+    assert context["sector"]["id"] == "retail_shop"
+    assert context["sector"]["name"] == "Retail shop"
+    assert "inventory_cost" in context["sector"]["kpis"]
+    assert context["user_supplied_sector_inputs"] == saved.inputs
+    assert "Adapt questions to the selected sector" in captured["prompt"]
 
 
 def test_save_calculator_result_recalculates_and_attaches_to_owned_plan(

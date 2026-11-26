@@ -13,6 +13,8 @@ const plan: PlanDocumentPayload = {
   calculations: { monthly_revenue: "150000000.00" },
   assumptions: {
     locale: "uz",
+    sector_id: "restaurant_cafe",
+    inputs: {},
     business_name: "Restaurant",
     restaurant_format: "family",
     location: "Tashkent",

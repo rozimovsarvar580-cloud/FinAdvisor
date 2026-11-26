@@ -86,6 +86,7 @@ def _listing_response(listing: MarketplaceListing) -> MarketplaceListingResponse
     return MarketplaceListingResponse(
         id=listing.id,
         plan_id=listing.saved_plan_id,
+        sector_id=listing.sector_id,
         business_name=listing.business_name,
         city=listing.city,
         stage=listing.stage,
@@ -119,11 +120,24 @@ def _owner_listing_query(owner_id: str):
 @router.get("", response_model=dict[str, list[MarketplaceListingResponse]])
 def discover_listings(
     db: Annotated[Session, Depends(get_db)],
+    sector: str | None = None,
+    q: str | None = None,
 ) -> dict[str, list[MarketplaceListingResponse]]:
+    query = select(MarketplaceListing).where(
+        MarketplaceListing.status == "published"
+    )
+    if sector:
+        query = query.where(MarketplaceListing.sector_id == sector)
+    if q:
+        needle = f"%{q.strip().casefold()}%"
+        query = query.where(
+            (MarketplaceListing.business_name.ilike(needle))
+            | (MarketplaceListing.city.ilike(needle))
+            | (MarketplaceListing.summary.ilike(needle))
+            | (MarketplaceListing.sector_id.ilike(needle))
+        )
     listings = db.scalars(
-        select(MarketplaceListing)
-        .where(MarketplaceListing.status == "published")
-        .order_by(MarketplaceListing.created_at.desc())
+        query.order_by(MarketplaceListing.created_at.desc())
     ).all()
     return {"items": [_listing_response(item) for item in listings]}
 
@@ -212,6 +226,7 @@ def publish_listing(
         id=f"listing-{uuid4().hex}",
         owner_id=user.id,
         saved_plan_id=saved_plan.id,
+        sector_id=saved_plan.sector_id,
         business_name=saved_plan.business_name,
         city=saved_plan.location,
         stage=data.stage,

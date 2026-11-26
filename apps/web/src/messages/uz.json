@@ -35,7 +35,7 @@
           },
           {
             "title": "Kundalik faoliyatni qayd eting",
-            "description": "Restoranning kundalik daromad va xarajatlarini hisobga olishni boshlang.",
+            "description": "Biznesning kundalik tushum va xarajatlarini hisobga olishni boshlang.",
             "action": "Kundalik hisobni ochish"
           },
           {
@@ -47,7 +47,7 @@
         "tour": [
           {
             "title": "Biznes-reja tuzing",
-            "description": "Restoraningizni tavsiflang va moliyaviy hisob-kitoblar hamda taxminlarni ko‘rib chiqing.",
+            "description": "Biznesingizni tavsiflang va moliyaviy hisob-kitoblar hamda taxminlarni ko‘rib chiqing.",
             "action": "Reja tuzuvchiga o‘tish"
           },
           {
@@ -140,7 +140,7 @@
     "tagline": "Biznesingiz uchun aniq moliyaviy qarorlar",
     "socialImage": {
       "title": "O‘sish uchun moliyaviy rejalar",
-      "audience": "Restoranlar • banklar • investorlar"
+      "audience": "Kichik biznes • banklar • investorlar"
     }
   },
   "businessPage": {
@@ -156,7 +156,7 @@
     "hero": {
       "badge": "O‘zbekiston kichik biznesi uchun",
       "title": "Biznesingizni raqamlar bilan ishonchli boshqaring",
-      "description": "Restoraningiz uchun moliyaviy reja tuzing, xarajat va tushumni tushuning hamda bankka tayyor biznes-reja oling.",
+      "description": "Biznesingiz uchun moliyaviy reja tuzing, xarajat va tushumni tushuning hamda bankka taqdim etish uchun biznes-reja tayyorlang.",
       "primaryCta": "Reja tuzishni boshlash",
       "secondaryCta": "Namuna PDF'ni ko‘rish",
       "demoCta": "Faqat ko‘rish uchun demo",
@@ -321,7 +321,7 @@
           "owner": {
             "label": "Tadbirkor",
             "title": "Biznes egasi uchun aniqroq reja",
-            "description": "Restoran g‘oyasini tuzilmali moliyaviy reja bilan tayyorlang, xarajat va jamoa ehtiyojlarini ko‘rib chiqing, keyingi qadamlarni anglang."
+            "description": "Biznes g‘oyangiz uchun tuzilmali moliyaviy reja tayyorlang, xarajat va jamoa ehtiyojlarini ko‘rib chiqing, keyingi qadamlarni belgilang."
           },
           "accountant": {
             "label": "Buxgalter",
@@ -431,7 +431,7 @@
       "items": [
         {
           "title": "Biznesingizni tanishtiring",
-          "description": "Restoran formati, joyi, menyusi va jamoasi haqida ma’lumot bering."
+          "description": "Biznes modelingiz, joylashuvingiz, mahsulot yoki xizmatlaringiz va jamoangiz haqida ma’lumot bering."
         },
         {
           "title": "Moliyaviy modelni hisoblang",
@@ -454,7 +454,7 @@
       "items": [
         {
           "title": "Biznes-reja",
-          "description": "Restoraningizga mos tuzilgan reja bo‘limlari."
+          "description": "Biznesingizga mos reja bo‘limlari."
         },
         {
           "title": "Moliyaviy hisob-kitoblar",
@@ -546,7 +546,7 @@
       "items": {
         "q1": {
           "question": "FinAdvisor kimlar uchun mo‘ljallangan?",
-          "answer": "O‘zbekistonda kichik biznes boshlayotgan yoki rivojlantirayotgan tadbirkorlar uchun. Dastlab restoran loyihalariga e’tibor qaratamiz."
+          "answer": "O‘zbekistonda kichik biznes boshlayotgan yoki rivojlantirayotgan tadbirkorlar uchun. FinAdvisor turli sohalar uchun rejalashtirishni qo‘llab-quvvatlaydi."
         },
         "q2": {
           "question": "AI moliyaviy natijalarni o‘zi hisoblaydimi?",
@@ -903,7 +903,7 @@
     "description": "FinAdvisor mahsuloti haqida hujjatlashtirilgan ma’lumotlarga asoslangan loyiha sharhi. Bozor, moliya, jamoa va mablag‘ jalb qilish haqidagi da’volar tekshirilishi kerak.",
     "summaryTitle": "Qisqacha ma’lumot",
     "audienceTitle": "Boshlang‘ich auditoriya",
-    "audienceText": "O‘zbekistondagi kichik bizneslar, dastlab restoranlar. Bozor hajmi va mijozlar talabi hali tasdiqlanmagan.",
+    "audienceText": "O‘zbekistondagi kichik bizneslar. Bozor hajmi va mijozlar talabi hali tasdiqlanmagan.",
     "productTitle": "Mahsulot yondashuvi",
     "productText": "Biznes-rejalash, aniq moliyaviy hisob-kitoblar, buxgalteriya jarayonlari va investorlar bilan ishlash yagona platformada.",
     "modelTitle": "Biznes modeli",
@@ -1060,6 +1060,8 @@
     "invalidRevenue": "Nuqtadan keyin ko‘pi bilan ikki raqamli, manfiy bo‘lmagan summani kiriting.",
     "draftInvalid": "Saqlangan qoralama yaroqsiz. Yangi reja boshlang",
     "draftUnavailable": "Qoralamani ushbu qurilmada saqlab bo‘lmadi",
+    "sectorListUnavailable": "Biznes turlarini yuklab bo‘lmadi. Qayta urinib ko‘ring.",
+    "sectorDraftFailed": "Biznes qoralamasini saqlab bo‘lmadi. Ma’lumotlarni tekshirib, qayta urinib ko‘ring.",
     "planAIUnavailable": "AI reja xizmatiga hozir ulanib bo‘lmadi. Keyinroq urinib ko‘ring",
     "planGenerationFailed": "Biznes-reja yaratilmadi. Kiritilgan ma’lumotlarni tekshiring",
     "planEditFailed": "Biznes-rejadagi o‘zgarishlarni saqlab bo‘lmadi. Qayta urinib ko‘ring",
@@ -1100,22 +1102,22 @@
       "desktopAgent": "Kompyuter agenti"
     },
     "wizard": {
-      "eyebrow": "Restoran shabloni",
+      "eyebrow": "Restoran misolida",
       "title": "Biznes-reja yaratish",
       "draftSaved": "Qoralama avtomatik saqlanadi",
       "progress": "{current}/{total}-qadam",
-      "businessName": "Restoran nomi",
-      "restaurantFormat": "Restoran formati",
+      "businessName": "Biznes nomi",
+      "restaurantFormat": "Biznes formati",
       "formats": {
         "cafe": "Kafe",
-        "family": "Oilaviy restoran",
+        "family": "Oilaviy xizmat",
         "fast_casual": "Tezkor xizmat",
-        "fine_dining": "Yuqori darajali restoran"
+        "fine_dining": "Premium xizmat"
       },
       "location": "Manzil yoki hudud",
       "seats": "O‘rindiqlar soni",
-      "menuSummary": "Menyu haqida qisqacha",
-      "averageCheck": "O‘rtacha chek (UZS)",
+      "menuSummary": "Mahsulot yoki xizmat haqida qisqacha",
+      "averageCheck": "O‘rtacha xarid summasi (UZS)",
       "dailyCustomers": "Kunlik mijozlar",
       "operatingDays": "Oylik ish kunlari",
       "variableCostPercent": "O‘zgaruvchan xarajatlar (%)",
@@ -1129,7 +1131,7 @@
       },
       "equipmentCost": "Uskunalar qiymati (UZS)",
       "otherStartupCost": "Boshqa boshlang‘ich xarajatlar (UZS)",
-      "equipmentLabel": "Restoran uskunalari",
+      "equipmentLabel": "Ish boshlash uskunalari",
       "loanAmount": "Kredit miqdori (UZS)",
       "annualInterestRate": "Yillik foiz stavkasi (%)",
       "loanTermMonths": "Kredit muddati (oy)",
@@ -1143,11 +1145,11 @@
       "steps": {
         "format": {
           "short": "Tur",
-          "title": "Joy va restoran formati"
+          "title": "Joylashuv va biznes modeli"
         },
         "menu": {
-          "short": "Menyu",
-          "title": "Menyu va kutilayotgan talab"
+          "short": "Taklif",
+          "title": "Taklif va kutilayotgan talab"
         },
         "staff": {
           "short": "Xodimlar",
@@ -1161,6 +1163,63 @@
           "short": "Moliya",
           "title": "Moliyalash va maqsad foyda"
         }
+      },
+      "sector": {
+        "eyebrow": "Biznes sozlamalari",
+        "title": "Qaysi biznesni boshlamoqchisiz?",
+        "loading": "Biznes turlari yuklanmoqda...",
+        "retry": "Qayta urinish",
+        "selectedSector": "Tanlangan biznes turi: {name}",
+        "changeSector": "Biznes turini o‘zgartirish",
+        "sectorStep": "Biznes turi",
+        "businessRevenueStep": "Biznes va tushum",
+        "rolesStep": "Jamoa",
+        "costsStep": "Operatsion xarajatlar",
+        "searchLabel": "Biznes turlarini qidirish",
+        "searchPlaceholder": "Biznes turini kiriting",
+        "noResults": "Bu so‘rov bo‘yicha biznes turi topilmadi.",
+        "stageLabel": "Biznes bosqichi",
+        "stages": {
+          "idea": "G‘oya",
+          "starting": "Endi boshlayapman",
+          "operating": "Faoliyat yurityapman",
+          "growing": "Biznesni kengaytirmoqchiman"
+        },
+        "otherDescription": "Biznesingizni qisqacha tasvirlang",
+        "otherDescriptionPlaceholder": "Biznes qanday mahsulot yoki xizmatlarni taklif qiladi?",
+        "sectorRequired": "Davom etish uchun biznes turini tanlang.",
+        "businessName": "Biznes nomi",
+        "location": "Shahar yoki hudud",
+        "revenueFields": {
+          "capacityUnits": "O‘rinlar, xonalar yoki xizmat birliklari",
+          "turnsOrOccupancy": "Kunlik aylanish yoki bandlik",
+          "operatingDaysPerMonth": "Oylik ish kunlari",
+          "utilizationPercent": "Kutilayotgan bandlik (%)",
+          "averageTicket": "O‘rtacha chek (UZS)",
+          "unitsPerMonth": "Oylik sotiladigan birliklar",
+          "pricePerUnit": "Bir birlik narxi (UZS)",
+          "staffHoursPerMonth": "Oylik hisob-kitob qilinadigan ish soatlari",
+          "hourlyRate": "Soatbay stavka (UZS)",
+          "startingSubscribers": "Boshlang‘ich obunachilar yoki a’zolar soni",
+          "averageRevenuePerUser": "Bir obunachidan o‘rtacha tushum (UZS)",
+          "monthlyChurnPercent": "Oylik mijozlar ketishi (%)",
+          "projectOpportunities": "Oylik loyiha imkoniyatlari",
+          "averageProjectValue": "Loyihaning o‘rtacha qiymati (UZS)",
+          "conversionPercent": "Kutilayotgan konversiya (%)"
+        },
+        "roleLabel": "Lavozim: {role}",
+        "employeeCount": "Xodimlar soni",
+        "monthlySalary": "Bir xodimning oylik haqi (UZS)",
+        "customRole": "Yangi lavozim nomi",
+        "addRole": "Lavozim qo‘shish",
+        "costCategoryLabel": "Xarajat turi: {category}",
+        "monthlyCost": "Oylik summa (UZS)",
+        "customCost": "Boshqa xarajat",
+        "customCostName": "Xarajat nomi",
+        "addCost": "Xarajat qo‘shish",
+        "saveDraft": "Biznes qoralamasini saqlash",
+        "saving": "Qoralama saqlanmoqda...",
+        "draftCreated": "Qoralama saqlandi. Raqam: {id}"
       }
     },
     "calculators": {
@@ -1415,14 +1474,17 @@
   "marketplace": {
     "hero": {
       "eyebrow": "Investorlar bozori",
-      "title": "Biznes egalari e’lon qilgan restoran loyihalari",
-      "description": "Biznes egalari e’lon qilishni tanlagan restoran loyihalarini ko‘ring. Loyiha ma’lumotlari va so‘ralgan mablag‘ egasi tomonidan kiritiladi."
+      "title": "Biznes egalari e’lon qilgan loyihalar",
+      "description": "Egalari e’lon qilishni tanlagan biznes loyihalarini ko‘ring. Loyiha ma’lumotlari va so‘ralgan mablag‘ egasi tomonidan kiritiladi."
     },
     "stats": {
       "listings": "E’lon qilingan loyihalar"
     },
     "filters": {
       "title": "Loyiha bosqichi bo‘yicha saralash",
+      "search": "E’lonlarni qidirish",
+      "sector": "Soha",
+      "allSectors": "Barcha sohalar",
       "city": "Shahar",
       "minimumFunding": "Eng kam moliyalashtirish (UZS)",
       "maximumFunding": "Eng ko?p moliyalashtirish (UZS)",
@@ -1442,7 +1504,7 @@
     "loading": "E’lon qilingan loyihalar yuklanmoqda…",
     "disclaimer": "E’lon va mablag‘ so‘rovlari biznes egalari tomonidan kiritilgan, mustaqil tekshirilmagan. Daromad, moliyalashtirish yoki investitsiya natijasi kafolatlanmaydi.",
     "form": {
-      "title": "Restoran loyihangizni e’lon qiling",
+      "title": "Biznes loyihangizni e’lon qiling",
       "disclaimer": "Faqat ulashish huquqiga ega bo‘lgan ma’lumotni e’lon qiling. Mablag‘ so‘rovi siz kiritgan qiymat bo‘lib, tekshirilgan baholash yoki investitsiya taklifi emas.",
       "businessName": "Loyiha nomi",
       "city": "Shahar",
@@ -1460,7 +1522,7 @@
       "myListings": "Mening e’lonlarim",
       "unpublish": "E’lonni yashirish",
       "republish": "Qayta e’lon qilish",
-      "ownerPrompt": "Restoran egasimisiz?",
+      "ownerPrompt": "Biznes egasimisiz?",
       "signUp": "Hisob yarating",
       "visibility": {
         "published": "Ommaviy",
@@ -1501,7 +1563,7 @@
     },
     "empty": {
       "title": "Hozircha e’lon qilingan loyiha yo‘q",
-      "description": "Restoran egasi loyihani e’lon qilganda, u shu yerda ko‘rinadi.",
+      "description": "Biznes egasi loyihani e’lon qilganda, u shu yerda ko‘rinadi.",
       "filteredTitle": "Bu bosqichda loyihalar yo‘q",
       "filteredDescription": "E’lon qilingan loyihalarni ko‘rish uchun boshqa bosqichni tanlang.",
       "clearFilters": "Filtrlarni tozalash",
@@ -1955,7 +2017,7 @@
       "review": "Ko‘rib chiqilmoqda",
       "newTitle": "Reja yaratish",
       "name": "Reja nomi",
-      "restaurantName": "Restoran nomi",
+      "restaurantName": "Biznes nomi",
       "detailsTitle": "Reja: {planId}",
       "currency": "Valyuta",
       "monthlyRevenue": "Oylik tushum",
@@ -2024,7 +2086,7 @@
     },
     "wizard": {
       "title": "Reja tuzish ustasi",
-      "profile": "Restoran profili",
+      "profile": "Biznes profili",
       "setupCosts": "Boshlang‘ich xarajatlar",
       "staffing": "Xodimlar",
       "scenarioReview": "Stsenariyni ko‘rib chiqish",
@@ -2049,6 +2111,15 @@
     "description": "Tavsif",
     "name": "Mahsulot nomi",
     "unit": "O?lchov birligi",
+    "item_type": "Tovar turi",
+    "goods": "Tovar",
+    "service": "Xizmat",
+    "service_duration_minutes": "Davomiyligi (daqiqa)",
+    "businessType": "Biznes turi",
+    "services": "Xizmatlar",
+    "mixed": "Tovar va xizmatlar",
+    "loading": "Yuklanmoqda...",
+    "loadError": "Buxgalteriya sozlamalarini yuklab bo'lmadi.",
     "save": "Yozuvni saqlash",
     "saving": "Saqlanmoqda?",
     "saved": "Yozuv saqlandi.",

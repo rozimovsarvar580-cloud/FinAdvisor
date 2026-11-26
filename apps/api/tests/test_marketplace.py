@@ -10,7 +10,7 @@ from finadvisor_api import auth as auth_module
 from finadvisor_api import plans
 from finadvisor_api.database import Base, get_db
 from finadvisor_api.main import app
-from finadvisor_api.models import User
+from finadvisor_api.models import MarketplaceListing, SavedBusinessPlan, User
 
 
 @pytest.fixture
@@ -192,6 +192,77 @@ def test_plan_generation_streams_progress_and_saves_json_and_markdown(
         {"role": "Cook", "employee_count": 10},
         {"role": "Server", "employee_count": 20},
     ]
+
+
+def test_listings_carry_sector_and_support_sector_and_text_filters(
+    client: TestClient,
+) -> None:
+    headers = register_user(client, "sector-owner@example.com")
+    with client.app.state.test_session_factory() as db:
+        owner = db.scalar(select(User).where(User.email == "sector-owner@example.com"))
+        assert owner is not None
+        cafe_plan = SavedBusinessPlan(
+            id="sector-plan-cafe",
+            owner_id=owner.id,
+            business_name="Sector Cafe",
+            location="Tashkent",
+            sector_id="restaurant_cafe",
+            inputs={},
+            request_payload={},
+            generated_plan={},
+        )
+        retail_plan = SavedBusinessPlan(
+            id="sector-plan-retail",
+            owner_id=owner.id,
+            business_name="Sector Retail",
+            location="Samarkand",
+            sector_id="retail_shop",
+            inputs={},
+            request_payload={},
+            generated_plan={},
+        )
+        db.add_all([cafe_plan, retail_plan])
+        db.commit()
+
+    cafe = client.post(
+        "/marketplace/listings",
+        json={**listing_payload("sector-plan-cafe"), "summary": "Neighborhood cafe"},
+        headers=headers,
+    )
+    assert cafe.status_code == 201
+    assert cafe.json()["sector_id"] == "restaurant_cafe"
+    with client.app.state.test_session_factory() as db:
+        owner = db.scalar(select(User).where(User.email == "sector-owner@example.com"))
+        assert owner is not None
+        retail = MarketplaceListing(
+            id="listing-retail-sector",
+            owner_id=owner.id,
+            saved_plan_id="sector-plan-retail",
+            sector_id="retail_shop",
+            business_name="Sector Retail",
+            city="Samarkand",
+            stage="pilot",
+            funding_target="250000000.00",
+            currency="UZS",
+            summary="Family retail shop",
+            status="published",
+            is_published=True,
+            public_financial_fields=[],
+            request_financial_fields=[],
+        )
+        db.add(retail)
+        db.commit()
+
+    sector_items = client.get(
+        "/marketplace/listings",
+        params={"sector": "retail_shop"},
+    ).json()["items"]
+    assert [item["id"] for item in sector_items] == ["listing-retail-sector"]
+    search_items = client.get(
+        "/marketplace/listings",
+        params={"q": "neighborhood"},
+    ).json()["items"]
+    assert [item["id"] for item in search_items] == [cafe.json()["id"]]
 
 
 def test_only_published_owner_listings_are_public(
